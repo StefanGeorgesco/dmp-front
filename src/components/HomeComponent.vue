@@ -1,5 +1,5 @@
-@<template>
-    <p>Bienvenu sur le dossier médical partagé.</p>
+<template>
+  <h1>Bienvenue sur le dossier médical personnalisé.</h1>
 </template>
 
 <script>

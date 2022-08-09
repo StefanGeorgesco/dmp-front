@@ -12,7 +12,12 @@
             </div>
             <button type="submit" class="btn btn-primary">Entrer</button>
         </form>
-        <div>{{ message }}</div>
+        <br>
+        <transition>
+            <div v-if="message" class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -25,23 +30,33 @@ export default {
     data() {
         return {
             user: new User(),
-            message: 'message'
+            message: ''
         }
     },
     methods: {
         async submitLogin() {
-            console.log(this.user.username + " " + this.user.password + ' from LoginComponent');
-
-            let response = await Service.login(this.user);
-
-            if (response) {
-                this.message = response.data.username + " est connecté avec le rôle " + response.data.role;
+            try {
+                let response = await Service.login(this.user);
+                console.log(response);
+                sessionStorage.setItem('userdetails', JSON.stringify(response.data));
+                sessionStorage.setItem('Authorization', response.headers.authorization);
+                this.$router.push("/")
+            } catch (error) {
+                console.log(error.response.status + ' ' + error.response.statusText);
+                this.message = 'identifiant ou mot de passe incorrect';
+                setTimeout(() => this.message = '', 3000);
             };
         }
     }
 }
 </script>
 
-<style>
+<style scoped>
+.v-enter-from, .v-leave-to {
+    opacity: 0;
+}
 
+.v-enter-active, .v-leave-active {
+    transition: opacity 2s;
+}
 </style>
