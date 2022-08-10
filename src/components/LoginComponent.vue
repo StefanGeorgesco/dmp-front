@@ -23,6 +23,8 @@
 
 <script>
 import { Service } from '../services/services.js';
+import { useAuthUserStore } from '../stores/authUserStore.js';
+import { mapWritableState } from 'pinia';
 
 export default {
     name: "LoginComponent",
@@ -37,6 +39,7 @@ export default {
             try {
                 let response = await Service.login(this.user);
                 console.log(response);
+                this.currentUser = response.data;
                 sessionStorage.setItem('userdetails', JSON.stringify(response.data));
                 sessionStorage.setItem('Authorization', response.headers.authorization);
                 this.$router.push("/")
@@ -46,6 +49,9 @@ export default {
                 setTimeout(() => this.message = '', 3000);
             };
         }
+    },
+    computed: {
+        ...mapWritableState(useAuthUserStore, ["currentUser"])
     }
 }
 </script>
