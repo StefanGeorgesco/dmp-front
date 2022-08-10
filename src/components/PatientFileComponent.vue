@@ -27,14 +27,12 @@
 
 <script>
 import { Service } from '../services/services.js';
-import { PatientFile } from '../model/patientFile.js'
-
 
 export default {
     name: "PatientFileComponent",
     data() {
         return {
-            patientFile: new PatientFile()
+            patientFile: {}
         }
     },
     async created() {

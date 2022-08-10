@@ -22,14 +22,13 @@
 </template>
 
 <script>
-import { User } from '../model/user.js';
 import { Service } from '../services/services.js';
 
 export default {
     name: "LoginComponent",
     data() {
         return {
-            user: new User(),
+            user: {},
             message: ''
         }
     },

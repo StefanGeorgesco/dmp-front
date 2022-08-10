@@ -2,9 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeComponent from "../components/HomeComponent.vue";
 import LoginComponent from "../components/LoginComponent.vue";
 import PatientFileComponent from "../components/PatientFileComponent.vue";
-import { User } from '../model/user.js';
 
-let user = new User();
+let user = {};
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

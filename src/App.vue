@@ -47,13 +47,12 @@
 
 <script>
 import { RouterLink, RouterView } from 'vue-router';
-import { User } from './model/user.js';
 
 export default {
   name: "App",
   data() {
     return {
-      user: new User()
+      user: {}
     }
   },
   created() {
@@ -63,7 +62,7 @@ export default {
   },
   methods: {
     logout() {
-      this.user = new User();
+      this.user = {};
       sessionStorage.removeItem('userdetails');
       sessionStorage.removeItem('Authorization');
       this.$router.push("/")

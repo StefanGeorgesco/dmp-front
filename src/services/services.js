@@ -5,7 +5,7 @@ axios.interceptors.request.use(request => {
 
     let authorization = sessionStorage.getItem('Authorization');
 
-    if (authorization && authorization !== 'null') {
+    if (authorization) {
         request.headers.common.Authorization = authorization;
     }
 
