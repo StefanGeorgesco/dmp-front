@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useAuthUserStore } from '../stores/authUserStore.js';
 import HomeComponent from "../components/HomeComponent.vue";
 import LoginComponent from "../components/LoginComponent.vue";
 import PatientFileComponent from "../components/PatientFileComponent.vue";
-
-let user = {};
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,9 +36,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  user = JSON.parse(sessionStorage.getItem('userdetails'));
+  
+  const store = new useAuthUserStore();
 
-  if (to.name !== 'login' && !user) next({ name: 'login' })
+  if (to.name !== 'login' && !store.currentUser.id) next({ name: 'login' })
   else next()
 })
 

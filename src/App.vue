@@ -29,8 +29,7 @@
                 <li>
                   <RouterLink v-show="currentUser.role !== 'ROLE_ADMIN'" class="dropdown-item"
                     to="/manage-personal-data">
-                    Modifier mes données
-                    personnelles</RouterLink>
+                    Mes données personnelles</RouterLink>
                 </li>
                 <li>
                   <hr v-show="currentUser.role !== 'ROLE_ADMIN'" class="dropdown-divider">
@@ -46,30 +45,39 @@
   <main>
     <RouterView />
   </main>
+
 </template>
 
 <script>
 import { RouterLink, RouterView } from 'vue-router';
-import { useAuthUserStore } from './stores/authUserStore.js';
 import { mapWritableState } from 'pinia';
+import { useAuthUserStore } from './stores/authUserStore.js';
 
 export default {
   name: "App",
+  components: {
+    RouterLink,
+    RouterView
+  },
   created() {
     if (sessionStorage.getItem('userdetails')) {
       this.currentUser = JSON.parse(sessionStorage.getItem('userdetails'));
+    }
+    if (sessionStorage.getItem('authorization')) {
+      this.authorization = sessionStorage.getItem('authorization');
     }
   },
   methods: {
     logout() {
       this.currentUser = {};
+      this.authorization = null;
       sessionStorage.removeItem('userdetails');
-      sessionStorage.removeItem('Authorization');
+      sessionStorage.removeItem('authorization');
       this.$router.push("/")
     }
   },
   computed: {
-    ...mapWritableState(useAuthUserStore, ["currentUser"])
+    ...mapWritableState(useAuthUserStore, ["currentUser", "authorization"])
   }
 }
 </script>

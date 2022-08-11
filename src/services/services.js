@@ -1,12 +1,13 @@
 import axios from "axios";
 import { Buffer } from "buffer";
+import { useAuthUserStore } from '../stores/authUserStore.js';
 
 axios.interceptors.request.use(request => {
 
-    let authorization = sessionStorage.getItem('Authorization');
+    const store = new useAuthUserStore();
 
-    if (authorization) {
-        request.headers.common.Authorization = authorization;
+    if (store.authorization) {
+        request.headers.common.Authorization = store.authorization;
     }
 
     return request;

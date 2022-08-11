@@ -11,7 +11,7 @@
             <th>date of birth</th>
             <th>referring doctor</th>
         </tr>
-        <tr>
+        <tr v-if="patientFile.id">
             <td>{{ patientFile.id }}</td>
             <td>{{ patientFile.firstname }}</td>
             <td>{{ patientFile.lastname }}</td>

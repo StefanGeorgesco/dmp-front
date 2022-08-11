@@ -38,8 +38,8 @@ export default {
         async submitLogin() {
             try {
                 let response = await Service.login(this.user);
-                console.log(response);
                 this.currentUser = response.data;
+                this.authorization = response.headers.authorization;
                 sessionStorage.setItem('userdetails', JSON.stringify(response.data));
                 sessionStorage.setItem('Authorization', response.headers.authorization);
                 this.$router.push("/")
@@ -51,7 +51,7 @@ export default {
         }
     },
     computed: {
-        ...mapWritableState(useAuthUserStore, ["currentUser"])
+        ...mapWritableState(useAuthUserStore, ["currentUser", "authorization"])
     }
 }
 </script>
