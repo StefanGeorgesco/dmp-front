@@ -41,6 +41,18 @@
         </div>
       </div>
     </nav>
+    <div class="container">
+      <transition name="errorMessageTransition">
+        <div v-show="errorMessage" class="alert alert-danger" role="alert">
+          {{ errorMessage }}
+        </div>
+      </transition>
+      <transition name="successMessageTransition">
+        <div v-show="successMessage" class="alert alert-success" role="alert">
+          {{ successMessage }}
+        </div>
+      </transition>
+    </div>
   </header>
   <main>
     <RouterView />
@@ -77,10 +89,37 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAuthUserStore, ["currentUser", "authorization"])
+    ...mapWritableState(useAuthUserStore, ["currentUser", "authorization", "errorMessage", "successMessage"])
+  },
+  watch: {
+    errorMessage(message) {
+      setTimeout(() => { this.errorMessage = ''; }, 3000);
+    },
+    successMessage(message) {
+      setTimeout(() => { this.successMessage = ''; }, 3000);
+    },
   }
 }
 </script>
 
-<style>
+<style scoped>
+
+nav, .container, .alert {
+  height: 4em;
+}
+
+.errorMessageTransition-enter-from,
+.successMessageTransition-enter-from,
+.errorMessageTransition-leave-to,
+.successMessageTransition-leave-to {
+  opacity: 0;
+}
+
+.errorMessageTransition-enter-active,
+.successMessageTransition-enter-active,
+.errorMessageTransition-leave-active,
+.successMessageTransition-leave-active {
+  transition: opacity 2s;
+}
+
 </style>

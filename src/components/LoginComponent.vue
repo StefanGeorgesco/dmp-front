@@ -13,11 +13,6 @@
             <button type="submit" class="btn btn-primary">Entrer</button>
         </form>
         <br>
-        <transition>
-            <div v-if="message" class="alert alert-danger" role="alert">
-                {{ message }}
-            </div>
-        </transition>
     </div>
 </template>
 
@@ -30,8 +25,7 @@ export default {
     name: "LoginComponent",
     data() {
         return {
-            user: {},
-            message: ''
+            user: {}
         }
     },
     methods: {
@@ -45,23 +39,15 @@ export default {
                 this.$router.push("/")
             } catch (error) {
                 console.log(error.response.status + ' ' + error.response.statusText);
-                this.message = 'identifiant ou mot de passe incorrect';
-                setTimeout(() => this.message = '', 3000);
+                this.errorMessage = 'identifiant ou mot de passe incorrect';
             };
         }
     },
     computed: {
-        ...mapWritableState(useAuthUserStore, ["currentUser", "authorization"])
+        ...mapWritableState(useAuthUserStore, ["currentUser", "authorization", "errorMessage"])
     }
 }
 </script>
 
 <style scoped>
-.v-enter-from, .v-leave-to {
-    opacity: 0;
-}
-
-.v-enter-active, .v-leave-active {
-    transition: opacity 2s;
-}
 </style>
