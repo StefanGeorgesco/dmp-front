@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import HomeComponent from "../components/HomeComponent.vue";
 import LoginComponent from "../components/LoginComponent.vue";
+import SignUpComponent from "../components/SignUpComponent.vue";
 import PatientFileComponent from "../components/PatientFileComponent.vue";
 
 const router = createRouter({
@@ -16,6 +17,11 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: LoginComponent,
+    },
+    {
+      path: "/sign-up",
+      name: "sign-up",
+      component: SignUpComponent,
     },
     {
       path: "/manage-doctors",
@@ -38,7 +44,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const store = new useAuthUserStore();
 
-  if (to.name !== "login" && !store.currentUser.id) next({ name: "login" });
+  if (to.name !== "login" && to.name !== "sign-up" && !store.currentUser.id) next({ name: "login" });
   else next();
 });
 

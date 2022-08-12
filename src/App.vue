@@ -5,7 +5,6 @@
   <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
       <button
-        v-show="currentUser.id"
         class="navbar-toggler"
         type="button"
         data-bs-toggle="collapse"
@@ -18,7 +17,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li v-show="currentUser.id" class="nav-item">
+          <li class="nav-item">
             <RouterLink class="nav-link" to="/">
               <i class="fa-solid fa-house"></i>
             </RouterLink>
@@ -103,6 +102,12 @@ export default {
     RouterLink,
     RouterView,
   },
+  data() {
+    return {
+      successMessagetimeOut: null,
+      errorMessagetimeOut: null,
+    };
+  },
   created() {
     if (sessionStorage.getItem("userdetails")) {
       this.currentUser = JSON.parse(sessionStorage.getItem("userdetails"));
@@ -126,12 +131,14 @@ export default {
   },
   watch: {
     errorMessage() {
-      setTimeout(() => {
+      clearTimeout(this.errorMessagetimeOut);
+      this.errorMessagetimeOut = setTimeout(() => {
         this.errorMessage = "";
       }, 3000);
     },
     successMessage() {
-      setTimeout(() => {
+      clearTimeout(this.successMessagetimeOut);
+      this.successMessagetimeOut = setTimeout(() => {
         this.successMessage = "";
       }, 3000);
     },

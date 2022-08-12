@@ -12,6 +12,8 @@ axios.interceptors.request.use((request) => {
   return request;
 });
 
+const baseUrl = "/dmp";
+
 export class Service {
   static login(user) {
     let headers = {
@@ -23,10 +25,14 @@ export class Service {
       "X-Requested-With": "XMLHttpRequest",
     };
 
-    return axios.post("/dmp/login", null, { headers });
+    return axios.post(`${baseUrl}/login`, null, { headers });
+  }
+
+  static signUp(user) {
+    return axios.post(`${baseUrl}/user`, user);
   }
 
   static getPatientFileDetails() {
-    return axios.get("/dmp/patient-file/details");
+    return axios.get(`${baseUrl}/patient-file/details`);
   }
 }

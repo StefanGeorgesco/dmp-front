@@ -1,27 +1,19 @@
+<!-- eslint-disable prettier/prettier -->
 <template>
   <div class="container">
     <form @submit.prevent="submitLogin">
       <div class="mb-3">
         <label for="username" class="form-label">identifiant</label>
-        <input
-          type="text"
-          class="form-control"
-          v-model="user.username"
-          id="username"
-          aria-describedby="usernameHelp"
-        />
+        <input type="text" class="form-control" v-model="user.username" id="username" aria-describedby="usernameHelp" />
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">mot de passe</label>
-        <input
-          type="password"
-          class="form-control"
-          v-model="user.password"
-          id="password"
-        />
+        <input type="password" class="form-control" v-model="user.password" id="password" />
       </div>
       <button type="submit" class="btn btn-primary">Entrer</button>
     </form>
+    <br>
+    <RouterLink to="/sign-up" type="button" class="btn btn-light">S'enregistrer</RouterLink>
     <br />
   </div>
 </template>
@@ -49,7 +41,7 @@ export default {
         sessionStorage.setItem("Authorization", response.headers.authorization);
         this.$router.push("/");
       } catch (error) {
-        console.log(error.response.status + " " + error.response.statusText);
+        console.log(error);
         this.errorMessage = "identifiant ou mot de passe incorrect";
       }
     },
