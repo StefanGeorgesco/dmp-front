@@ -6,4 +6,8 @@ export const useAuthUserStore = defineStore({
     currentUser: {},
     authorization: null,
   }),
+  getters: {
+    isAuthenticated: (state) => state.currentUser.id != null,
+    role: (state) => state.currentUser.role?.split("_")[1],
+  },
 });

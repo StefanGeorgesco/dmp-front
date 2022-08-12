@@ -3,7 +3,19 @@ import { useAuthUserStore } from "../stores/authUserStore.js";
 import HomeComponent from "../components/HomeComponent.vue";
 import LoginComponent from "../components/LoginComponent.vue";
 import SignUpComponent from "../components/SignUpComponent.vue";
+import AddPatientFileComponent from "../components/AddPatientFileComponent.vue";
 import PatientFileComponent from "../components/PatientFileComponent.vue";
+
+const roleGuard = (roles) => {
+  return () => {
+    const store = useAuthUserStore();
+    if (!roles.includes(store.role)) {
+      return { path: "/" };
+    } else {
+      return true;
+    }
+  };
+};
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,6 +36,12 @@ const router = createRouter({
       component: SignUpComponent,
     },
     {
+      path: "/add-patient-file",
+      name: "add-patient-file",
+      component: AddPatientFileComponent,
+      beforeEnter: roleGuard(["DOCTOR"]),
+    },
+    {
       path: "/manage-doctors",
       name: "manage-doctors",
       component: HomeComponent,
@@ -36,16 +54,19 @@ const router = createRouter({
     {
       path: "/manage-personal-data",
       name: "manage-personal-data",
-      component: PatientFileComponent,
+      component: PatientFileComponent, // for test
     },
   ],
 });
 
 router.beforeEach((to, from, next) => {
-  const store = new useAuthUserStore();
+  const store = useAuthUserStore();
 
-  if (to.name !== "login" && to.name !== "sign-up" && !store.currentUser.id) next({ name: "login" });
-  else next();
+  if (to.name !== "login" && to.name !== "sign-up" && !store.isAuthenticated) {
+    next({ name: "login" });
+  } else {
+    next();
+  }
 });
 
 export default router;

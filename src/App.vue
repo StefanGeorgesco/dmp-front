@@ -24,22 +24,19 @@
           </li>
           <li class="nav-item">
             <RouterLink
-              v-show="currentUser.id && currentUser.role === 'ROLE_ADMIN'"
+              v-show="isAuthenticated && role === 'ADMIN'"
               class="nav-link"
               to="/manage-doctors"
             >
               Médecins
             </RouterLink>
           </li>
-          <li
-            class="nav-item"
-            v-show="currentUser.id && currentUser.role === 'ROLE_ADMIN'"
-          >
+          <li class="nav-item" v-show="isAuthenticated && role === 'ADMIN'">
             <RouterLink class="nav-link" to="/manage-patients">
               Patients
             </RouterLink>
           </li>
-          <li v-show="currentUser.id" class="nav-item dropdown">
+          <li v-show="isAuthenticated" class="nav-item dropdown">
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -50,12 +47,12 @@
               {{ currentUser.username }}
             </a>
             <ul class="dropdown-menu">
-              <li v-show="currentUser.role !== 'ROLE_ADMIN'">
+              <li v-show="role !== 'ADMIN'">
                 <RouterLink class="dropdown-item" to="/manage-personal-data">
                   Mes données personnelles</RouterLink
                 >
               </li>
-              <li v-show="currentUser.role !== 'ROLE_ADMIN'">
+              <li v-show="role !== 'ADMIN'">
                 <hr class="dropdown-divider" />
               </li>
               <li>
@@ -126,7 +123,12 @@ export default {
     },
   },
   computed: {
-    ...mapWritableState(useAuthUserStore, ["currentUser", "authorization"]),
+    ...mapWritableState(useAuthUserStore, [
+      "currentUser",
+      "authorization",
+      "isAuthenticated",
+      "role",
+    ]),
     ...mapWritableState(useMessagesStore, ["errorMessage", "successMessage"]),
   },
   watch: {

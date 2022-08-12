@@ -19,7 +19,7 @@
             <div></div>
             <div class="col-md-4">
                 <label for="password" class="form-label">Mot de passe</label>
-                <input @input="passwordRepeatError=false" v-model.trim="user.password" type="password"
+                <input @input="passwordRepeatError = false" v-model.trim="user.password" type="password"
                     class="form-control" id="password" required>
                 <div class="error" :class="{ fieldError: passwordPresentError }">
                     Le mot de passe est obligatoire.
@@ -30,8 +30,8 @@
             </div>
             <div class="col-md-4">
                 <label for="passwordRepeat" class="form-label">Veuillez ressaisir le mot de passe</label>
-                <input @input="passwordRepeatError = false" v-model="passwordRepeat" type="password" class="form-control"
-                    id="passwordRepeat" required>
+                <input @input="passwordRepeatError = false" v-model="passwordRepeat" type="password"
+                    class="form-control" id="passwordRepeat" required>
                 <div class="error" :class="{ fieldError: passwordRepeatError }">
                     Le mot de passe est différent.
                 </div>
@@ -58,58 +58,72 @@ import { useMessagesStore } from "../stores/messagesStore";
 import { mapWritableState } from "pinia";
 
 export default {
-    name: "SignUpComponent",
-    data() {
-        return {
-            user: {},
-            passwordRepeat: null,
-            mustCheck: false,
-            idError: false,
-            userNameError: false,
-            passwordPresentError: false,
-            passwordLengthError: false,
-            passwordRepeatError: false,
-            securityCodeError: false,
-        };
-    },
-    methods: {
-        checkForm() {
-            if (this.mustCheck) {
-                this.idError = !this.user.id;
-                this.userNameError = !this.user.username;
-                this.passwordPresentError = !this.user.password;
-                this.passwordLengthError = this.user.password ? this.user.password.length < 4 : false;
-                this.securityCodeError = !this.user.securityCode;
+  name: "SignUpComponent",
+  data() {
+    return {
+      user: {
+        id: "",
+        username: "",
+        password: "",
+        securityCode: "",
+      },
+      passwordRepeat: "",
+      mustCheck: false,
+      idError: false,
+      userNameError: false,
+      passwordPresentError: false,
+      passwordLengthError: false,
+      passwordRepeatError: false,
+      securityCodeError: false,
+    };
+  },
+  methods: {
+    checkForm() {
+      this.user.id = this.user.id.toUpperCase();
+      if (this.mustCheck) {
+        this.idError = !this.user.id;
+        this.userNameError = !this.user.username;
+        this.passwordPresentError = !this.user.password;
+        this.passwordLengthError = this.user.password
+          ? this.user.password.length < 4
+          : false;
+        this.securityCodeError = !this.user.securityCode;
 
-                return !this.IdError && !this.userNameError && !this.passwordPresentError && !this.passwordLengthError && !this.securityCodeError;
-            }
-        },
-        async submitSignUp() {
-            this.mustCheck = true;
-            let passwordsEqual = this.passwordRepeat == this.user.password;
-            if (!passwordsEqual) {
-                this.passwordRepeatError =true;
-            }
-            if (this.checkForm() && passwordsEqual) {
-                try {
-                    await Service.signUp(this.user);
-                    this.successMessage =
-                        "Le compte a bien été créé. Veuillez vous connecter.";
-                    this.$router.push("/");
-                } catch (error) {
-                    console.error(error);
-                    if (error.response.status === 406) {
-                        this.errorMessage = Object.values(error.response.data).join(", ");
-                    } else {
-                        this.errorMessage = error.response.data.message;
-                    }
-                }
-            }
-        },
+        return (
+          !this.IdError &&
+          !this.userNameError &&
+          !this.passwordPresentError &&
+          !this.passwordLengthError &&
+          !this.securityCodeError
+        );
+      }
     },
-    computed: {
-        ...mapWritableState(useMessagesStore, ["successMessage", "errorMessage"]),
+    async submitSignUp() {
+      this.mustCheck = true;
+      let passwordsEqual = this.passwordRepeat == this.user.password;
+      if (!passwordsEqual) {
+        this.passwordRepeatError = true;
+      }
+      if (this.checkForm() && passwordsEqual) {
+        try {
+          await Service.signUp(this.user);
+          this.successMessage =
+            "Le compte a bien été créé. Veuillez vous connecter.";
+          this.$router.push("/");
+        } catch (error) {
+          console.error(error);
+          if (error.response.status === 406) {
+            this.errorMessage = Object.values(error.response.data).join(", ");
+          } else {
+            this.errorMessage = error.response.data.message;
+          }
+        }
+      }
     },
+  },
+  computed: {
+    ...mapWritableState(useMessagesStore, ["successMessage", "errorMessage"]),
+  },
 };
 </script>
 
