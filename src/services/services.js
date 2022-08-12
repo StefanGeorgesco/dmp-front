@@ -3,7 +3,7 @@ import { Buffer } from "buffer";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 
 axios.interceptors.request.use((request) => {
-  const store = new useAuthUserStore();
+  const store = useAuthUserStore();
 
   if (store.authorization) {
     request.headers.common.Authorization = store.authorization;
@@ -30,6 +30,10 @@ export class Service {
 
   static signUp(user) {
     return axios.post(`${baseUrl}/user`, user);
+  }
+
+  static addPatientFile(patientFile) {
+    return axios.post(`${baseUrl}/patient-file`, patientFile);
   }
 
   static getPatientFileDetails() {

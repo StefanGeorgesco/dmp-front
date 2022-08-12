@@ -3,14 +3,14 @@
     <div class="container">
         <form @submit.prevent="submitSignUp" @input="checkForm" class="row g-3 needs-validation" novalidate>
             <div class="col-md-4">
-                <label for="id" class="form-label">Identifiant</label>
+                <label for="id" class="form-label">* Identifiant</label>
                 <input v-model.trim="user.id" type="text" class="form-control" id="id" required>
                 <div class="error" :class="{ fieldError: idError }">
                     L'identifiant est obligatoire.
                 </div>
             </div>
             <div class="col-md-4">
-                <label for="nom-utilisateur" class="form-label">Nom d'utilisateur</label>
+                <label for="nom-utilisateur" class="form-label">* Nom d'utilisateur</label>
                 <input v-model.trim="user.username" type="text" class="form-control" id="nom-utlisateur" required>
                 <div class="error" :class="{ fieldError: userNameError }">
                     Le nom d'utilisateur est obligatoire.
@@ -18,7 +18,7 @@
             </div>
             <div></div>
             <div class="col-md-4">
-                <label for="password" class="form-label">Mot de passe</label>
+                <label for="password" class="form-label">* Mot de passe</label>
                 <input @input="passwordRepeatError = false" v-model.trim="user.password" type="password"
                     class="form-control" id="password" required>
                 <div class="error" :class="{ fieldError: passwordPresentError }">
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <label for="passwordRepeat" class="form-label">Veuillez ressaisir le mot de passe</label>
+                <label for="passwordRepeat" class="form-label">* Veuillez ressaisir le mot de passe</label>
                 <input @input="passwordRepeatError = false" v-model="passwordRepeat" type="password"
                     class="form-control" id="passwordRepeat" required>
                 <div class="error" :class="{ fieldError: passwordRepeatError }">
@@ -38,7 +38,7 @@
             </div>
             <div></div>
             <div class="col-md-4">
-                <label for="security-code" class="form-label">Code de sécurité</label>
+                <label for="security-code" class="form-label">* Code de sécurité</label>
                 <input v-model.trim="user.securityCode" type="text" class="form-control" id="security-code" required>
                 <div class="error" :class="{ fieldError: securityCodeError }">
                     Le code de sécurité est obligatoire.
@@ -127,7 +127,7 @@ export default {
 };
 </script>
 
-<style scope>
+<style scoped>
 .error {
   visibility: hidden;
 }

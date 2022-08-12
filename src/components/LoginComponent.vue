@@ -38,7 +38,7 @@ export default {
         this.currentUser = response.data;
         this.authorization = response.headers.authorization;
         sessionStorage.setItem("userdetails", JSON.stringify(response.data));
-        sessionStorage.setItem("Authorization", response.headers.authorization);
+        sessionStorage.setItem("authorization", response.headers.authorization);
         this.$router.push("/");
       } catch (error) {
         console.log(error);
