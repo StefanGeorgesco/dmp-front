@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { useAuthUserStore } from '../stores/authUserStore.js';
+import { useAuthUserStore } from "../stores/authUserStore.js";
 import HomeComponent from "../components/HomeComponent.vue";
 import LoginComponent from "../components/LoginComponent.vue";
 import PatientFileComponent from "../components/PatientFileComponent.vue";
@@ -36,11 +36,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  
   const store = new useAuthUserStore();
 
-  if (to.name !== 'login' && !store.currentUser.id) next({ name: 'login' })
-  else next()
-})
+  if (to.name !== "login" && !store.currentUser.id) next({ name: "login" });
+  else next();
+});
 
 export default router;

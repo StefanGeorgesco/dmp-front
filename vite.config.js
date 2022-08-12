@@ -7,17 +7,17 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   server: {
     proxy: {
-      '^/dmp': {
-        target: 'http://localhost:8080',
+      "^/dmp": {
+        target: "http://localhost:8080",
         ws: true,
-        changeOrigin: true
-      }
-    }
+        changeOrigin: true,
+      },
+    },
   },
   plugins: [vue()],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
-  }
+  },
 });
