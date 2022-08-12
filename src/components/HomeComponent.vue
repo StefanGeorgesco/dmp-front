@@ -1,3 +1,3 @@
 <template>
-  <h1>Bienvenue sur le dossier médical partagé.</h1>
+  <h2>Bienvenue !</h2>
 </template>

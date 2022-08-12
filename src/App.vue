@@ -1,90 +1,72 @@
+<!-- eslint-disable prettier/prettier -->
 <template>
   <header>
-    <nav class="navbar navbar-expand-lg bg-light">
-      <div class="container-fluid">
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <RouterLink
-                v-show="currentUser.id && currentUser.role === 'ROLE_ADMIN'"
-                class="nav-link"
-                to="/manage-doctors"
-              >
-                Médecins
-              </RouterLink>
-            </li>
-            <li class="nav-item">
-              <RouterLink
-                v-show="currentUser.id && currentUser.role === 'ROLE_ADMIN'"
-                class="nav-link"
-                to="/manage-patients"
-              >
-                Patients
-              </RouterLink>
-            </li>
-            <li v-show="currentUser.id" class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                {{ currentUser.username }}
-              </a>
-              <ul class="dropdown-menu">
-                <li>
-                  <RouterLink
-                    v-show="currentUser.role !== 'ROLE_ADMIN'"
-                    class="dropdown-item"
-                    to="/manage-personal-data"
-                  >
-                    Mes données personnelles</RouterLink
-                  >
-                </li>
-                <li>
-                  <hr
-                    v-show="currentUser.role !== 'ROLE_ADMIN'"
-                    class="dropdown-divider"
-                  />
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#" @click="logout"
-                    >Déconnexion</a
-                  >
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-    <div class="container">
-      <transition name="errorMessageTransition">
-        <div v-show="errorMessage" class="alert alert-danger" role="alert">
-          {{ errorMessage }}
-        </div>
-      </transition>
-      <transition name="successMessageTransition">
-        <div v-show="successMessage" class="alert alert-success" role="alert">
-          {{ successMessage }}
-        </div>
-      </transition>
-    </div>
+    <h1>Dossier médical partagé</h1>
   </header>
+  <nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+      <button v-show="currentUser.id" class=" navbar-toggler" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li v-show="currentUser.id" class="nav-item">
+            <RouterLink class="nav-link" to="/">
+              <i class="fa-solid fa-house"></i>
+            </RouterLink>
+          </li>
+          <li class="nav-item">
+            <RouterLink v-show="currentUser.id && currentUser.role === 'ROLE_ADMIN'" class="nav-link"
+              to="/manage-doctors">
+              Médecins
+            </RouterLink>
+          </li>
+          <li class="nav-item" v-show="currentUser.id && currentUser.role === 'ROLE_ADMIN'">
+            <RouterLink class="nav-link" to="/manage-patients">
+              Patients
+            </RouterLink>
+          </li>
+          <li v-show="currentUser.id" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ currentUser.username }}
+            </a>
+            <ul class="dropdown-menu">
+              <li v-show="currentUser.role !== 'ROLE_ADMIN'">
+                <RouterLink class="dropdown-item" to="/manage-personal-data">
+                  Mes données personnelles</RouterLink>
+              </li>
+              <li v-show="currentUser.role !== 'ROLE_ADMIN'">
+                <hr class="dropdown-divider" />
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" @click="logout">Déconnexion</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
   <main>
-    <RouterView />
+    <section>
+      <div class="container">
+        <transition name="errorMessageTransition">
+          <div v-show="errorMessage" class="alert alert-danger" role="alert">
+            {{ errorMessage }}
+          </div>
+        </transition>
+        <transition name="successMessageTransition">
+          <div v-show="successMessage" class="alert alert-success" role="alert">
+            {{ successMessage }}
+          </div>
+        </transition>
+      </div>
+    </section>
+    <section>
+      <RouterView />
+    </section>
   </main>
 </template>
 
