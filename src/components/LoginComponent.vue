@@ -29,6 +29,7 @@
 <script>
 import { Service } from "../services/services.js";
 import { useAuthUserStore } from "../stores/authUserStore.js";
+import { useMessagesStore } from "../stores/messagesStore";
 import { mapWritableState } from "pinia";
 
 export default {
@@ -54,11 +55,8 @@ export default {
     },
   },
   computed: {
-    ...mapWritableState(useAuthUserStore, [
-      "currentUser",
-      "authorization",
-      "errorMessage",
-    ]),
+    ...mapWritableState(useAuthUserStore, ["currentUser", "authorization"]),
+    ...mapWritableState(useMessagesStore, ["errorMessage"]),
   },
 };
 </script>

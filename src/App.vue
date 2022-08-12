@@ -1,13 +1,19 @@
-<!-- eslint-disable prettier/prettier -->
 <template>
   <header>
     <h1>Dossier médical partagé</h1>
   </header>
   <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
-      <button v-show="currentUser.id" class=" navbar-toggler" type="button" data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-        aria-label="Toggle navigation">
+      <button
+        v-show="currentUser.id"
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -18,30 +24,45 @@
             </RouterLink>
           </li>
           <li class="nav-item">
-            <RouterLink v-show="currentUser.id && currentUser.role === 'ROLE_ADMIN'" class="nav-link"
-              to="/manage-doctors">
+            <RouterLink
+              v-show="currentUser.id && currentUser.role === 'ROLE_ADMIN'"
+              class="nav-link"
+              to="/manage-doctors"
+            >
               Médecins
             </RouterLink>
           </li>
-          <li class="nav-item" v-show="currentUser.id && currentUser.role === 'ROLE_ADMIN'">
+          <li
+            class="nav-item"
+            v-show="currentUser.id && currentUser.role === 'ROLE_ADMIN'"
+          >
             <RouterLink class="nav-link" to="/manage-patients">
               Patients
             </RouterLink>
           </li>
           <li v-show="currentUser.id" class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
               {{ currentUser.username }}
             </a>
             <ul class="dropdown-menu">
               <li v-show="currentUser.role !== 'ROLE_ADMIN'">
                 <RouterLink class="dropdown-item" to="/manage-personal-data">
-                  Mes données personnelles</RouterLink>
+                  Mes données personnelles</RouterLink
+                >
               </li>
               <li v-show="currentUser.role !== 'ROLE_ADMIN'">
                 <hr class="dropdown-divider" />
               </li>
               <li>
-                <a class="dropdown-item" href="#" @click="logout">Déconnexion</a>
+                <a class="dropdown-item" href="#" @click="logout"
+                  >Déconnexion</a
+                >
               </li>
             </ul>
           </li>
@@ -74,6 +95,7 @@
 import { RouterLink, RouterView } from "vue-router";
 import { mapWritableState } from "pinia";
 import { useAuthUserStore } from "./stores/authUserStore.js";
+import { useMessagesStore } from "./stores/messagesStore.js";
 
 export default {
   name: "App",
@@ -99,12 +121,8 @@ export default {
     },
   },
   computed: {
-    ...mapWritableState(useAuthUserStore, [
-      "currentUser",
-      "authorization",
-      "errorMessage",
-      "successMessage",
-    ]),
+    ...mapWritableState(useAuthUserStore, ["currentUser", "authorization"]),
+    ...mapWritableState(useMessagesStore, ["errorMessage", "successMessage"]),
   },
   watch: {
     errorMessage() {
