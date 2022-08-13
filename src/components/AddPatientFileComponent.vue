@@ -1,6 +1,10 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div class="container">
+        <h2>Ajouter un dossier patient</h2>
+    </div>
+    <br>
+    <div class="container" :hidden="created">
         <form @submit.prevent="submitAddPatientFile" @input="checkForm" class="row g-3 needs-validation" novalidate>
             <div class="col-md-4">
                 <label for="id" class="form-label">* Identifiant</label>
@@ -102,10 +106,13 @@
         </form>
     </div>
     <div :hidden="!created">
-        <div>
-            {{ creationMessage }}
+        <div class="container">
+            <div>{{ creationMessage }} <span id="code">{{ creationCode }}</span></div>
         </div>
-        <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>
+        <div></div><br>
+        <div class="container">
+            <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>
+        </div>
     </div>
 </template>
 
@@ -113,7 +120,7 @@
 <script>
 import { Service } from "../services/services.js";
 import { useMessagesStore } from "../stores/messagesStore";
-import { mapWritableState } from "pinia";
+import { mapActions } from "pinia";
 
 export default {
     name: "AddPatientFileComponent",
@@ -121,6 +128,7 @@ export default {
         return {
             created: false,
             creationMessage: "",
+            creationCode: "",
             patientFile: {
                 id: "",
                 firstname: "",
@@ -191,23 +199,21 @@ export default {
             if (this.checkForm()) {
                 try {
                     let response = await Service.addPatientFile(this.patientFile);
-                    this.successMessage =
-                        "Le dossier patient a bien été créé.";
-                    this.creationMessage = `Le dossier patient ${response.data.id} pour ${response.data.firstname} ${response.data.lastname} a bien été créé. Veuillez transmettre ce code secret au patient afin qu'il puisse créer sont compte : ${response.data.securityCode}`;
+                    this.setSuccessMessage("Le dossier patient a bien été créé.");
+                    this.creationMessage = `Le dossier patient ${response.data.id} pour ${response.data.firstname} ${response.data.lastname} a bien été créé. Veuillez transmettre ce code secret au patient afin qu'il puisse créer sont compte : `;
+                    this.creationCode = `${response.data.securityCode}`;
                     this.created = true;
                 } catch (error) {
                     console.error(error);
                     if (error.response.status === 406) {
-                        this.errorMessage = Object.values(error.response.data).join(", ");
+                        this.setErrorMessage(Object.values(error.response.data).join(", "));
                     } else {
-                        this.errorMessage = error.response.data.message;
+                        this.setErrorMessage(error.response.data.message);
                     }
                 }
             }
         },
-    },
-    computed: {
-        ...mapWritableState(useMessagesStore, ["successMessage", "errorMessage"]),
+        ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
     },
 };
 </script>
@@ -220,5 +226,8 @@ export default {
 .error.fieldError {
   display: initial;
   color: red;
+}
+#code {
+  color: blue;
 }
 </style>

@@ -89,7 +89,7 @@
 
 <script>
 import { RouterLink, RouterView } from "vue-router";
-import { mapWritableState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useAuthUserStore } from "./stores/authUserStore.js";
 import { useMessagesStore } from "./stores/messagesStore.js";
 
@@ -98,12 +98,6 @@ export default {
   components: {
     RouterLink,
     RouterView,
-  },
-  data() {
-    return {
-      successMessagetimeOut: null,
-      errorMessagetimeOut: null,
-    };
   },
   created() {
     if (sessionStorage.getItem("userdetails")) {
@@ -129,21 +123,7 @@ export default {
       "isAuthenticated",
       "role",
     ]),
-    ...mapWritableState(useMessagesStore, ["errorMessage", "successMessage"]),
-  },
-  watch: {
-    errorMessage() {
-      clearTimeout(this.errorMessagetimeOut);
-      this.errorMessagetimeOut = setTimeout(() => {
-        this.errorMessage = "";
-      }, 3000);
-    },
-    successMessage() {
-      clearTimeout(this.successMessagetimeOut);
-      this.successMessagetimeOut = setTimeout(() => {
-        this.successMessage = "";
-      }, 3000);
-    },
+    ...mapState(useMessagesStore, ["errorMessage", "successMessage"]),
   },
 };
 </script>

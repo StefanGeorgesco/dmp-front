@@ -5,5 +5,23 @@ export const useMessagesStore = defineStore({
   state: () => ({
     errorMessage: "",
     successMessage: "",
+    errorMessageTimeout: null,
+    successMessageTimeout: null,
   }),
+  actions: {
+    setErrorMessage(message) {
+      clearTimeout(this.errorMessageTimeout);
+      this.errorMessageTimeout = setTimeout(() => {
+        this.errorMessage = "";
+      }, 3000);
+      this.errorMessage = message;
+    },
+    setSuccessMessage(message) {
+      clearTimeout(this.successMessageTimeout);
+      this.successMessageTimeout = setTimeout(() => {
+        this.successMessage = "";
+      }, 3000);
+      this.successMessage = message;
+    },
+  },
 });

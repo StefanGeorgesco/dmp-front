@@ -1,6 +1,10 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <div class="container">
+    <h2>S'identifier</h2>
+  </div>
+  <br>
+  <div class="container">
     <form @submit.prevent="submitLogin">
       <div class="mb-3">
         <label for="username" class="form-label">identifiant</label>
@@ -22,7 +26,7 @@
 import { Service } from "../services/services.js";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapActions } from "pinia";
 
 export default {
   name: "LoginComponent",
@@ -30,6 +34,9 @@ export default {
     return {
       user: {},
     };
+  },
+  computed: {
+    ...mapWritableState(useAuthUserStore, ["currentUser", "authorization"]),
   },
   methods: {
     async submitLogin() {
@@ -42,13 +49,10 @@ export default {
         this.$router.push("/");
       } catch (error) {
         console.log(error);
-        this.errorMessage = "identifiant ou mot de passe incorrect";
+        this.setErrorMessage("identifiant ou mot de passe incorrect");
       }
     },
-  },
-  computed: {
-    ...mapWritableState(useAuthUserStore, ["currentUser", "authorization"]),
-    ...mapWritableState(useMessagesStore, ["errorMessage"]),
+    ...mapActions(useMessagesStore, ["setErrorMessage"]),
   },
 };
 </script>
