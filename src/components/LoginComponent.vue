@@ -23,10 +23,9 @@
 </template>
 
 <script>
-import { Service } from "../services/services.js";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore";
-import { mapWritableState, mapActions } from "pinia";
+import { mapActions } from "pinia";
 
 export default {
   name: "LoginComponent",
@@ -35,17 +34,10 @@ export default {
       user: {},
     };
   },
-  computed: {
-    ...mapWritableState(useAuthUserStore, ["currentUser", "authorization"]),
-  },
   methods: {
     async submitLogin() {
       try {
-        let response = await Service.login(this.user);
-        this.currentUser = response.data;
-        this.authorization = response.headers.authorization;
-        sessionStorage.setItem("userdetails", JSON.stringify(response.data));
-        sessionStorage.setItem("authorization", response.headers.authorization);
+        await this.login(this.user);
         this.$router.push("/");
       } catch (error) {
         console.log(error);
@@ -53,6 +45,7 @@ export default {
       }
     },
     ...mapActions(useMessagesStore, ["setErrorMessage"]),
+    ...mapActions(useAuthUserStore, ["login"]),
   },
 };
 </script>

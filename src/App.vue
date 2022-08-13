@@ -44,7 +44,7 @@
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              {{ currentUser.username }}
+              {{ username }}
             </a>
             <ul class="dropdown-menu">
               <li v-show="role !== 'ADMIN'">
@@ -56,7 +56,7 @@
                 <hr class="dropdown-divider" />
               </li>
               <li>
-                <a class="dropdown-item" href="#" @click="logout"
+                <a class="dropdown-item" href="#" @click="doLogout"
                   >Déconnexion</a
                 >
               </li>
@@ -89,7 +89,7 @@
 
 <script>
 import { RouterLink, RouterView } from "vue-router";
-import { mapState, mapWritableState } from "pinia";
+import { mapState, mapActions } from "pinia";
 import { useAuthUserStore } from "./stores/authUserStore.js";
 import { useMessagesStore } from "./stores/messagesStore.js";
 
@@ -100,30 +100,18 @@ export default {
     RouterView,
   },
   created() {
-    if (sessionStorage.getItem("userdetails")) {
-      this.currentUser = JSON.parse(sessionStorage.getItem("userdetails"));
-    }
-    if (sessionStorage.getItem("authorization")) {
-      this.authorization = sessionStorage.getItem("authorization");
-    }
-  },
-  methods: {
-    logout() {
-      this.currentUser = {};
-      this.authorization = null;
-      sessionStorage.removeItem("userdetails");
-      sessionStorage.removeItem("authorization");
-      this.$router.push("/");
-    },
+    this.reloadAuth();
   },
   computed: {
-    ...mapWritableState(useAuthUserStore, [
-      "currentUser",
-      "authorization",
-      "isAuthenticated",
-      "role",
-    ]),
     ...mapState(useMessagesStore, ["errorMessage", "successMessage"]),
+    ...mapState(useAuthUserStore, ["isAuthenticated", "role", "username"]),
+  },
+  methods: {
+    doLogout() {
+      this.logout();
+      this.$router.push("/");
+    },
+    ...mapActions(useAuthUserStore, ["reloadAuth", "logout"]),
   },
 };
 </script>
