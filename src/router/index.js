@@ -4,6 +4,7 @@ import HomeComponent from "../components/HomeComponent.vue";
 import LoginComponent from "../components/LoginComponent.vue";
 import SignUpComponent from "../components/SignUpComponent.vue";
 import AddPatientFileComponent from "../components/AddPatientFileComponent.vue";
+import AddDoctorComponent from "../components/AddDoctorComponent.vue";
 import PatientFileComponent from "../components/PatientFileComponent.vue";
 
 const roleGuard = (roles) => {
@@ -40,6 +41,12 @@ const router = createRouter({
       name: "add-patient-file",
       component: AddPatientFileComponent,
       beforeEnter: roleGuard(["DOCTOR"]),
+    },
+    {
+      path: "/add-doctor",
+      name: "add-doctor",
+      component: AddDoctorComponent,
+      beforeEnter: roleGuard(["ADMIN"]),
     },
     {
       path: "/manage-doctors",

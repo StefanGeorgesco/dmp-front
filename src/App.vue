@@ -1,18 +1,12 @@
+<!-- eslint-disable prettier/prettier -->
 <template>
   <header>
     <h1>Dossier médical partagé</h1>
   </header>
   <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -22,45 +16,35 @@
               <i class="fa-solid fa-house"></i>
             </RouterLink>
           </li>
-          <li class="nav-item">
-            <RouterLink
-              v-show="isAuthenticated && role === 'ADMIN'"
-              class="nav-link"
-              to="/manage-doctors"
-            >
+          <li v-show="isAuthenticated && role === 'ADMIN'" class="nav-item">
+            <RouterLink class="nav-link" to="/manage-doctors">
               Médecins
             </RouterLink>
           </li>
-          <li class="nav-item" v-show="isAuthenticated && role === 'ADMIN'">
+          <li v-show="isAuthenticated && role === 'ADMIN'" class="nav-item">
             <RouterLink class="nav-link" to="/manage-patients">
               Patients
             </RouterLink>
           </li>
           <li v-show="isAuthenticated" class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               {{ username }}
             </a>
             <ul class="dropdown-menu">
               <li v-show="role !== 'ADMIN'">
                 <RouterLink class="dropdown-item" to="/manage-personal-data">
-                  Mes données personnelles</RouterLink
-                >
+                  Mes données personnelles</RouterLink>
               </li>
               <li v-show="role !== 'ADMIN'">
                 <hr class="dropdown-divider" />
               </li>
               <li>
-                <a class="dropdown-item" href="#" @click="doLogout"
-                  >Déconnexion</a
-                >
+                <a class="dropdown-item" href="#" @click="doLogout">Déconnexion</a>
               </li>
             </ul>
+          </li>
+          <li v-if="isAuthenticated" class="nav-item">
+            <i class="nav-link">{{ roles[role] }}</i>
           </li>
         </ul>
       </div>
@@ -99,6 +83,15 @@ export default {
     RouterLink,
     RouterView,
   },
+  data() {
+    return {
+      roles: {
+        ADMIN: "Administrateur",
+        DOCTOR: "Médecin",
+        PATIENT: "Patient",
+      }
+    }
+  },
   created() {
     this.reloadAuth();
   },
@@ -120,7 +113,7 @@ export default {
 nav,
 .container,
 .alert {
-  height: 4em;
+  height: 3em;
 }
 
 .errorMessageTransition-enter-from,

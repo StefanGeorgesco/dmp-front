@@ -1,54 +1,52 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div class="container">
-        <h2>Ajouter un dossier patient</h2>
+        <h2>Ajouter un médecin</h2>
     </div>
     <br>
     <div class="container" :hidden="created">
-        <form @submit.prevent="submitAddPatientFile" @input="checkForm" class="row g-3 needs-validation" novalidate>
+        <form @submit.prevent="submitAddDoctor" @input="checkForm" class="row g-3 needs-validation" novalidate>
             <div class="col-md-4">
                 <label for="id" class="form-label">* Identifiant</label>
-                <input v-model.trim="patientFile.id" type="text" class="form-control" id="id" required>
+                <input v-model.trim="doctor.id" type="text" class="form-control" id="id" required>
                 <div class="error" :class="{ fieldError: idError }">
                     L'identifiant est obligatoire.
                 </div>
             </div>
             <div class="col-md-4">
                 <label for="prenom" class="form-label">* Prénom</label>
-                <input v-model.trim="patientFile.firstname" type="text" class="form-control" id="prenom" required>
+                <input v-model.trim="doctor.firstname" type="text" class="form-control" id="prenom" required>
                 <div class="error" :class="{ fieldError: firstnameError }">
                     Le prénom est obligatoire.
                 </div>
             </div>
             <div class="col-md-4">
                 <label for="nom" class="form-label">* Nom</label>
-                <input v-model.trim="patientFile.lastname" type="text" class="form-control" id="nom" required>
+                <input v-model.trim="doctor.lastname" type="text" class="form-control" id="nom" required>
                 <div class="error" :class="{ fieldError: lastnameError }">
                     Le nom est obligatoire.
                 </div>
             </div>
             <div></div>
-            <div class="col-md-4">
-                <label for="date_de_naissance" class="form-label">* Date de naissance</label>
-                <input v-model.trim="patientFile.dateOfBirth" type="date" class="form-control" id="date_de_naissance"
-                    required>
-                <div class="error" :class="{ fieldError: dateOfBirthPresentError }">
-                    La date de naissance est obligatoire.
-                </div>
-                <div class="error" :class="{ fieldError: dateOfBirthPastOrPresentError }">
-                    La date de naissance ne peut pas être dans le futur.
+            <div class="col-md-12">
+                <label class="form-label">* Spécialités</label>
+                <TagSelectorComponent @newSelection="updateSelection($event, selection)"
+                    :options="specialties" />
+                <div class="error" :class="{ fieldError: specialtiesError }">
+                    Le médecin doit avoir au moins une spécialité.
                 </div>
             </div>
+            <div></div>
             <div class="col-md-4">
                 <label for="telephone" class="form-label">* Numéro de téléphone</label>
-                <input v-model.trim="patientFile.phone" type="text" class="form-control" id="telephone" required>
+                <input v-model.trim="doctor.phone" type="text" class="form-control" id="telephone" required>
                 <div class="error" :class="{ fieldError: phoneError }">
                     Le numéro de téléphone est obligatoire.
                 </div>
             </div>
             <div class="col-md-4">
                 <label for="email" class="form-label">* Adresse e-mail</label>
-                <input v-model="patientFile.email" type="mail" class="form-control" id="email" required>
+                <input v-model="doctor.email" type="mail" class="form-control" id="email" required>
                 <div class="error" :class="{ fieldError: emailPresentError }">
                     L'adresse email est obligatoire.
                 </div>
@@ -61,31 +59,29 @@
                 <legend>Adresse</legend>
                 <div class="col-md-4">
                     <label for="rue1" class="form-label">* Numéro et voie</label>
-                    <input v-model.trim="patientFile.address.street1" type="text" class="form-control" id="rue1"
-                        required>
+                    <input v-model.trim="doctor.address.street1" type="text" class="form-control" id="rue1" required>
                     <div class="error" :class="{ fieldError: street1Error }">
                         La voie est obligatoire.
                     </div>
                 </div>
                 <div class="col-md-4">
                     <label for="rue2" class="form-label">Complément d'adresse</label>
-                    <input v-model.trim="patientFile.address.street2" type="text" class="form-control" id="rue2">
+                    <input v-model.trim="doctor.address.street2" type="text" class="form-control" id="rue2">
                 </div>
                 <div class="col-md-4">
                     <label for="commune" class="form-label">* Commune</label>
-                    <input v-model.trim="patientFile.address.city" type="text" class="form-control" id="commune"
-                        required>
+                    <input v-model.trim="doctor.address.city" type="text" class="form-control" id="commune" required>
                     <div class="error" :class="{ fieldError: cityError }">
                         La commune est obligatoire.
                     </div>
                 </div>
                 <div class="col-md-4">
                     <label for="etat" class="form-label">Etat ou région</label>
-                    <input v-model.trim="patientFile.address.state" type="text" class="form-control" id="etat">
+                    <input v-model.trim="doctor.address.state" type="text" class="form-control" id="etat">
                 </div>
                 <div class="col-md-4">
                     <label for="code_postal" class="form-label">* Code postal</label>
-                    <input v-model.trim="patientFile.address.zipcode" type="text" class="form-control" id="code_postal"
+                    <input v-model.trim="doctor.address.zipcode" type="text" class="form-control" id="code_postal"
                         required>
                     <div class="error" :class="{ fieldError: zipcodeError }">
                         Le code postal est obligatoire.
@@ -93,8 +89,7 @@
                 </div>
                 <div class="col-md-4">
                     <label for="pays" class="form-label">* Pays</label>
-                    <input v-model.trim="patientFile.address.country" type="text" class="form-control" id="pays"
-                        required>
+                    <input v-model.trim="doctor.address.country" type="text" class="form-control" id="pays" required>
                     <div class="error" :class="{ fieldError: countryError }">
                         Le pays est obligatoire.
                     </div>
@@ -121,19 +116,24 @@
 import { Service } from "../services/services.js";
 import { useMessagesStore } from "../stores/messagesStore";
 import { mapActions } from "pinia";
+import TagSelectorComponent from "./TagSelectorComponent.vue";
 
 export default {
-    name: "AddPatientFileComponent",
+    name: "AddDoctorComponent",
+    components: {
+        TagSelectorComponent,
+    },
     data() {
         return {
             created: false,
             creationMessage: "",
             creationCode: "",
-            patientFile: {
+            specialties: [],
+            doctor: {
                 id: "",
                 firstname: "",
                 lastname: "",
-                dateOfBirth: "",
+                specialties: [],
                 phone: "",
                 email: "",
                 address: {
@@ -149,8 +149,7 @@ export default {
             idError: false,
             firstnameError: false,
             lastnameError: false,
-            dateOfBirthPresentError: false,
-            dateOfBirthPastOrPresentError: false,
+            specialtiesError: false,
             phoneError: false,
             emailPresentError: false,
             emailFormatError: false,
@@ -160,29 +159,48 @@ export default {
             countryError: false,
         }
     },
+    computed: {
+        filteredSpecialties() {
+            return this.specialties.filter(specialty => specialty.id.toLowerCase().indexOf(this.specialtySearchText.toLowerCase()) !== -1 ||
+                specialty.description.toLowerCase().indexOf(this.specialtySearchText.toLowerCase()) !== -1
+            );
+        },
+    },
+    async created() {
+        try {
+            let response = await Service.getSpecialties();
+            this.specialties = response.data;
+        } catch (error) {
+            this.setErrorMessage(error.response.data.message);
+        }
+
+    },
     methods: {
+        updateSelection(selection) {
+            this.doctor.specialties = selection;
+            this.checkForm();
+        },
         checkForm() {
-            this.patientFile.id = this.patientFile.id.toUpperCase();
+            this.doctor.id = this.doctor.id.toUpperCase();
             if (this.mustCheck) {
-                this.idError = !this.patientFile.id;
-                this.firstnameError = !this.patientFile.firstname;
-                this.lastnameError = !this.patientFile.lastname;
-                this.dateOfBirthPresentError = !this.patientFile.dateOfBirth;
-                this.dateOfBirthPastOrPresentError = new Date(this.patientFile.dateOfBirth) > new Date();
-                this.phoneError = !this.patientFile.phone;
-                this.emailPresentError = !this.patientFile.email;
-                this.emailFormatError = this.patientFile.email &&!new RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, 'g').test(this.patientFile.email);
-                this.street1Error = !this.patientFile.address.street1;
-                this.cityError = !this.patientFile.address.city;
-                this.zipcodeError = !this.patientFile.address.zipcode;
-                this.countryError = !this.patientFile.address.country;
+                this.idError = !this.doctor.id;
+                this.firstnameError = !this.doctor.firstname;
+                this.lastnameError = !this.doctor.lastname;
+                this.specialtiesError = this.doctor.specialties.length < 1;
+                this.phoneError = !this.doctor.phone;
+                this.emailPresentError = !this.doctor.email;
+                this.emailFormatError = this.doctor.email && !new RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, 'g').test(this.doctor.email);
+                this.street1Error = !this.doctor.address.street1;
+                this.cityError = !this.doctor.address.city;
+                this.zipcodeError = !this.doctor.address.zipcode;
+                this.countryError = !this.doctor.address.country;
+                this.referringDoctorIdError = !this.doctor.referringDoctorId;
 
                 return (
                     !this.IdError &&
                     !this.firstnameError &&
                     !this.lastnameError &&
-                    !this.dateOfBirthPresentError &&
-                    !this.dateOfBirthPastOrPresentError &&
+                    !this.specialtiesError &&
                     !this.phoneError &&
                     !this.emailPresentError &&
                     !this.emailFormatError &&
@@ -190,16 +208,16 @@ export default {
                     !this.cityError &&
                     !this.zipcodeError &&
                     !this.countryError
-                 );
+                );
             }
         },
-        async submitAddPatientFile() {
+        async submitAddDoctor() {
             this.mustCheck = true;
             if (this.checkForm()) {
                 try {
-                    let response = await Service.addPatientFile(this.patientFile);
-                    this.setSuccessMessage("Le dossier patient a bien été créé.");
-                    this.creationMessage = `Le dossier patient ${response.data.id} pour ${response.data.firstname} ${response.data.lastname} a bien été créé. Veuillez transmettre ce code secret au patient afin qu'il puisse créer sont compte : `;
+                    let response = await Service.addDoctor(this.doctor);
+                    this.setSuccessMessage("Le médecin a bien été créé.");
+                    this.creationMessage = `Le dossier ${response.data.id} pour ${response.data.firstname} ${response.data.lastname} a bien été créé. Veuillez transmettre ce code secret au médecin afin qu'il puisse créer sont compte : `;
                     this.creationCode = `${response.data.securityCode}`;
                     this.created = true;
                 } catch (error) {
@@ -226,6 +244,7 @@ export default {
   display: initial;
   color: red;
 }
+
 #code {
   color: blue;
 }

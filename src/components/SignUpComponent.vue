@@ -52,6 +52,8 @@
         <button class="btn btn-primary" type="submit">Entrer</button>
       </div>
     </form>
+    <br>
+    <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>
   </div>
 </template>
 
