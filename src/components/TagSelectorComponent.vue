@@ -78,6 +78,10 @@ export default {
     font-weight: bold;
 }
 
+.tag-input>.tag>span:hover {
+    cursor: pointer;
+}
+
 .tag-input>input {
     border: none;
     outline: none;    flex: 1 0 auto;
