@@ -1,7 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <div class="container">
-    <h2>Mes données personnelles</h2>
+    <h2>Données personnelles</h2>
   </div>
   <br>
   <div class="container">

@@ -22,7 +22,7 @@
             </RouterLink>
           </li>
           <li v-show="isAuthenticated && role === 'ADMIN'" class="nav-item">
-            <RouterLink class="nav-link" to="/manage-patients">
+            <RouterLink class="nav-link" to="/manage-patient-files">
               Patients
             </RouterLink>
           </li>

@@ -3,9 +3,11 @@ import { useAuthUserStore } from "../stores/authUserStore.js";
 import HomeComponent from "../components/HomeComponent.vue";
 import LoginComponent from "../components/LoginComponent.vue";
 import SignUpComponent from "../components/SignUpComponent.vue";
+import PersonalDataComponent from "../components/PersonalDataComponent.vue";
 import AddPatientFileComponent from "../components/AddPatientFileComponent.vue";
 import AddDoctorComponent from "../components/AddDoctorComponent.vue";
-import PersonalDataComponent from "../components/PersonalDataComponent.vue";
+import ManageDoctorsComponent from "../components/ManageDoctorsComponent.vue";
+import ManagePatientFilesComponent from "../components/ManagePatientFilesComponent.vue";
 
 const roleGuard = (roles) => {
   return () => {
@@ -37,6 +39,13 @@ const router = createRouter({
       component: SignUpComponent,
     },
     {
+      path: "/personal-data",
+      name: "personal-data",
+      component: PersonalDataComponent,
+
+      beforeEnter: roleGuard(["DOCTOR", "PATIENT"]),
+    },
+    {
       path: "/add-patient-file",
       name: "add-patient-file",
       component: AddPatientFileComponent,
@@ -51,17 +60,14 @@ const router = createRouter({
     {
       path: "/manage-doctors",
       name: "manage-doctors",
-      component: HomeComponent,
+      component: ManageDoctorsComponent,
+      beforeEnter: roleGuard(["ADMIN"]),
     },
     {
-      path: "/manage-patients",
-      name: "manage-patients",
-      component: HomeComponent,
-    },
-    {
-      path: "/personal-data",
-      name: "personal-data",
-      component: PersonalDataComponent,
+      path: "/manage-patient-files",
+      name: "manage-patient-files",
+      component: ManagePatientFilesComponent,
+      beforeEnter: roleGuard(["ADMIN", "DOCTOR"]),
     },
   ],
 });
