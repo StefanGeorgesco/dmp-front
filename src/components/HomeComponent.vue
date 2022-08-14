@@ -10,7 +10,7 @@
       </RouterLink>
     </div>
   </div>
-  <ManagePatientFilesComponent v-if="role === 'DOCTOR'" />
+  <ManageFilesComponent type="PATIENT" v-if="role === 'DOCTOR'" />
   <ViewPatientFileComponent v-if="role === 'PATIENT'" />
 </template>
 
@@ -18,13 +18,13 @@
 <script>
 import { mapState } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
-import ManagePatientFilesComponent from "./ManagePatientFilesComponent.vue";
+import ManageFilesComponent from "./ManageFilesComponent.vue";
 import ViewPatientFileComponent from "./ViewPatientFileComponent.vue";
 
 export default {
   name: "HomeComponent",
   components : {
-    ManagePatientFilesComponent, ViewPatientFileComponent,
+    ManageFilesComponent, ViewPatientFileComponent,
   },
   computed: {
     ...mapState(useAuthUserStore, ["role"]),
