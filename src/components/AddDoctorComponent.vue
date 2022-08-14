@@ -159,13 +159,6 @@ export default {
             countryError: false,
         }
     },
-    computed: {
-        filteredSpecialties() {
-            return this.specialties.filter(specialty => specialty.id.toLowerCase().indexOf(this.specialtySearchText.toLowerCase()) !== -1 ||
-                specialty.description.toLowerCase().indexOf(this.specialtySearchText.toLowerCase()) !== -1
-            );
-        },
-    },
     async created() {
         try {
             let response = await Service.getSpecialties();
@@ -194,7 +187,6 @@ export default {
                 this.cityError = !this.doctor.address.city;
                 this.zipcodeError = !this.doctor.address.zipcode;
                 this.countryError = !this.doctor.address.country;
-                this.referringDoctorIdError = !this.doctor.referringDoctorId;
 
                 return (
                     !this.IdError &&
