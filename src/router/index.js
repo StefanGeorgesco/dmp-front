@@ -5,7 +5,7 @@ import LoginComponent from "../components/LoginComponent.vue";
 import SignUpComponent from "../components/SignUpComponent.vue";
 import AddPatientFileComponent from "../components/AddPatientFileComponent.vue";
 import AddDoctorComponent from "../components/AddDoctorComponent.vue";
-import PatientFileComponent from "../components/PatientFileComponent.vue";
+import PersonalDataComponent from "../components/PersonalDataComponent.vue";
 
 const roleGuard = (roles) => {
   return () => {
@@ -59,9 +59,9 @@ const router = createRouter({
       component: HomeComponent,
     },
     {
-      path: "/manage-personal-data",
-      name: "manage-personal-data",
-      component: PatientFileComponent, // for test
+      path: "/personal-data",
+      name: "personal-data",
+      component: PersonalDataComponent,
     },
   ],
 });

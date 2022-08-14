@@ -1,7 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div class="container">
-        <h2>Ajouter un médecin</h2>
+        <h2>Créer un dossier de médecin</h2>
     </div>
     <br>
     <div class="container" :hidden="created">
@@ -30,8 +30,7 @@
             <div></div>
             <div class="col-md-12">
                 <label class="form-label">* Spécialités</label>
-                <TagSelectorComponent @newSelection="updateSelection($event, selection)"
-                    :options="specialties" />
+                <TagSelectorComponent @newSelection="updateSelection($event, selection)" :options="specialties" />
                 <div class="error" :class="{ fieldError: specialtiesError }">
                     Le médecin doit avoir au moins une spécialité.
                 </div>
@@ -55,7 +54,7 @@
                 </div>
             </div>
             <div></div>
-            <fieldset>
+            <fieldset class="row g-3">
                 <legend>Adresse</legend>
                 <div class="col-md-4">
                     <label for="rue1" class="form-label">* Numéro et voie</label>
@@ -96,18 +95,24 @@
                 </div>
             </fieldset>
             <div class="col-12">
-                <button class="btn btn-primary" type="submit">Entrer</button>
+                <button class="btn btn-primary" type="submit">Créer</button>
             </div>
         </form>
-    </div>
-    <div :hidden="!created">
-        <div class="container">
-            <div>{{ creationMessage }} <span id="code">{{ creationCode }}</span></div>
-        </div>
-        <div></div><br>
-        <div class="container">
+        <br>
+        <div class="col-12">
             <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>
         </div>
+        <br>
+    </div>
+    <div class="container" :hidden="!created">
+        <div class="col-12">
+            <div>{{ creationMessage }} <span id="code">{{ creationCode }}</span></div>
+        </div>
+        <br>
+        <div class="col-12">
+            <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>
+        </div>
+        <br>
     </div>
 </template>
 
@@ -166,7 +171,6 @@ export default {
         } catch (error) {
             this.setErrorMessage(error.response.data.message);
         }
-
     },
     methods: {
         updateSelection(selection) {
@@ -213,7 +217,6 @@ export default {
                     this.creationCode = `${response.data.securityCode}`;
                     this.created = true;
                 } catch (error) {
-                    console.error(error);
                     if (error.response.status === 406) {
                         this.setErrorMessage(Object.values(error.response.data).join(", "));
                     } else {

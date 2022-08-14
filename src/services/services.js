@@ -44,7 +44,19 @@ export class Service {
     return axios.get(`${baseUrl}/specialty`);
   }
 
+  static getDoctorDetails() {
+    return axios.get(`${baseUrl}/doctor/details`);
+  }
+
   static getPatientFileDetails() {
     return axios.get(`${baseUrl}/patient-file/details`);
+  }
+
+  static updateDoctorDetails(doctor) {
+    return axios.put(`${baseUrl}/doctor/details`, doctor);
+  }
+
+  static updatePatientFileDetails(patientFile) {
+    return axios.put(`${baseUrl}/patient-file/details`, patientFile);
   }
 }

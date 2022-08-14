@@ -7,11 +7,9 @@
         </div>
         <input ref="input" v-model="searchText" type="text">
         <div class="options-list" v-show="filteredOptions.length > 0">
-
             <div class="tag-option" v-for="o in filteredOptions" :key="o.id" @click="add(o)">
                 {{ o.id }} - {{ o.description }}
             </div>
-
         </div>
     </div>
 </template>
@@ -78,9 +76,6 @@ export default {
     margin: 0 0 0 1em;
     font-size: large;
     font-weight: bold;
-}
-
-.tag-input>input {
 }
 
 .tag-input>input {

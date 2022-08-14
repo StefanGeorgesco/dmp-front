@@ -14,11 +14,15 @@
         <label for="password" class="form-label">mot de passe</label>
         <input type="password" class="form-control" v-model="user.password" id="password" />
       </div>
-      <button type="submit" class="btn btn-primary">Entrer</button>
+      <div class="col-12">
+        <button class="btn btn-primary" type="submit">Entrer</button>
+      </div>
     </form>
     <br>
-    <RouterLink to="/sign-up" type="button" class="btn btn-light">S'enregistrer</RouterLink>
-    <br />
+    <div class="col-12">
+      <RouterLink to="/sign-up" type="button" class="btn btn-light">S'enregistrer</RouterLink>
+    </div>
+    <br>
   </div>
 </template>
 
@@ -40,7 +44,6 @@ export default {
         await this.login(this.user);
         this.$router.push("/");
       } catch (error) {
-        console.log(error);
         this.setErrorMessage("identifiant ou mot de passe incorrect");
       }
     },
@@ -50,4 +53,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

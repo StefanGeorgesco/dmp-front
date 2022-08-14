@@ -32,8 +32,8 @@
             </a>
             <ul class="dropdown-menu">
               <li v-show="role !== 'ADMIN'">
-                <RouterLink class="dropdown-item" to="/manage-personal-data">
-                  Mes données personnelles</RouterLink>
+                <RouterLink class="dropdown-item" to="/personal-data">
+                  Données personnelles</RouterLink>
               </li>
               <li v-show="role !== 'ADMIN'">
                 <hr class="dropdown-divider" />
@@ -110,10 +110,14 @@ export default {
 </script>
 
 <style scoped>
+.collapse.navbar-collapse {
+  background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity));
+  padding-left: 1em;
+}
 nav,
 .container,
 .alert {
-  height: 3em;
+  height: 3.75em;
 }
 
 .errorMessageTransition-enter-from,

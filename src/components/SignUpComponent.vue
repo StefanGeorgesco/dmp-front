@@ -49,11 +49,14 @@
         </div>
       </div>
       <div class="col-12">
-        <button class="btn btn-primary" type="submit">Entrer</button>
+        <button class="btn btn-primary" type="submit">S'enregistrer</button>
       </div>
     </form>
     <br>
-    <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>
+    <div class="col-12">
+      <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>
+    </div>
+    <br>
   </div>
 </template>
 
@@ -116,7 +119,6 @@ export default {
           this.setSuccessMessage("Le compte a bien été créé. Veuillez vous connecter.");
           this.$router.push("/");
         } catch (error) {
-          console.error(error);
           if (error.response.status === 406) {
             this.setErrorMessage(Object.values(error.response.data).join(", "));
           } else {
