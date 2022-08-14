@@ -59,4 +59,14 @@ export class Service {
   static updatePatientFileDetails(patientFile) {
     return axios.put(`${baseUrl}/patient-file/details`, patientFile);
   }
+
+  static findDoctorsByIdOrFirstnameOrLastname(q) {
+    let uri = encodeURI(`${baseUrl}/doctor?q=${q}`);
+    return axios.get(uri);
+  }
+
+  static findPatientFilesByIdOrFirstnameOrLastname(q) {
+    let uri = encodeURI(`${baseUrl}/patient-file?q=${q}`);
+    return axios.get(uri);
+  }
 }

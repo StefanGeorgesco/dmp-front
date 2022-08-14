@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="container">Visualisation d'un dossier patient...</div>
+  <div class="container">Visualiser un dossier patient...</div>
 </template>
 
 <!-- eslint-disable prettier/prettier -->

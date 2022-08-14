@@ -84,7 +84,8 @@ export default {
 
 .tag-input>input {
     border: none;
-    outline: none;    flex: 1 0 auto;
+    outline: none;
+    flex: 1 0 auto;
     margin: 0.25em;
     padding: 0.25em;
 }
