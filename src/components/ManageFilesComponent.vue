@@ -27,36 +27,43 @@
 import { Service } from "../services/services.js";
 
 export default {
-    name: "ManageFilesComponent",
-    props: ["type"],
-    data() {
-      return {
-        searchString: "",
-        foundFiles: [],
-        selectedFile: null,
+  name: "ManageFilesComponent",
+  props: ["type"],
+  data() {
+    return {
+      searchString: "",
+      foundFiles: [],
+      selectedFile: null,
+    }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.searchString = "";
+      vm.foundFiles = [];
+      vm.selectedFile = null;
+    })
+  },
+  methods: {
+    async findFiles() {
+      let service;
+      if (this.type === "DOCTOR") {
+        service = Service.findDoctorsByIdOrFirstnameOrLastname;
+      } else {
+        service = Service.findPatientFilesByIdOrFirstnameOrLastname;
+      }
+      try {
+        let response = await service(this.searchString);
+        this.foundFiles = response.data;
+      } catch (error) {
+        this.setErrorMessage(error.response.data.message);
       }
     },
-    methods: {
-      async findFiles() {
-        let service;
-        if (this.type === "DOCTOR") {
-          service = Service.findDoctorsByIdOrFirstnameOrLastname;
-        } else {
-          service = Service.findPatientFilesByIdOrFirstnameOrLastname;
-        }
-        try {
-          let response = await service(this.searchString);
-          this.foundFiles = response.data;
-        } catch (error) {
-          this.setErrorMessage(error.response.data.message);
-        }
-      },
-      select(f) {
-        this.selectedFile = f;
-        this.searchString = "";
-        this.foundFiles = [];
-      }
+    select(f) {
+      this.selectedFile = f;
+      this.searchString = "";
+      this.foundFiles = [];
     }
+  },
 }
 </script>
 

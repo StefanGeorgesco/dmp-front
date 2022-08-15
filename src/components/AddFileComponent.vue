@@ -142,6 +142,7 @@ export default {
     props: ["type"],
     data() {
         return {
+            editing: false,
             created: false,
             creationMessage: "",
             creationCode: "",
@@ -187,12 +188,19 @@ export default {
             this.setErrorMessage(error.response.data.message);
         }
     },
+    beforeRouteLeave() {
+        if (this.editing) {
+            const answer = window.confirm("Voulez-vous vraiment quitter la page ? Les données saisies seront perdues.")
+            if (!answer) return false
+        }
+    },
     methods: {
         updateSelection(selection) {
             this.file.specialties = selection;
             this.checkForm();
         },
         checkForm() {
+            this.editing = true;
             this.file.id = this.file.id.toUpperCase();
             if (this.mustCheck) {
                 this.idError = !this.file.id;
