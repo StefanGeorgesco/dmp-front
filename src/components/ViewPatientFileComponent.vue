@@ -15,15 +15,15 @@
           <a @click="correspondenceFilter='past'" :class="{ active: correspondenceFilter ==='past'}">passées</a>
           <ViewCorrespondenceComponent v-for="correspondence in filteredCorrepondences" :key="correspondence.id"
             :correspondence="correspondence" :canDelete="file.referringDoctorId === userId"
-            @correspondencesUpdated="updateCorrespondences" />
+            @correspondenceUpdated="updateCorrespondences" />
         </template>
-        <template v-else-if="correspondencesUpdated">
+        <template v-else-if="correspondenceUpdated">
           <p>Il n'y a aucune correspondance sur ce dossier.</p>
         </template>
       </div>
       <div class="col-md-7">
         <h5>Eléments médicaux ({{ items.length }})</h5>
-        <ViewItemComponent v-for="item in items" :key="item.id" :item="item" />
+        <ViewItemComponent v-for="item in items" :key="item.id" :item="item" @itemUpdated="updateItems" />
       </div>
       <br>
     </div>
@@ -59,7 +59,7 @@ export default {
       correspondences: [],
       correspondenceFilter: "all",
       items: [],
-      correspondencesUpdated: false,
+      correspondenceUpdated: false,
       itemsUpdated: false,
     };
   },
@@ -103,11 +103,11 @@ export default {
       }
     },
     async updateCorrespondences() {
-      this.correspondencesUpdated = false;
+      this.correspondenceUpdated = false;
       try {
         let response = await Service.getCorrespondences(this.routeId);
         this.correspondences = response.data;
-        this.correspondencesUpdated = true;
+        this.correspondenceUpdated = true;
       } catch (error) {
         this.setErrorMessage(error.response.data.message);
       }

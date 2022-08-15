@@ -49,13 +49,13 @@ import { Service } from "../services/services.js";
 export default {
     name: "ViewCorrespondenceComponent",
     props: ["correspondence", "canDelete"],
-    emits: ["correspondencesUpdated", "itemsUpdated"],
+    emits: ["correspondenceUpdated"],
     methods: {
         async deleteCorrespondence() {
             this.$refs.modalClose.click();
             try {
                 await Service.deleteCorrespondence(this.correspondence.patientFileId, this.correspondence.id);
-                this.$emit("correspondencesUpdated");
+                this.$emit("correspondenceUpdated");
                 this.setSuccessMessage("La correspondance a bien été supprimée");
             } catch (error) {
                 this.setErrorMessage(error.response.data.message);
