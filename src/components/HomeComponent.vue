@@ -10,8 +10,9 @@
       </RouterLink>
     </div>
   </div>
-  <ManageFilesComponent type="PATIENT" v-if="role === 'DOCTOR'" />
-  <ViewPatientFileComponent v-if="role === 'PATIENT'" />
+  <ManageFilesComponent type="PATIENT" v-else-if="role === 'DOCTOR'" />
+  <ViewPatientFileComponent v-else-if="role === 'PATIENT'" />
+  <div class="container" v-else>Type inconnu</div>
 </template>
 
 <!-- eslint-disable prettier/prettier -->

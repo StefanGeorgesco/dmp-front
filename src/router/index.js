@@ -40,7 +40,6 @@ const router = createRouter({
       path: "/personal-data",
       name: "personal-data",
       component: PersonalDataComponent,
-
       beforeEnter: roleGuard(["DOCTOR", "PATIENT"]),
     },
     {
