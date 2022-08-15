@@ -3,7 +3,7 @@
   <header>
     <h1>Dossier médical partagé</h1>
     <nav class="navbar navbar-expand-lg bg-light">
-      <div class="container-fluid">
+      <div class="container">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -49,10 +49,6 @@
           </ul>
         </div>
       </div>
-    </nav>
-  </header>
-  <main>
-    <section>
       <div class="container">
         <transition name="errorMessageTransition">
           <div v-show="errorMessage" class="alert alert-danger" role="alert">
@@ -65,10 +61,10 @@
           </div>
         </transition>
       </div>
-    </section>
-    <section>
-      <RouterView />
-    </section>
+    </nav>
+  </header>
+  <main class="main-section">
+    <RouterView />
   </main>
 </template>
 
@@ -111,17 +107,27 @@ export default {
 </script>
 
 <style scoped>
-header {
+header>nav {
   position: fixed;
-  top: 0;
+  top: 4rem;
   z-index: 1;
   background-color: white;
   width: 100%;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
 }
 
-main {
-  margin-top: 7.5rem;
+header>h1 {
+  position: fixed;
+  padding: 0.5rem;
+  top: 0;
+  z-index: 1;
+  background-color: white;
+  width: 100%;
+}
+
+.main-section {
+  margin-top: 9rem;
+  padding: 1rem;
 }
 
 .collapse.navbar-collapse {
@@ -134,10 +140,18 @@ main {
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
 }
 
-nav,
-.container,
+nav {
+  height: 5em;
+}
+
 .alert {
-  height: 4em;
+  height: 4rem;
+  position: absolute;
+  top: 0.45rem;
+  bottom: auto;
+  left: 20%;
+  right: 20%;
+  z-index: 2;
 }
 
 .errorMessageTransition-enter-from,
