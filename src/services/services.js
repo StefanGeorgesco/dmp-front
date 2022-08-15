@@ -70,6 +70,11 @@ export class Service {
     return axios.get(uri);
   }
 
+  static getDoctor(id) {
+    let uri = encodeURI(`${baseUrl}/doctor/${id}`);
+    return axios.get(uri);
+  }
+
   static deleteDoctor(id) {
     let uri = encodeURI(`${baseUrl}/doctor/${id}`);
     return axios.delete(uri);

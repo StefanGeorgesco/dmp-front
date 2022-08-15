@@ -50,6 +50,7 @@ export default {
   },
   methods: {
     async findFiles() {
+      this.selectedFile = null;
       let service;
       if (this.type === "DOCTOR") {
         service = Service.findDoctorsByIdOrFirstnameOrLastname;

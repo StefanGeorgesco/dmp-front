@@ -10,7 +10,13 @@
             <p v-if="type === 'DOCTOR'">
                 Spécialités : {{ file.specialties.map(s => s.id + " - " + s.description).join(", ") }}
             </p>
-            <RouterLink v-if="role === 'DOCTOR'" :to="viewFileUrl" class="btn btn-primary">Gérer</RouterLink>
+            <RouterLink v-if="type === 'PATIENT' && role === 'DOCTOR' && doctorCanEdit" :to="viewFileUrl"
+                class="btn btn-primary">Gérer
+            </RouterLink>
+            <p v-if="type === 'PATIENT' && role === 'DOCTOR' && !doctorCanEdit">
+                Médecin référent : {{ referringDoctor.id }} - {{ referringDoctor.firstname }}
+                {{ referringDoctor.lastname }}
+            </p>
             <button v-if="role === 'ADMIN'" type="button" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#deleteModal">
                 Supprimer
@@ -51,8 +57,22 @@ export default {
     name: "FileCardComponent",
     emits: ["fileDeleted", "close"],
     props: ["type", "file"],
+    data() {
+        return {
+            doctorCanEdit: false,
+            referringDoctor: {},
+        };
+    },
     components: {
         RouterLink,
+    },
+    async created() {
+        this.updateCanEdit();
+    },
+    watch: {
+        async file() {
+            this.updateCanEdit();
+        },
     },
     computed: {
         viewFileUrl() {
@@ -75,6 +95,20 @@ export default {
                 this.setSuccessMessage(`Le dossier ${ this.type === "DOCTOR" ? "de docteur" : "patient"} ${this.file.id} a bien été supprimé, ainsi que le compte utilisateur associé.`)
             } catch (error) {
                 this.setErrorMessage(`Le dossier ${this.type === "DOCTOR" ? "de docteur" : "patient"} ne peut pas être supprimé.${this.type === "DOCTOR" ? " Il doit être référencé dans au moins un dossier patient." : ""}`);
+            }
+        },
+        async updateCanEdit() {
+            if (this.type === "PATIENT") {
+                try {
+                    let response = await Service.getPatientFile(this.file.id);
+                    let referringDoctorId = response.data.referringDoctorId;
+                    response = await Service.getDoctor(referringDoctorId);
+                    this.referringDoctor = response.data;
+                    await Service.getCorrespondences(this.file.id);
+                    this.doctorCanEdit = true;
+                } catch (error) {
+                    this.doctorCanEdit = false;
+                }
             }
         },
         close() {
