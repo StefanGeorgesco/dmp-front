@@ -11,7 +11,7 @@
     </div>
   </div>
   <ManageFilesComponent type="PATIENT" v-else-if="role === 'DOCTOR'" />
-  <ViewPatientFileComponent v-else-if="role === 'PATIENT'" :fileId="userId"/>
+  <ViewPatientFileComponent v-else-if="role === 'PATIENT'"/>
   <div class="container" v-else>Type inconnu</div>
 </template>
 
@@ -28,7 +28,7 @@ export default {
     ManageFilesComponent, ViewPatientFileComponent,
   },
   computed: {
-    ...mapState(useAuthUserStore, ["role", "userId"]),
+    ...mapState(useAuthUserStore, ["role"]),
   },
 };
 </script>
