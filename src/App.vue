@@ -107,7 +107,7 @@ export default {
 </script>
 
 <style scoped>
-header>nav {
+header > nav {
   position: fixed;
   top: 4rem;
   z-index: 1;
@@ -116,7 +116,7 @@ header>nav {
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
 }
 
-header>h1 {
+header > h1 {
   position: fixed;
   padding: 0.5rem;
   top: 0;
@@ -126,8 +126,10 @@ header>h1 {
 }
 
 .main-section {
+  padding: 1rem 0;
+  margin: 0;
+  box-sizing: border-box;
   margin-top: 9rem;
-  padding: 1rem;
 }
 
 .collapse.navbar-collapse {

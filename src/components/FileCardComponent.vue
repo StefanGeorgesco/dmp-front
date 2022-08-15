@@ -7,7 +7,7 @@
             <p v-if="type === 'PATIENT'" class="card-text">
                 Date de naissance : {{ new Date(file.dateOfBirth).toLocaleDateString() }}
             </p>
-            <p v-if="type === 'DOCTOR'">
+            <p v-if="type === 'DOCTOR'" class="card-text">
                 Spécialités : {{ file.specialties.map(s => s.id + " - " + s.description).join(", ") }}
             </p>
             <template v-if="canEditKnown">

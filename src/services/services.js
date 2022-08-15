@@ -105,4 +105,11 @@ export class Service {
     }
     return axios.get(`${baseUrl}/patient-file/${id}/item`);
   }
+
+  static deleteCorrespondence(patientFileId, correspondenceId) {
+    let uri = encodeURI(
+      `${baseUrl}/patient-file/${patientFileId}/correspondence/${correspondenceId}`
+    );
+    return axios.delete(uri);
+  }
 }
