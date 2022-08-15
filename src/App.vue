@@ -2,54 +2,55 @@
 <template>
   <header>
     <h1>Dossier médical partagé</h1>
-  </header>
-  <nav class="navbar navbar-expand-lg bg-light">
-    <div class="container-fluid">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/">
-              <i class="fa-solid fa-house"></i>
-            </RouterLink>
-          </li>
-          <li v-show="isAuthenticated && role === 'ADMIN'" class="nav-item">
-            <RouterLink class="nav-link" to="/manage-doctors">
-              Médecins
-            </RouterLink>
-          </li>
-          <li v-show="isAuthenticated && role === 'ADMIN'" class="nav-item">
-            <RouterLink class="nav-link" to="/manage-patient-files">
-              Patients
-            </RouterLink>
-          </li>
-          <li v-show="isAuthenticated" class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              {{ username }}
-            </a>
-            <ul class="dropdown-menu">
-              <li v-show="role !== 'ADMIN'">
-                <RouterLink class="dropdown-item" to="/personal-data">
-                  Données personnelles</RouterLink>
-              </li>
-              <li v-show="role !== 'ADMIN'">
-                <hr class="dropdown-divider" />
-              </li>
-              <li>
-                <a class="dropdown-item" href="#" @click="doLogout">Déconnexion</a>
-              </li>
-            </ul>
-          </li>
-          <li v-if="isAuthenticated" class="nav-item">
-            <i class="nav-link">{{ roles[role] }}</i>
-          </li>
-        </ul>
+    <nav class="navbar navbar-expand-lg bg-light">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <RouterLink class="nav-link" to="/">
+                <i class="fa-solid fa-house"></i>
+              </RouterLink>
+            </li>
+            <li v-show="isAuthenticated && role === 'ADMIN'" class="nav-item">
+              <RouterLink class="nav-link" to="/manage-doctors">
+                Médecins
+              </RouterLink>
+            </li>
+            <li v-show="isAuthenticated && role === 'ADMIN'" class="nav-item">
+              <RouterLink class="nav-link" to="/manage-patient-files">
+                Patients
+              </RouterLink>
+            </li>
+            <li v-show="isAuthenticated" class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                {{ username }}
+              </a>
+              <ul class="dropdown-menu">
+                <li v-show="role !== 'ADMIN'">
+                  <RouterLink class="dropdown-item" to="/personal-data">
+                    Données personnelles</RouterLink>
+                </li>
+                <li v-show="role !== 'ADMIN'">
+                  <hr class="dropdown-divider" />
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" @click="doLogout">Déconnexion</a>
+                </li>
+              </ul>
+            </li>
+            <li v-if="isAuthenticated" class="nav-item">
+              <i class="nav-link">{{ roles[role] }}</i>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </header>
   <main>
     <section>
       <div class="container">
@@ -89,8 +90,8 @@ export default {
         ADMIN: "Administrateur",
         DOCTOR: "Médecin",
         PATIENT: "Patient",
-      }
-    }
+      },
+    };
   },
   created() {
     this.reloadAuth();
@@ -110,10 +111,29 @@ export default {
 </script>
 
 <style scoped>
+header {
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  background-color: white;
+  width: 100%;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+main {
+  margin-top: 6.5rem;
+}
+
 .collapse.navbar-collapse {
   background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity));
   padding-left: 1em;
 }
+
+.dropdown-menu {
+  z-index: 2;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
+}
+
 nav,
 .container,
 .alert {
