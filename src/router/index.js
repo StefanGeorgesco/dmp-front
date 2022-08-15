@@ -6,6 +6,7 @@ import SignUpComponent from "../components/SignUpComponent.vue";
 import PersonalDataComponent from "../components/PersonalDataComponent.vue";
 import AddFileComponent from "../components/AddFileComponent.vue";
 import ManageFilesComponent from "../components/ManageFilesComponent.vue";
+import ViewPatientFileComponent from "../components/ViewPatientFileComponent.vue";
 
 const roleGuard = (roles) => {
   return () => {
@@ -69,6 +70,12 @@ const router = createRouter({
       component: ManageFilesComponent,
       props: { type: "PATIENT" },
       beforeEnter: roleGuard(["ADMIN", "DOCTOR"]),
+    },
+    {
+      path: "/view-patient-file/:id",
+      name: "view-patient-file",
+      component: ViewPatientFileComponent,
+      beforeEnter: roleGuard(["DOCTOR"]),
     },
   ],
 });

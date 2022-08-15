@@ -249,6 +249,7 @@ export default {
                     this.creationMessage = `Le dossier ${this.type === "DOCTOR" ? "de médecin" : "patient"} ${response.data.id} pour ${response.data.firstname} ${response.data.lastname} a bien été créé. Veuillez transmettre ce code secret au ${ this.type === "DOCTOR" ? "médecin" : "patient"} afin qu'il puisse créer sont compte : `;
                     this.creationCode = `${response.data.securityCode}`;
                     this.created = true;
+                    this.editing = false;
                 } catch (error) {
                     if (error.response.status === 406) {
                         this.setErrorMessage(Object.values(error.response.data).join(", "));

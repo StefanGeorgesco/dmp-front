@@ -7,7 +7,8 @@
   <div class="container">
     <form class="row g-3">
       <div class="col-md-4 input-container">
-        <input v-model="searchString" type="text" @input="findFiles" class="form-control" placeholder="Recherche...">
+        <input @keyup.esc="clear" v-model="searchString" type="text" @input="findFiles" class="form-control"
+          placeholder="Recherche...">
         <div class="options-list" v-show="foundFiles.length > 0">
           <div class="option-item" v-for="file in foundFiles" :key="file.id" @click="select(file)">
             {{ file.id }} {{ file.firstname }} {{ file.lastname }}
@@ -18,17 +19,21 @@
   </div>
   <br>
   <div v-if="selectedFile" class="container">
-    {{ selectedFile.id }} {{ selectedFile.firstname }} {{ selectedFile.lastname }}
+    <FileCardComponent @close="clear" @fileDeleted="clear" :type="type" :file="selectedFile"></FileCardComponent>
   </div>
 </template>
 
 <!-- eslint-disable prettier/prettier -->
 <script>
 import { Service } from "../services/services.js";
+import FileCardComponent from "./FileCardComponent.vue";
 
 export default {
   name: "ManageFilesComponent",
   props: ["type"],
+  components: {
+    FileCardComponent,
+  },
   data() {
     return {
       searchString: "",
@@ -62,7 +67,12 @@ export default {
       this.selectedFile = f;
       this.searchString = "";
       this.foundFiles = [];
-    }
+    },
+    clear() {
+      this.searchString = "";
+      this.foundFiles = [];
+      this.selectedFile = null;
+    },
   },
 }
 </script>

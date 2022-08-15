@@ -121,7 +121,7 @@ header {
 }
 
 main {
-  margin-top: 6.5rem;
+  margin-top: 7.5rem;
 }
 
 .collapse.navbar-collapse {
@@ -137,7 +137,7 @@ main {
 nav,
 .container,
 .alert {
-  height: 3.75em;
+  height: 4em;
 }
 
 .errorMessageTransition-enter-from,

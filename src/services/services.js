@@ -69,4 +69,14 @@ export class Service {
     let uri = encodeURI(`${baseUrl}/patient-file?q=${q}`);
     return axios.get(uri);
   }
+
+  static deleteDoctor(id) {
+    let uri = encodeURI(`${baseUrl}/doctor/${id}`);
+    return axios.delete(uri);
+  }
+
+  static deletePatientFile(id) {
+    let uri = encodeURI(`${baseUrl}/patient-file/${id}`);
+    return axios.delete(uri);
+  }
 }
