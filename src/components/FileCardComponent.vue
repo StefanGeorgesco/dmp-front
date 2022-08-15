@@ -10,13 +10,15 @@
             <p v-if="type === 'DOCTOR'">
                 Spécialités : {{ file.specialties.map(s => s.id + " - " + s.description).join(", ") }}
             </p>
-            <RouterLink v-if="type === 'PATIENT' && role === 'DOCTOR' && doctorCanEdit" :to="viewFileUrl"
-                class="btn btn-primary">Gérer
-            </RouterLink>
-            <p v-if="type === 'PATIENT' && role === 'DOCTOR' && !doctorCanEdit">
-                Médecin référent : {{ referringDoctor.id }} - {{ referringDoctor.firstname }}
-                {{ referringDoctor.lastname }}
-            </p>
+            <template v-if="canEditKnown">
+                <RouterLink v-if="type === 'PATIENT' && role === 'DOCTOR' && doctorCanEdit" :to="viewFileUrl"
+                    class="btn btn-primary">Gérer
+                </RouterLink>
+                <p v-if="type === 'PATIENT' && role === 'DOCTOR' && !doctorCanEdit">
+                    Médecin référent : {{ referringDoctor.id }} - {{ referringDoctor.firstname }}
+                    {{ referringDoctor.lastname }}
+                </p>
+            </template>
             <button v-if="role === 'ADMIN'" type="button" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#deleteModal">
                 Supprimer
@@ -59,7 +61,8 @@ export default {
     props: ["type", "file"],
     data() {
         return {
-            doctorCanEdit: false,
+            canEditKnown: false,
+            doctorCanEdit: null,
             referringDoctor: {},
         };
     },
@@ -71,6 +74,8 @@ export default {
     },
     watch: {
         async file() {
+            this.canEditKnown = false;
+            this.doctorCanEdit = null;
             this.updateCanEdit();
         },
     },
@@ -109,6 +114,7 @@ export default {
                 } catch (error) {
                     this.doctorCanEdit = false;
                 }
+                this.canEditKnown = true;
             }
         },
         close() {
