@@ -19,7 +19,8 @@
   </div>
   <br>
   <div v-if="selectedFile" class="container">
-    <FileCardComponent @close="clear" @fileDeleted="clear" :type="type" :file="selectedFile"></FileCardComponent>
+    <FileCardComponent @referringDoctorUpdated="updateFile($event, file)" @close="clear" @fileDeleted="clear" :type="type" :file="selectedFile">
+    </FileCardComponent>
   </div>
   <div class="container">
     <RouterLink to="/add-doctor" v-if="type === 'doctor' && role === 'ADMIN'" class="btn btn-primary">
@@ -76,6 +77,14 @@ export default {
         this.foundFiles = response.data;
       } catch (error) {
         this.setErrorMessage(error.response.data.message);
+      }
+    },
+    async updateFile(file) {
+      try {
+        let response = await Service.getPatientFile(file.id);
+        this.select(response.data);
+      } catch(error) {
+        this.clear();
       }
     },
     select(f) {

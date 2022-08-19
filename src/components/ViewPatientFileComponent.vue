@@ -139,6 +139,9 @@ export default {
         let response = await Service.getCorrespondences(this.routeId);
         this.correspondences = response.data;
         this.correspondencesUpdated = true;
+        if (this.correspondenceFilter === "past") {
+          this.correspondenceFilter = "ongoing";
+        }
       } catch (error) {
         this.setErrorMessage(error.response.data.message);
       }

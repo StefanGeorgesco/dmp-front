@@ -8,20 +8,46 @@
                 <p class="card-text">
                     Date de naissance : {{ new Date(file.dateOfBirth).toLocaleDateString() }}
                 </p>
-                <p>
+                <p v-if="!updatingReferringDoctor">
                     Médecin référent : {{ file.referringDoctorId }} - {{ file.referringDoctorFirstname }}
                     {{ file.referringDoctorLastname }} ({{ file.referringDoctorSpecialties.join(", ") }})
+                    <span v-if="role === 'ADMIN'" @click="updatingReferringDoctor = true" class="btn btn-primary"><i
+                            class="fa-solid fa-pen"></i> Modifier le médecin</span>
                 </p>
+                <div v-else class="container">
+                    <form @submit.prevent="submitUpdateReferringDoctor" @input="checkForm" class="row g-3" novalidate>
+                        <div class="col-md-12"></div>
+                        <ObjectFinderComponent @newSelection="updateDoctorSelection($event, selection)"
+                            objectType="doctor" :preSelection="{
+                                id: file.referringDoctorId,
+                                firstname: file.referringDoctorFirstname,
+                                lastname: file.referringDoctorLastname,
+                                specialties: file.referringDoctorSpecialties.map(s => { s.description })
+                            }" :objectRepFn="toString" :objectFilterFn="objectFilter"
+                            :finderState="objectFinderSate" />
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit">Enregistrer</button>
+                        </div>
+                    </form>
+                    <div class="error" :class="{ fieldError: doctorPresentError }">
+                        Le médecin est obligatoire.
+                    </div>
+                    <br>
+                    <div class="col-12">
+                        <button @click="cancelEditReferringDoctorAction" type="button"
+                            class="btn btn-light">Annuler</button>
+                    </div>
+                </div>
                 <RouterLink v-if="role === 'DOCTOR' && canEditKnown && canEdit" :to="viewFileUrl"
-                    class="btn btn-primary"><i class="fa-solid fa-pen"></i>
+                    class="btn btn-primary"><i class="fa-solid fa-pen"></i> Editer
                 </RouterLink>
             </template>
             <p v-else-if="type === 'doctor'" class="card-text">
                 {{ file.specialties.map(s => s.description).join(", ") }}
             </p>
-            <button v-if="role === 'ADMIN'" type="button" class="btn btn-primary" data-bs-toggle="modal"
-                data-bs-target="#deleteModal">
-                <i class="fa-solid fa-trash-can"></i>
+            <button v-if="role === 'ADMIN' && !updatingReferringDoctor" type="button" class="btn btn-danger"
+                data-bs-toggle="modal" data-bs-target="#deleteModal">
+                <i class="fa-solid fa-trash-can"></i> Supprimer le dossier
             </button>
             <span @click="$emit('close')"></span>
         </div>
@@ -54,19 +80,29 @@ import { mapState, mapActions } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore.js";
 import { Service } from "../services/services.js";
+import ObjectFinderComponent from "./ObjectFinderComponent.vue";
 
 export default {
     name: "FileCardComponent",
-    emits: ["fileDeleted", "close"],
+    emits: ["fileDeleted", "close", "referringDoctorUpdated"],
     props: ["type", "file"],
+    components: {
+        ObjectFinderComponent, RouterLink,
+    },
     data() {
         return {
             canEditKnown: false,
             canEdit: null,
+            updatingReferringDoctor: false,
+            referringDoctor: {
+                id: "",
+            },
+            objectFinderSate: {
+                counter: 0,
+            },
+            mustCheck: false,
+            doctorPresentError: false,
         };
-    },
-    components: {
-        RouterLink,
     },
     async created() {
         this.updateCanEdit();
@@ -83,12 +119,18 @@ export default {
             return `/view-${this.type === "doctor" ? "doctor" : "patient-file"}/${this.file.id}`;
         },
         ...mapState(useAuthUserStore, ["role"]),
-   },
+    },
     methods: {
+        checkForm() {
+            if (this.mustCheck) {
+                this.doctorPresentError = !this.correspondence.doctorId;
+            }
+            return (!this.doctorPresentError);
+        },
         async deleteFile() {
             this.$refs.modalClose.click();
             let service;
-            if (this.type ==="doctor") {
+            if (this.type === "doctor") {
                 service = Service.deleteDoctor;
             } else {
                 service = Service.deletePatientFile;
@@ -96,7 +138,7 @@ export default {
             try {
                 await service(this.file.id);
                 this.$emit("fileDeleted");
-                this.setSuccessMessage(`Le dossier ${ this.type === "doctor" ? "de docteur" : "patient"} ${this.file.id} a bien été supprimé, ainsi que le compte utilisateur associé.`)
+                this.setSuccessMessage(`Le dossier ${this.type === "doctor" ? "de docteur" : "patient"} ${this.file.id} a bien été supprimé, ainsi que le compte utilisateur associé.`)
             } catch (error) {
                 this.setErrorMessage(`Le dossier ${this.type === "doctor" ? "de docteur" : "patient"} ne peut pas être supprimé.${this.type === "doctor" ? " Il doit être référencé dans au moins un dossier patient." : ""}`);
             }
@@ -111,6 +153,42 @@ export default {
                 }
                 this.canEditKnown = true;
             }
+        },
+        updateDoctorSelection(selection) {
+            this.referringDoctor = selection;
+        },
+        async submitUpdateReferringDoctor() {
+            try {
+                await Service.updateReferringDoctor(this.file.id, this.referringDoctor);
+                this.setSuccessMessage("Le médecin référent a bien été modifié");
+                this.updatingReferringDoctor = false;
+                this.clearReferringDoctor();
+                this.objectFinderSate.counter++;
+                this.$emit("referringDoctorUpdated", this.file);
+            } catch (error) {
+                if (error.response.status === 406) {
+                    this.setErrorMessage(Object.values(error.response.data).join(", "));
+                }
+                else {
+                    this.setErrorMessage(error.response.data.message);
+                }
+            }
+        },
+        cancelEditReferringDoctorAction() {
+            this.clearReferringDoctor();
+            this.updatingReferringDoctor = false;
+            this.objectFinderSate.counter++;
+        },
+        clearReferringDoctor() {
+            this.referringDoctor = {
+                id: "",
+            };
+        },
+        toString(o) {
+            return `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties.map(s => s.description).join(", ")}`;
+        },
+        objectFilter() {
+            return true;
         },
         ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
     },
@@ -136,5 +214,13 @@ export default {
     margin: 0 0 0 1em;
     font-size: x-large;
     font-weight: bold;
+}
+.error {
+    display: none;
+}
+
+.error.fieldError {
+    display: initial;
+    color: red;
 }
 </style>

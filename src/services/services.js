@@ -135,4 +135,11 @@ export class Service {
     );
     return axios.delete(uri);
   }
+
+  static updateReferringDoctor(patientFileId, referringDoctor) {
+    let uri = encodeURI(
+      `${baseUrl}/patient-file/${patientFileId}/referring-doctor`
+    );
+    return axios.put(uri, referringDoctor);
+  }
 }

@@ -4,7 +4,8 @@
         <div v-if="selectedOject" class="tag">
             {{ objectRepFn(selectedOject) }}
         </div>
-        <input @focus="deleteSelection" @input="searchObjects" ref="input" v-model="searchString" type="text">
+        <input @keyup.esc="deleteSelection" @focus="deleteSelection" @input="searchObjects" ref="input"
+            v-model="searchString" type="text">
         <div class="options-list" v-show="foundObjects.length > 0">
             <div class="tag-option" v-for="o in foundObjects" :key="o.id" @click="select(o)">
                 {{ objectRepFn(o) }}
@@ -15,12 +16,15 @@
 
 <!-- eslint-disable prettier/prettier -->
 <script>
+import { mapActions } from "pinia";
+import { useMessagesStore } from "../stores/messagesStore.js";
+
 import { Service } from "../services/services.js";
 
 export default {
     name: "ObjectFinderComponent",
     emits: ["newSelection"],
-    props: ["objectType", "objectRepFn", "objectFilterFn", "finderState"],
+    props: ["objectType", "preSelection", "objectRepFn", "objectFilterFn", "finderState"],
     data() {
         return {
             searchString: "",
@@ -60,7 +64,8 @@ export default {
             this.foundObjects = [];
             this.$refs.input.blur();
             this.$emit("newSelection", o);
-        }
+        },
+        ...mapActions(useMessagesStore, ["setErrorMessage"]),
     },
 }
 </script>
@@ -113,7 +118,9 @@ export default {
 .options-list .tag-option:not(:last-child) {
     border-bottom: 1px dotted lightgray;
 
-}.options-list .tag-option:hover {
+}
+
+.options-list .tag-option:hover {
     cursor: pointer;
     background-color: #eeeeee;
 }

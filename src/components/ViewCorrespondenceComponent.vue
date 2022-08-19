@@ -8,9 +8,9 @@
             <p class="card-text">
                 Jusqu'au : {{ new Date(correspondence.dateUntil).toLocaleDateString() }}
             </p>
-            <button v-if="canDelete" type="button" class="btn btn-primary" data-bs-toggle="modal"
+            <button v-if="canDelete" type="button" class="btn btn-danger" data-bs-toggle="modal"
                 :data-bs-target="'#deleteModal-' + correspondence.id">
-                <i class="fa-solid fa-trash-can"></i>
+                <i class="fa-solid fa-trash-can"></i> Supprimer
             </button>
         </div>
     </div>
