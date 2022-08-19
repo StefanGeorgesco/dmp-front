@@ -147,12 +147,12 @@ nav {
 }
 
 .alert {
-  height: 4rem;
+  min-height: 4rem;
   position: absolute;
   top: 0.45rem;
   bottom: auto;
-  left: 20%;
-  right: 20%;
+  left: 30%;
+  right: 10%;
   z-index: 2;
 }
 

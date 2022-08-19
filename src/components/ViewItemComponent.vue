@@ -9,6 +9,7 @@
 export default {
     name: "ViewItemComponent",
     props: ["item"],
+    emits: ["itemUpdated"],
 }
 </script>
 

@@ -10,7 +10,7 @@
       </RouterLink>
     </div>
   </div>
-  <ManageFilesComponent type="PATIENT" v-else-if="role === 'DOCTOR'" />
+  <ManageFilesComponent type="patientFile" v-else-if="role === 'DOCTOR'" />
   <ViewPatientFileComponent v-else-if="role === 'PATIENT'"/>
   <div class="container" v-else>Type inconnu</div>
 </template>

@@ -16,7 +16,7 @@
       <div class="col-md-4">
         <label for="nom-utilisateur" class="form-label">* Nom d'utilisateur</label>
         <input v-model.trim="user.username" type="text" class="form-control" id="nom-utlisateur" required>
-        <div class="error" :class="{ fieldError: userNameError }">
+        <div class="error" :class="{ fieldError: usernameError }">
           Le nom d'utilisateur est obligatoire.
         </div>
       </div>
@@ -79,7 +79,7 @@ export default {
       passwordRepeat: "",
       mustCheck: false,
       idError: false,
-      userNameError: false,
+      usernameError: false,
       passwordPresentError: false,
       passwordLengthError: false,
       passwordRepeatError: false,
@@ -91,7 +91,7 @@ export default {
       this.user.id = this.user.id.toUpperCase();
       if (this.mustCheck) {
         this.idError = !this.user.id;
-        this.userNameError = !this.user.username;
+        this.usernameError = !this.user.username;
         this.passwordPresentError = !this.user.password;
         this.passwordLengthError = this.user.password
           ? this.user.password.length < 4
@@ -100,7 +100,7 @@ export default {
 
         return (
           !this.IdError &&
-          !this.userNameError &&
+          !this.usernameError &&
           !this.passwordPresentError &&
           !this.passwordLengthError &&
           !this.securityCodeError
@@ -109,11 +109,8 @@ export default {
     },
     async submitSignUp() {
       this.mustCheck = true;
-      let passwordsEqual = this.passwordRepeat == this.user.password;
-      if (!passwordsEqual) {
-        this.passwordRepeatError = true;
-      }
-      if (this.checkForm() && passwordsEqual) {
+      this.passwordRepeatError = this.passwordRepeat !== this.user.password;
+      if (this.checkForm() && !this.passwordRepeatError) {
         try {
           await Service.signUp(this.user);
           this.setSuccessMessage("Le compte a bien été créé. Veuillez vous connecter.");

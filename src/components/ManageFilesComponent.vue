@@ -1,7 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <div class="container">
-    <h2>Gérer les dossiers {{ type === "DOCTOR" ? "des médecins" : "patients" }}</h2>
+    <h2>Gérer les dossiers {{ type === "doctor" ? "des médecins" : "patients" }}</h2>
   </div>
   <br>
   <div class="container">
@@ -43,16 +43,14 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.searchString = "";
-      vm.foundFiles = [];
-      vm.selectedFile = null;
+      vm.clear();
     })
   },
   methods: {
     async findFiles() {
       this.selectedFile = null;
       let service;
-      if (this.type === "DOCTOR") {
+      if (this.type === "doctor") {
         service = Service.findDoctorsByIdOrFirstnameOrLastname;
       } else {
         service = Service.findPatientFilesByIdOrFirstnameOrLastname;

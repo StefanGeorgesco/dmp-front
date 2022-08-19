@@ -3,27 +3,27 @@
     <div class="card col-md-4">
         <div class="card-body">
             <h5 class="card-title">{{ file.id }} - {{ file.firstname }} {{ file.lastname }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{ type === "DOCTOR" ? "Médecin" : "Patient" }}</h6>
-            <p v-if="type === 'PATIENT'" class="card-text">
-                Date de naissance : {{ new Date(file.dateOfBirth).toLocaleDateString() }}
-            </p>
-            <p v-if="type === 'DOCTOR'" class="card-text">
+            <h6 class="card-subtitle mb-2 text-muted">{{ type === "doctor" ? "Médecin" : "Patient" }}</h6>
+            <template v-if="type === 'patientFile'">
+                <p class="card-text">
+                    Date de naissance : {{ new Date(file.dateOfBirth).toLocaleDateString() }}
+                </p>
+                <p>
+                    Médecin référent : {{ file.referringDoctorId }} - {{ file.referringDoctorFirstname }}
+                    {{ file.referringDoctorLastname }}
+                </p>
+                <RouterLink v-if="role === 'DOCTOR' && canEditKnown && canEdit"
+                    :to="viewFileUrl" class="btn btn-primary">Gérer
+                </RouterLink>
+            </template>
+            <p v-else-if="type === 'doctor'" class="card-text">
                 Spécialités : {{ file.specialties.map(s => s.id + " - " + s.description).join(", ") }}
             </p>
-            <template v-if="canEditKnown">
-                <RouterLink v-if="type === 'PATIENT' && role === 'DOCTOR' && doctorCanEdit" :to="viewFileUrl"
-                    class="btn btn-primary">Gérer
-                </RouterLink>
-                <p v-if="type === 'PATIENT' && role === 'DOCTOR' && !doctorCanEdit">
-                    Médecin référent : {{ referringDoctor.id }} - {{ referringDoctor.firstname }}
-                    {{ referringDoctor.lastname }}
-                </p>
-            </template>
             <button v-if="role === 'ADMIN'" type="button" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#deleteModal">
                 Supprimer
             </button>
-            <span @click="close"></span>
+            <span @click="$emit('close')"></span>
         </div>
     </div>
     <div class="modal fade" id="deleteModal" tabindex="-1">
@@ -62,8 +62,7 @@ export default {
     data() {
         return {
             canEditKnown: false,
-            doctorCanEdit: null,
-            referringDoctor: {},
+            canEdit: null,
         };
     },
     components: {
@@ -75,13 +74,13 @@ export default {
     watch: {
         async file() {
             this.canEditKnown = false;
-            this.doctorCanEdit = null;
+            this.canEdit = null;
             this.updateCanEdit();
         },
     },
     computed: {
         viewFileUrl() {
-            return `/view-${this.type === "DOCTOR" ? "doctor" : "patient-file"}/${this.file.id}`;
+            return `/view-${this.type === "doctor" ? "doctor" : "patient-file"}/${this.file.id}`;
         },
         ...mapState(useAuthUserStore, ["role"]),
    },
@@ -89,7 +88,7 @@ export default {
         async deleteFile() {
             this.$refs.modalClose.click();
             let service;
-            if (this.type ==="DOCTOR") {
+            if (this.type ==="doctor") {
                 service = Service.deleteDoctor;
             } else {
                 service = Service.deletePatientFile;
@@ -97,28 +96,21 @@ export default {
             try {
                 await service(this.file.id);
                 this.$emit("fileDeleted");
-                this.setSuccessMessage(`Le dossier ${ this.type === "DOCTOR" ? "de docteur" : "patient"} ${this.file.id} a bien été supprimé, ainsi que le compte utilisateur associé.`)
+                this.setSuccessMessage(`Le dossier ${ this.type === "doctor" ? "de docteur" : "patient"} ${this.file.id} a bien été supprimé, ainsi que le compte utilisateur associé.`)
             } catch (error) {
-                this.setErrorMessage(`Le dossier ${this.type === "DOCTOR" ? "de docteur" : "patient"} ne peut pas être supprimé.${this.type === "DOCTOR" ? " Il doit être référencé dans au moins un dossier patient." : ""}`);
+                this.setErrorMessage(`Le dossier ${this.type === "doctor" ? "de docteur" : "patient"} ne peut pas être supprimé.${this.type === "doctor" ? " Il doit être référencé dans au moins un dossier patient." : ""}`);
             }
         },
         async updateCanEdit() {
-            if (this.type === "PATIENT") {
+            if (this.type === "patientFile") {
                 try {
-                    let response = await Service.getPatientFile(this.file.id);
-                    let referringDoctorId = response.data.referringDoctorId;
-                    response = await Service.getDoctor(referringDoctorId);
-                    this.referringDoctor = response.data;
                     await Service.getCorrespondences(this.file.id);
-                    this.doctorCanEdit = true;
+                    this.canEdit = true;
                 } catch (error) {
-                    this.doctorCanEdit = false;
+                    this.canEdit = false;
                 }
                 this.canEditKnown = true;
             }
-        },
-        close() {
-            this.$emit("close");
         },
         ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
     },

@@ -86,24 +86,35 @@ export class Service {
   }
 
   static getPatientFile(id) {
-    if (id === null) {
-      id = "details";
+    let uri;
+    if (id) {
+      uri = encodeURI(`${baseUrl}/patient-file/${id}`);
+    } else {
+      uri = encodeURI(`${baseUrl}/patient-file/details`);
     }
-    return axios.get(`${baseUrl}/patient-file/${id}`);
+    return axios.get(uri);
   }
 
-  static getCorrespondences(id) {
-    if (id === null) {
-      id = "details";
+  static getCorrespondences(patientFileId) {
+    let uri;
+    if (patientFileId) {
+      uri = encodeURI(
+        `${baseUrl}/patient-file/${patientFileId}/correspondence`
+      );
+    } else {
+      uri = encodeURI(`${baseUrl}/patient-file/details/correspondence`);
     }
-    return axios.get(`${baseUrl}/patient-file/${id}/correspondence`);
+    return axios.get(uri);
   }
 
-  static getItems(id) {
-    if (id === null) {
-      id = "details";
+  static getItems(patientFileId) {
+    let uri;
+    if (patientFileId) {
+      uri = encodeURI(`${baseUrl}/patient-file/${patientFileId}/item`);
+    } else {
+      uri = encodeURI(`${baseUrl}/patient-file/details/item`);
     }
-    return axios.get(`${baseUrl}/patient-file/${id}/item`);
+    return axios.get(uri);
   }
 
   static deleteCorrespondence(patientFileId, correspondenceId) {

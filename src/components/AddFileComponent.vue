@@ -1,7 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div class="container">
-        <h2>Créer un dossier {{ type === "DOCTOR" ? "de médecin" : "patient"}}</h2>
+        <h2>Créer un dossier {{ type === "doctor" ? "de médecin" : "patient"}}</h2>
     </div>
     <br>
     <div class="container" :hidden="created">
@@ -28,14 +28,14 @@
                 </div>
             </div>
             <div></div>
-            <div v-if="type === 'DOCTOR'" class="col-md-12">
+            <div v-if="type === 'doctor'" class="col-md-12">
                 <label class="form-label">* Spécialités</label>
                 <TagSelectorComponent @newSelection="updateSelection($event, selection)" :options="specialties" />
                 <div class="error" :class="{ fieldError: specialtiesError }">
                     Le médecin doit avoir au moins une spécialité.
                 </div>
             </div>
-            <div v-if="type === 'PATIENT'" class="col-md-4">
+            <div v-if="type === 'patientFile'" class="col-md-4">
                 <label for="date_de_naissance" class="form-label">* Date de naissance</label>
                 <input v-model="file.dateOfBirth" type="date" class="form-control" id="date_de_naissance"
                     required>
@@ -206,9 +206,9 @@ export default {
                 this.idError = !this.file.id;
                 this.firstnameError = !this.file.firstname;
                 this.lastnameError = !this.file.lastname;
-                this.specialtiesError = this.type === "DOCTOR" && this.file.specialties.length < 1;
-                this.dateOfBirthPresentError = this.type === "PATIENT" && !this.file.dateOfBirth;
-                this.dateOfBirthPastOrPresentError = this.type === "PATIENT" && new Date(this.file.dateOfBirth) > new Date();
+                this.specialtiesError = this.type === "doctor" && this.file.specialties.length < 1;
+                this.dateOfBirthPresentError = this.type === "patientFile" && !this.file.dateOfBirth;
+                this.dateOfBirthPastOrPresentError = this.type === "patientFile" && new Date(this.file.dateOfBirth) > new Date();
                 this.phoneError = !this.file.phone;
                 this.emailPresentError = !this.file.email;
                 this.emailFormatError = this.file.email && !new RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, 'g').test(this.file.email);
@@ -238,15 +238,15 @@ export default {
             this.mustCheck = true;
             if (this.checkForm()) {
                 let service;
-                if (this.type === "DOCTOR") {
+                if (this.type === "doctor") {
                     service = Service.addDoctor;
                 } else {
                     service = Service.addPatientFile;
                 }
                 try {
                     let response = await service(this.file);
-                    this.setSuccessMessage(`Le dossier ${this.type === "DOCTOR" ? "de médecin" : "patient"} a bien été créé.`);
-                    this.creationMessage = `Le dossier ${this.type === "DOCTOR" ? "de médecin" : "patient"} ${response.data.id} pour ${response.data.firstname} ${response.data.lastname} a bien été créé. Veuillez transmettre ce code secret au ${ this.type === "DOCTOR" ? "médecin" : "patient"} afin qu'il puisse créer sont compte : `;
+                    this.setSuccessMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} a bien été créé.`);
+                    this.creationMessage = `Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ${response.data.id} pour ${response.data.firstname} ${response.data.lastname} a bien été créé. Veuillez transmettre ce code secret au ${ this.type === "doctor" ? "médecin" : "patient"} afin qu'il puisse créer sont compte : `;
                     this.creationCode = `${response.data.securityCode}`;
                     this.created = true;
                     this.editing = false;
