@@ -5,7 +5,8 @@
     </div>
     <br>
     <div class="container" :hidden="created">
-        <form @submit.prevent="submitAddFile" @input="checkForm" class="row g-3 needs-validation" novalidate>
+        <form @submit.prevent="submitAddFile" @input="editing=true; checkForm()" class="row g-3 needs-validation"
+            novalidate>
             <div class="col-md-4">
                 <label for="id" class="form-label">* Identifiant</label>
                 <input v-model.trim="file.id" type="text" class="form-control" id="id" required>
@@ -37,8 +38,8 @@
             </div>
             <div v-if="type === 'patientFile'" class="col-md-4">
                 <label for="date_de_naissance" class="form-label">* Date de naissance</label>
-                <input v-model="file.dateOfBirth" type="date" class="form-control" id="date_de_naissance"
-                    required>
+                <input @change="($event) => $event.target.blur()" v-model="file.dateOfBirth" type="date"
+                    class="form-control" id="date_de_naissance" required>
                 <div class="error" :class="{ fieldError: dateOfBirthPresentError }">
                     La date de naissance est obligatoire.
                 </div>
@@ -111,7 +112,7 @@
         </form>
         <br>
         <div class="col-12">
-            <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>
+            <button @click="$router.go(-1);" type="button" class="btn btn-light">Retour</button>
         </div>
         <br>
     </div>
@@ -121,7 +122,7 @@
         </div>
         <br>
         <div class="col-12">
-            <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>
+            <button @click="$router.go(-1);" type="button" class="btn btn-light">Retour</button>
         </div>
         <br>
     </div>
@@ -181,11 +182,13 @@ export default {
         }
     },
     async created() {
-        try {
-            let response = await Service.getSpecialties();
-            this.specialties = response.data;
-        } catch (error) {
-            this.setErrorMessage(error.response.data.message);
+        if (this.type === "doctor") {
+            try {
+                let response = await Service.getSpecialties();
+                this.specialties = response.data;
+            } catch (error) {
+                this.setErrorMessage(error.response.data.message);
+            }
         }
     },
     beforeRouteLeave() {
@@ -200,15 +203,15 @@ export default {
             this.checkForm();
         },
         checkForm() {
-            this.editing = true;
             this.file.id = this.file.id.toUpperCase();
+
             if (this.mustCheck) {
                 this.idError = !this.file.id;
                 this.firstnameError = !this.file.firstname;
                 this.lastnameError = !this.file.lastname;
                 this.specialtiesError = this.type === "doctor" && this.file.specialties.length < 1;
                 this.dateOfBirthPresentError = this.type === "patientFile" && !this.file.dateOfBirth;
-                this.dateOfBirthPastOrPresentError = this.type === "patientFile" && new Date(this.file.dateOfBirth) > new Date();
+                this.dateOfBirthPastOrPresentError = this.type === "patientFile" && this.file.dateOfBirth && new Date(this.file.dateOfBirth) > new Date();
                 this.phoneError = !this.file.phone;
                 this.emailPresentError = !this.file.email;
                 this.emailFormatError = this.file.email && !new RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, 'g').test(this.file.email);
@@ -216,23 +219,23 @@ export default {
                 this.cityError = !this.file.address.city;
                 this.zipcodeError = !this.file.address.zipcode;
                 this.countryError = !this.file.address.country;
-
-                return (
-                    !this.IdError &&
-                    !this.firstnameError &&
-                    !this.lastnameError &&
-                    !this.specialtiesError &&
-                    !this.dateOfBirthPresentError &&
-                    !this.dateOfBirthPastOrPresentError &&
-                    !this.phoneError &&
-                    !this.emailPresentError &&
-                    !this.emailFormatError &&
-                    !this.street1Error &&
-                    !this.cityError &&
-                    !this.zipcodeError &&
-                    !this.countryError
-                );
             }
+
+            return (
+                !this.IdError &&
+                !this.firstnameError &&
+                !this.lastnameError &&
+                !this.specialtiesError &&
+                !this.dateOfBirthPresentError &&
+                !this.dateOfBirthPastOrPresentError &&
+                !this.phoneError &&
+                !this.emailPresentError &&
+                !this.emailFormatError &&
+                !this.street1Error &&
+                !this.cityError &&
+                !this.zipcodeError &&
+                !this.countryError
+            );
         },
         async submitAddFile() {
             this.mustCheck = true;

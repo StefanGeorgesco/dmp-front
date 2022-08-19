@@ -9,16 +9,16 @@
                 Jusqu'au : {{ new Date(correspondence.dateUntil).toLocaleDateString() }}
             </p>
             <button v-if="canDelete" type="button" class="btn btn-primary" data-bs-toggle="modal"
-                data-bs-target="#deleteModal">
-                Supprimer
+                :data-bs-target="'#deleteModal-' + correspondence.id">
+                <i class="fa-solid fa-trash-can"></i>
             </button>
         </div>
     </div>
-    <div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal fade" :id="'deleteModal-' + correspondence.id" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Suppression</h5>
+                    <h5 class="modal-title">Suppression</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                         ref="modalClose"></button>
                 </div>

@@ -2,25 +2,46 @@
 <template>
   <div class="container-custom">
     <div class="row">
-      <div v-cloak class="col-md-2">
-        <h5>{{ file.firstname }} {{ file.lastname }} ({{ file.id }})</h5>
-        <p>Né(e) le {{ new Date(file.dateOfBirth).toLocaleDateString() }}</p>
+      <div v-show="file.id" class="col-md-2">
+        <template v-if="role === 'DOCTOR'">
+          <div v-cloak class="card">
+            <h4>{{ file.firstname }} {{ file.lastname }} ({{ file.id }})</h4>
+            <p>Né(e) le {{ new Date(file.dateOfBirth).toLocaleDateString() }}</p>
+          </div>
+        </template>
+        <div class="card" v-else-if="role === 'PATIENT'">
+          <h5>Médecin référent</h5>
+          <h6>{{ file.referringDoctorFirstname }} {{ file.referringDoctorLastname }} ({{ file.referringDoctorId }})</h6>
+          <p>{{ file.referringDoctorSpecialties.join(", ") }}</p>
+        </div>
       </div>
       <div v-cloak class="col-md-3">
         <h5>Correspondances ({{ filteredCorrepondences.length }})</h5>
         <template v-if="correspondencesUpdated">
           <template v-if="correspondences.length > 0">
-            <a @click="correspondenceFilter='ongoing'" :class="{ active: correspondenceFilter ==='ongoing'}">en
+            <a @click="correspondenceFilter = 'ongoing'" :class="{ active: correspondenceFilter === 'ongoing' }">en
               cours</a> -
-            <a @click="correspondenceFilter='past'" :class="{ active: correspondenceFilter ==='past'}">passées</a> -
-            <a @click="correspondenceFilter='all'" :class="{ active: correspondenceFilter ==='all'}">toutes</a>
+            <a @click="correspondenceFilter = 'past'" :class="{ active: correspondenceFilter === 'past' }">passées</a> -
+            <a @click="correspondenceFilter = 'all'" :class="{ active: correspondenceFilter === 'all' }">toutes</a>
+            <br><br>
             <ViewCorrespondenceComponent v-for="correspondence in filteredCorrepondences" :key="correspondence.id"
               :correspondence="correspondence" :canDelete="isReferringDoctor"
               @correspondenceUpdated="updateCorrespondences" />
+            <template v-if="filteredCorrepondences.length === 0">
+              <p>Aucune correspondance {{ correspondenceFilter === "ongoing" ? "en cours" : "passée" }}.</p>
+            </template>
           </template>
           <template v-else>
+            <br>
             <p>Il n'y a aucune correspondance sur ce dossier.</p>
           </template>
+        </template>
+        <template v-if="isReferringDoctor">
+          <br>
+          <button v-show="!addingCorrespondence" @click="addingCorrespondence = true" type="button"
+            class="btn btn-primary"><i class="fa-solid fa-plus"></i> Ajouter une correspondance</button>
+          <AddCorrespondence @correspondenceAdded="addingCorrespondence = false; updateCorrespondences();"
+            @canceled="addingCorrespondence = false" v-show="addingCorrespondence" :patientFileId="file.id" />
         </template>
       </div>
       <div v-cloak class="col-md-7">
@@ -47,21 +68,25 @@ import { useMessagesStore } from "../stores/messagesStore";
 import { Service } from "../services/services.js";
 import ViewCorrespondenceComponent from "./ViewCorrespondenceComponent.vue";
 import ViewItemComponent from "./ViewItemComponent.vue";
+import AddCorrespondence from "./AddCorrespondence.vue";
 
 export default {
   name: "ViewPatientFileComponent",
   components: {
-    ViewCorrespondenceComponent, ViewItemComponent,
+    ViewCorrespondenceComponent, ViewItemComponent, AddCorrespondence,
   },
   data() {
     return {
       file: {
         id: "",
         referringDoctorId: "",
+        referringDoctorFirstname: "",
+        referringDoctorLastname: "",
       },
       correspondences: [],
       correspondencesUpdated: false,
       correspondenceFilter: "ongoing",
+      addingCorrespondence: false,
       items: [],
       itemsUpdated: false,
     };
@@ -74,7 +99,7 @@ export default {
       return this.file.referringDoctorId === this.userId;
     },
     filteredCorrepondences() {
-      switch(this.correspondenceFilter) {
+      switch (this.correspondenceFilter) {
         case "all":
           return [...this.correspondences];
         case "past":
@@ -128,6 +153,11 @@ export default {
 [v-cloak] {
   display: none;
 }
+
+.card {
+  padding: 0.5rem;
+}
+
 .container-custom {
   padding: 0;
   margin: 0;

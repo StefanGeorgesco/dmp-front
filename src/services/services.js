@@ -70,6 +70,11 @@ export class Service {
     return axios.get(uri);
   }
 
+  static findObjectBySearchString(objectType, q) {
+    let uri = encodeURI(`${baseUrl}/${objectType}?q=${q}`);
+    return axios.get(uri);
+  }
+
   static getDoctor(id) {
     let uri = encodeURI(`${baseUrl}/doctor/${id}`);
     return axios.get(uri);
@@ -115,6 +120,13 @@ export class Service {
       uri = encodeURI(`${baseUrl}/patient-file/details/item`);
     }
     return axios.get(uri);
+  }
+
+  static addCorrespondence(patientFileId, correspondence) {
+    let uri = encodeURI(
+      `${baseUrl}/patient-file/${patientFileId}/correspondence`
+    );
+    return axios.post(uri, correspondence);
   }
 
   static deleteCorrespondence(patientFileId, correspondenceId) {

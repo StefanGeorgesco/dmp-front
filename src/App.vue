@@ -99,7 +99,7 @@ export default {
   methods: {
     doLogout() {
       this.logout();
-      this.$router.push("/");
+      this.$router.go("/");
     },
     ...mapActions(useAuthUserStore, ["reloadAuth", "logout"]),
   },
@@ -107,22 +107,22 @@ export default {
 </script>
 
 <style scoped>
-header > nav {
+header > * {
   position: fixed;
-  top: 4rem;
   z-index: 1;
   background-color: white;
   width: 100%;
+  margin: 0;
+}
+
+header > nav {
+  top: 4rem;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
 }
 
 header > h1 {
-  position: fixed;
-  padding: 0.5rem;
   top: 0;
-  z-index: 1;
-  background-color: white;
-  width: 100%;
+  padding: 0.5rem;
 }
 
 .main-section {

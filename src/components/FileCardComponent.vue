@@ -10,18 +10,18 @@
                 </p>
                 <p>
                     Médecin référent : {{ file.referringDoctorId }} - {{ file.referringDoctorFirstname }}
-                    {{ file.referringDoctorLastname }}
+                    {{ file.referringDoctorLastname }} ({{ file.referringDoctorSpecialties.join(", ") }})
                 </p>
-                <RouterLink v-if="role === 'DOCTOR' && canEditKnown && canEdit"
-                    :to="viewFileUrl" class="btn btn-primary">Gérer
+                <RouterLink v-if="role === 'DOCTOR' && canEditKnown && canEdit" :to="viewFileUrl"
+                    class="btn btn-primary"><i class="fa-solid fa-pen"></i>
                 </RouterLink>
             </template>
             <p v-else-if="type === 'doctor'" class="card-text">
-                Spécialités : {{ file.specialties.map(s => s.id + " - " + s.description).join(", ") }}
+                {{ file.specialties.map(s => s.description).join(", ") }}
             </p>
             <button v-if="role === 'ADMIN'" type="button" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#deleteModal">
-                Supprimer
+                <i class="fa-solid fa-trash-can"></i>
             </button>
             <span @click="$emit('close')"></span>
         </div>
@@ -102,7 +102,7 @@ export default {
             }
         },
         async updateCanEdit() {
-            if (this.type === "patientFile") {
+            if (this.role === "DOCTOR" && this.type === "patientFile") {
                 try {
                     await Service.getCorrespondences(this.file.id);
                     this.canEdit = true;

@@ -21,10 +21,20 @@
   <div v-if="selectedFile" class="container">
     <FileCardComponent @close="clear" @fileDeleted="clear" :type="type" :file="selectedFile"></FileCardComponent>
   </div>
+  <div class="container">
+    <RouterLink to="/add-doctor" v-if="type === 'doctor' && role === 'ADMIN'" class="btn btn-primary">
+      <i class="fa-solid fa-plus"></i> Ajouter un médecin
+    </RouterLink>
+    <RouterLink to="/add-patient-file" v-if="type === 'patientFile' && role === 'DOCTOR'" class="btn btn-primary">
+      <i class="fa-solid fa-plus"></i> Ajouter un dossier patient
+    </RouterLink>
+  </div>
 </template>
 
 <!-- eslint-disable prettier/prettier -->
 <script>
+import { mapState } from "pinia";
+import { useAuthUserStore } from "../stores/authUserStore.js";
 import { Service } from "../services/services.js";
 import FileCardComponent from "./FileCardComponent.vue";
 
@@ -41,10 +51,16 @@ export default {
       selectedFile: null,
     }
   },
+  computed: {
+    ...mapState(useAuthUserStore, ["role"]),
+  },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.clear();
     })
+  },
+  beforeRouteLeave() {
+    this.clear();
   },
   methods: {
     async findFiles() {
