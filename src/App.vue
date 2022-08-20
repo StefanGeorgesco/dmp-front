@@ -82,6 +82,7 @@ export default {
   },
   data() {
     return {
+      state: 0,
       roles: {
         ADMIN: "Administrateur",
         DOCTOR: "Médecin",
@@ -91,6 +92,11 @@ export default {
   },
   created() {
     this.reloadAuth();
+  },
+  watch: {
+    $route() {
+      this.state++;
+    },
   },
   computed: {
     ...mapState(useMessagesStore, ["errorMessage", "successMessage"]),

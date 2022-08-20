@@ -46,7 +46,9 @@ export default {
                 let response = await Service.findObjectBySearchString(this.objectType, this.searchString);
                 this.foundObjects = response.data.filter(this.objectFilterFn);
             } catch (error) {
-                this.setErrorMessage(error.response.data.message);
+                if (error.response.data) {
+                    this.setErrorMessage(error.response.data.message);
+                }
             }
         },
         clear() {

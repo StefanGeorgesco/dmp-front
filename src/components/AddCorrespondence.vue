@@ -86,11 +86,12 @@ export default {
                     this.setSuccessMessage("La correspondance a bien été créée.");
                 }
                 catch (error) {
-                    if (error.response.status === 406) {
-                        this.setErrorMessage(Object.values(error.response.data).join(", "));
-                    }
-                    else {
-                        this.setErrorMessage(error.response.data.message);
+                    if (error.response.data) {
+                        if (error.response.status === 406) {
+                            this.setErrorMessage(Object.values(error.response.data).join(", "));
+                        } else {
+                            this.setErrorMessage(error.response.data.message);
+                        }
                     }
                 }
             }
@@ -117,6 +118,7 @@ export default {
             return o.id !== this.userId;
         },
         ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
+        ...mapActions(useAuthUserStore, ["logout"]),
     },
     computed: {
         ...mapState(useAuthUserStore, ["userId"]),

@@ -17,8 +17,8 @@
                 <div v-else class="container">
                     <form @submit.prevent="submitUpdateReferringDoctor" @input="checkForm" class="row g-3" novalidate>
                         <div class="col-md-12"></div>
-                        <ObjectFinder @newSelection="updateDoctorSelection($event, selection)"
-                            objectType="doctor" :preSelection="{
+                        <ObjectFinder @newSelection="updateDoctorSelection($event, selection)" objectType="doctor"
+                            :preSelection="{
                                 id: file.referringDoctorId,
                                 firstname: file.referringDoctorFirstname,
                                 lastname: file.referringDoctorLastname,
@@ -140,7 +140,9 @@ export default {
                 this.$emit("fileDeleted");
                 this.setSuccessMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ${this.file.id} a bien été supprimé, ainsi que le compte utilisateur associé.`)
             } catch (error) {
-                this.setErrorMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ne peut pas être supprimé.${this.type === "doctor" ? " Il doit être référencé dans au moins un dossier patient." : ""}`);
+                if (error.response.data) {
+                    this.setErrorMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ne peut pas être supprimé.${this.type === "doctor" ? " Il doit être référencé dans au moins un dossier patient." : ""}`);
+                }
             }
         },
         async updateCanEdit() {
@@ -150,8 +152,9 @@ export default {
                     this.canEdit = true;
                 } catch (error) {
                     this.canEdit = false;
+                } finally {
+                    this.canEditKnown = true;
                 }
-                this.canEditKnown = true;
             }
         },
         updateDoctorSelection(selection) {
@@ -160,17 +163,19 @@ export default {
         async submitUpdateReferringDoctor() {
             try {
                 await Service.updateReferringDoctor(this.file.id, this.referringDoctor);
-                this.setSuccessMessage("Le médecin référent a bien été modifié");
+                this.setSuccessMessage("Le médecin référent a bien été modifié.");
                 this.updatingReferringDoctor = false;
                 this.clearReferringDoctor();
                 this.objectFinderSate.counter++;
                 this.$emit("referringDoctorUpdated", this.file);
             } catch (error) {
-                if (error.response.status === 406) {
-                    this.setErrorMessage(Object.values(error.response.data).join(", "));
-                }
-                else {
-                    this.setErrorMessage(error.response.data.message);
+                this.canEdit = false;
+                if (error.response.data) {
+                    if (error.response.status === 406) {
+                        this.setErrorMessage(Object.values(error.response.data).join(", "));
+                    } else {
+                        this.setErrorMessage(error.response.data.message);
+                    }
                 }
             }
         },
@@ -215,6 +220,7 @@ export default {
     font-size: x-large;
     font-weight: bold;
 }
+
 .error {
     display: none;
 }

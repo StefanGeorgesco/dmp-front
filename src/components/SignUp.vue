@@ -116,10 +116,12 @@ export default {
           this.setSuccessMessage("Le compte a bien été créé. Veuillez vous connecter.");
           this.$router.push("/");
         } catch (error) {
-          if (error.response.status === 406) {
-            this.setErrorMessage(Object.values(error.response.data).join(", "));
-          } else {
-            this.setErrorMessage(error.response.data.message);
+          if (error.response.data) {
+            if (error.response.status === 406) {
+              this.setErrorMessage(Object.values(error.response.data).join(", "));
+            } else {
+              this.setErrorMessage(error.response.data.message);
+            }
           }
         }
       }

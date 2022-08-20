@@ -56,9 +56,11 @@ export default {
             try {
                 await Service.deleteCorrespondence(this.correspondence.patientFileId, this.correspondence.id);
                 this.$emit("correspondenceUpdated");
-                this.setSuccessMessage("La correspondance a bien été supprimée");
+                this.setSuccessMessage("La correspondance a bien été supprimée.");
             } catch (error) {
-                this.setErrorMessage(error.response.data.message);
+                if (error.response.data) {
+                    this.setErrorMessage(error.response.data.message);
+                }
             }
         },
         ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),

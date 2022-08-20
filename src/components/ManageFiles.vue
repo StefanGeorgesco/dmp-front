@@ -19,7 +19,8 @@
   </div>
   <br>
   <div v-if="selectedFile" class="container">
-    <FileCard @referringDoctorUpdated="updateFile($event, file)" @close="clear" @fileDeleted="clear" :type="type" :file="selectedFile">
+    <FileCard @referringDoctorUpdated="updateFile($event, file)" @close="clear" @fileDeleted="clear" :type="type"
+      :file="selectedFile">
     </FileCard>
   </div>
   <div class="container">
@@ -34,8 +35,9 @@
 
 <!-- eslint-disable prettier/prettier -->
 <script>
-import { mapState } from "pinia";
+import { mapState, mapActions } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
+import { useMessagesStore } from "../stores/messagesStore";
 import { Service } from "../services/services.js";
 import FileCard from "./FileCard.vue";
 
@@ -76,14 +78,16 @@ export default {
         let response = await service(this.searchString);
         this.foundFiles = response.data;
       } catch (error) {
-        this.setErrorMessage(error.response.data.message);
+        if (error.response.data) {
+          this.setErrorMessage(error.response.data.message);
+        }
       }
     },
     async updateFile(file) {
       try {
         let response = await Service.getPatientFile(file.id);
         this.select(response.data);
-      } catch(error) {
+      } catch (error) {
         this.clear();
       }
     },
@@ -97,6 +101,8 @@ export default {
       this.foundFiles = [];
       this.selectedFile = null;
     },
+    ...mapActions(useMessagesStore, ["setErrorMessage"]),
+    ...mapActions(useAuthUserStore, ["logout"]),
   },
 }
 </script>

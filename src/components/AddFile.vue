@@ -1,11 +1,11 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div class="container">
-        <h2>Créer un dossier {{ type === "doctor" ? "de médecin" : "patient"}}</h2>
+        <h2>Créer un dossier {{ type === "doctor" ? "de médecin" : "patient" }}</h2>
     </div>
     <br>
     <div class="container" :hidden="created">
-        <form @submit.prevent="submitAddFile" @input="editing=true; checkForm()" class="row g-3 needs-validation"
+        <form @submit.prevent="submitAddFile" @input="editing = true; checkForm()" class="row g-3 needs-validation"
             novalidate>
             <div class="col-md-4">
                 <label for="id" class="form-label">* Identifiant</label>
@@ -187,14 +187,17 @@ export default {
                 let response = await Service.getSpecialties();
                 this.specialties = response.data;
             } catch (error) {
-                this.setErrorMessage(error.response.data.message);
+                if (error.response.data) {
+                    this.setErrorMessage(error.response.data.message);
+                }
             }
         }
     },
-    beforeRouteLeave() {
-        if (this.editing) {
+    beforeRouteLeave(to) {
+        if (to.name !== "login" && this.editing) {
             const answer = window.confirm("Voulez-vous vraiment quitter la page ? Les données saisies seront perdues.")
-            if (!answer) return false
+            if (!answer)
+                return false;
         }
     },
     methods: {
@@ -249,15 +252,17 @@ export default {
                 try {
                     let response = await service(this.file);
                     this.setSuccessMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} a bien été créé.`);
-                    this.creationMessage = `Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ${response.data.id} pour ${response.data.firstname} ${response.data.lastname} a bien été créé. Veuillez transmettre ce code secret au ${ this.type === "doctor" ? "médecin" : "patient"} afin qu'il puisse créer sont compte : `;
+                    this.creationMessage = `Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ${response.data.id} pour ${response.data.firstname} ${response.data.lastname} a bien été créé. Veuillez transmettre ce code secret au ${this.type === "doctor" ? "médecin" : "patient"} afin qu'il puisse créer sont compte : `;
                     this.creationCode = `${response.data.securityCode}`;
                     this.created = true;
                     this.editing = false;
                 } catch (error) {
-                    if (error.response.status === 406) {
-                        this.setErrorMessage(Object.values(error.response.data).join(", "));
-                    } else {
-                        this.setErrorMessage(error.response.data.message);
+                    if (error.response.data) {
+                        if (error.response.status === 406) {
+                            this.setErrorMessage(Object.values(error.response.data).join(", "));
+                        } else {
+                            this.setErrorMessage(error.response.data.message);
+                        }
                     }
                 }
             }
@@ -269,15 +274,15 @@ export default {
 
 <style scoped>
 .error {
-  display: none;
+    display: none;
 }
 
 .error.fieldError {
-  display: initial;
-  color: red;
+    display: initial;
+    color: red;
 }
 
 #code {
-  color: blue;
+    color: blue;
 }
 </style>

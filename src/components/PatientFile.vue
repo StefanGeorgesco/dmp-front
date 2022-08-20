@@ -71,7 +71,9 @@ export default {
       let response = await Service.getPatientFile(this.routeId);
       this.file = response.data;
     } catch (error) {
-      this.setErrorMessage(error.response.data.message);
+      if (error.response.data) {
+        this.setErrorMessage(error.response.data.message);
+      }
     }
   },
   methods: {
@@ -98,5 +100,4 @@ export default {
 [class*="col-md-"] {
   padding: 0.5rem 2rem;
 }
-
 </style>

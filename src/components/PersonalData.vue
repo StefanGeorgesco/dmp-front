@@ -5,7 +5,8 @@
   </div>
   <br>
   <div class="container">
-    <form @submit.prevent="submitUpdateFile" @input="checkForm" class="row g-3 needs-validation" novalidate>
+    <form @submit.prevent="submitUpdateFile" @input="editing = true; checkForm()" class="row g-3 needs-validation"
+      novalidate>
       <div class="col-md-4">
         <label for="id" class="form-label">Identifiant</label>
         <input v-model="file.id" type="text" class="form-control" id="id" readonly>
@@ -128,6 +129,7 @@ export default {
   name: "PersonalData",
   data() {
     return {
+      editing: false,
       update: false,
       file: {
         id: "",
@@ -159,6 +161,13 @@ export default {
   async created() {
     this.getFile();
   },
+  beforeRouteLeave(to) {
+    if (to.name !== "login" && this.editing) {
+      const answer = window.confirm("Voulez-vous vraiment quitter la page ? Les données saisies seront perdues.")
+      if (!answer)
+        return false;
+    }
+  },
   computed: {
     ...mapState(useAuthUserStore, ["role"]),
   },
@@ -175,11 +184,10 @@ export default {
         this.file = response.data;
         this.checkForm();
         this.update = false;
+        this.editing = false;
         this.mustCheck = false;
       } catch (error) {
-        if (error.response.status === 406) {
-          this.setErrorMessage(Object.values(error.response.data).join(", "));
-        } else {
+        if (error.response.data) {
           this.setErrorMessage(error.response.data.message);
         }
       }
@@ -219,11 +227,14 @@ export default {
           this.setSuccessMessage("Les données ont bien été modifiées.");
           this.file = response.data;
           this.update = false;
+          this.editing = false;
         } catch (error) {
-          if (error.response.status === 406) {
-            this.setErrorMessage(Object.values(error.response.data).join(", "));
-          } else {
-            this.setErrorMessage(error.response.data.message);
+          if (error.response.data) {
+            if (error.response.status === 406) {
+              this.setErrorMessage(Object.values(error.response.data).join(", "));
+            } else {
+              this.setErrorMessage(error.response.data.message);
+            }
           }
         }
       }

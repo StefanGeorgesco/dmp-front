@@ -87,7 +87,9 @@ export default {
           this.correspondenceFilter = "ongoing";
         }
       } catch (error) {
-        this.setErrorMessage(error.response.data.message);
+        if (error.response.data) {
+          this.setErrorMessage(error.response.data.message);
+        }
       }
     },
     ...mapActions(useMessagesStore, ["setErrorMessage"]),

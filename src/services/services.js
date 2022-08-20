@@ -1,16 +1,42 @@
 import axios from "axios";
 import { Buffer } from "buffer";
 import { useAuthUserStore } from "../stores/authUserStore.js";
+import { useMessagesStore } from "../stores/messagesStore.js";
+
+let router;
+
+(async function () {
+  let obj = await import("../router");
+  router = obj.default;
+})();
 
 axios.interceptors.request.use((request) => {
-  const store = useAuthUserStore();
+  const authStore = useAuthUserStore();
 
-  if (store.authorization) {
-    request.headers.common.Authorization = store.authorization;
+  if (authStore.authorization) {
+    request.headers.common.Authorization = authStore.authorization;
   }
+  request.headers["X-Requested-With"] = "XMLHttpRequest";
 
   return request;
 });
+
+axios.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  async function (error) {
+    const authStore = useAuthUserStore();
+    const msgStore = useMessagesStore();
+
+    if (error.response.status === 401) {
+      msgStore.setErrorMessage("Session expirée. Vous devez vous reconnecter.");
+      authStore.logout();
+      router.push("/login");
+    }
+    return Promise.reject(error);
+  }
+);
 
 const baseUrl = "/dmp";
 
@@ -22,7 +48,7 @@ export class Service {
         Buffer.from(user.username + ":" + user.password, "utf8").toString(
           "base64"
         ),
-      "X-Requested-With": "XMLHttpRequest",
+      //"X-Requested-With": "XMLHttpRequest",
     };
 
     return axios.post(`${baseUrl}/login`, null, { headers });

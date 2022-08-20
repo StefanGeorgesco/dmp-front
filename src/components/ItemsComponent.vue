@@ -17,6 +17,7 @@ export default {
   components: {
     ItemComponent,
   },
+  props: ["file"],
   data() {
     return {
       items: [],
@@ -40,7 +41,9 @@ export default {
         this.items = response.data;
         this.itemsUpdated = true;
       } catch (error) {
-        this.setErrorMessage(error.response.data.message);
+        if (error.response.data) {
+          this.setErrorMessage(error.response.data.message);
+        }
       }
     },
     ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
@@ -49,4 +52,5 @@ export default {
 </script>
 
 <!-- eslint-disable prettier/prettier -->
-<style scoped></style>
+<style scoped>
+</style>
