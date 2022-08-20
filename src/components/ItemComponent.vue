@@ -7,7 +7,7 @@
 <!-- eslint-disable prettier/prettier -->
 <script>
 export default {
-    name: "ViewItemComponent",
+    name: "ItemComponent",
     props: ["item"],
     emits: ["itemUpdated"],
 }

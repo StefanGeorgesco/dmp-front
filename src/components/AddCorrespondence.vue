@@ -4,7 +4,7 @@
         <form @submit.prevent="submitAddCorrespondence" @input="checkForm" class="row g-3" novalidate>
             <div class="col-md-12">
                 <label class="form-label">* Médecin correspondant</label>
-                <ObjectFinderComponent objectType="doctor" :objectRepFn="toString" :finderState="objectFinderSate"
+                <ObjectFinder objectType="doctor" :objectRepFn="toString" :finderState="objectFinderSate"
                     :objectFilterFn="objectFilter" @newSelection="updateSelection($event, selection)" />
                 <div class="error" :class="{ fieldError: doctorPresentError }">
                     Le médecin est obligatoire.
@@ -38,13 +38,13 @@ import { mapActions, mapState } from "pinia";
 import { useMessagesStore } from "../stores/messagesStore.js";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { Service } from "../services/services.js";
-import ObjectFinderComponent from "./ObjectFinderComponent.vue";
+import ObjectFinder from "./ObjectFinder.vue";
 
 export default {
     name: "AddCorrespondence",
     props: ["patientFileId"],
     components: {
-        ObjectFinderComponent,
+        ObjectFinder,
     },
     emits: ["correspondenceAdded", "canceled"],
     data() {

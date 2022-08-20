@@ -67,7 +67,7 @@ import { useMessagesStore } from "../stores/messagesStore";
 import { mapActions } from "pinia";
 
 export default {
-  name: "SignUpComponent",
+  name: "SignUp",
   data() {
     return {
       user: {

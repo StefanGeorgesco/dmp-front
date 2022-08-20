@@ -19,8 +19,8 @@
   </div>
   <br>
   <div v-if="selectedFile" class="container">
-    <FileCardComponent @referringDoctorUpdated="updateFile($event, file)" @close="clear" @fileDeleted="clear" :type="type" :file="selectedFile">
-    </FileCardComponent>
+    <FileCard @referringDoctorUpdated="updateFile($event, file)" @close="clear" @fileDeleted="clear" :type="type" :file="selectedFile">
+    </FileCard>
   </div>
   <div class="container">
     <RouterLink to="/add-doctor" v-if="type === 'doctor' && role === 'ADMIN'" class="btn btn-primary">
@@ -37,13 +37,13 @@
 import { mapState } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { Service } from "../services/services.js";
-import FileCardComponent from "./FileCardComponent.vue";
+import FileCard from "./FileCard.vue";
 
 export default {
-  name: "ManageFilesComponent",
+  name: "ManageFiles",
   props: ["type"],
   components: {
-    FileCardComponent,
+    FileCard,
   },
   data() {
     return {

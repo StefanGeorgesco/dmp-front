@@ -2,11 +2,11 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import HomeComponent from "../components/HomeComponent.vue";
 import LoginComponent from "../components/LoginComponent.vue";
-import SignUpComponent from "../components/SignUpComponent.vue";
-import PersonalDataComponent from "../components/PersonalDataComponent.vue";
-import AddFileComponent from "../components/AddFileComponent.vue";
-import ManageFilesComponent from "../components/ManageFilesComponent.vue";
-import ViewPatientFileComponent from "../components/ViewPatientFileComponent.vue";
+import SignUp from "../components/SignUp.vue";
+import PersonalData from "../components/PersonalData.vue";
+import AddFile from "../components/AddFile.vue";
+import ManageFiles from "../components/ManageFiles.vue";
+import PatientFile from "../components/PatientFile.vue";
 
 const roleGuard = (roles) => {
   return () => {
@@ -35,46 +35,46 @@ const router = createRouter({
     {
       path: "/sign-up",
       name: "sign-up",
-      component: SignUpComponent,
+      component: SignUp,
     },
     {
       path: "/personal-data",
       name: "personal-data",
-      component: PersonalDataComponent,
+      component: PersonalData,
       beforeEnter: roleGuard(["DOCTOR", "PATIENT"]),
     },
     {
       path: "/add-doctor",
       name: "add-doctor",
-      component: AddFileComponent,
+      component: AddFile,
       props: { type: "doctor" },
       beforeEnter: roleGuard(["ADMIN"]),
     },
     {
       path: "/add-patient-file",
       name: "add-patient-file",
-      component: AddFileComponent,
+      component: AddFile,
       props: { type: "patientFile" },
       beforeEnter: roleGuard(["DOCTOR"]),
     },
     {
       path: "/manage-doctors",
       name: "manage-doctors",
-      component: ManageFilesComponent,
+      component: ManageFiles,
       props: { type: "doctor" },
       beforeEnter: roleGuard(["ADMIN"]),
     },
     {
       path: "/manage-patient-files",
       name: "manage-patient-files",
-      component: ManageFilesComponent,
+      component: ManageFiles,
       props: { type: "patientFile" },
       beforeEnter: roleGuard(["ADMIN", "DOCTOR"]),
     },
     {
       path: "/view-patient-file/:id",
       name: "view-patient-file",
-      component: ViewPatientFileComponent,
+      component: PatientFile,
       beforeEnter: roleGuard(["DOCTOR"]),
     },
   ],

@@ -17,7 +17,7 @@
                 <div v-else class="container">
                     <form @submit.prevent="submitUpdateReferringDoctor" @input="checkForm" class="row g-3" novalidate>
                         <div class="col-md-12"></div>
-                        <ObjectFinderComponent @newSelection="updateDoctorSelection($event, selection)"
+                        <ObjectFinder @newSelection="updateDoctorSelection($event, selection)"
                             objectType="doctor" :preSelection="{
                                 id: file.referringDoctorId,
                                 firstname: file.referringDoctorFirstname,
@@ -80,14 +80,14 @@ import { mapState, mapActions } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore.js";
 import { Service } from "../services/services.js";
-import ObjectFinderComponent from "./ObjectFinderComponent.vue";
+import ObjectFinder from "./ObjectFinder.vue";
 
 export default {
-    name: "FileCardComponent",
+    name: "FileCard",
     emits: ["fileDeleted", "close", "referringDoctorUpdated"],
     props: ["type", "file"],
     components: {
-        ObjectFinderComponent, RouterLink,
+        ObjectFinder, RouterLink,
     },
     data() {
         return {
@@ -138,9 +138,9 @@ export default {
             try {
                 await service(this.file.id);
                 this.$emit("fileDeleted");
-                this.setSuccessMessage(`Le dossier ${this.type === "doctor" ? "de docteur" : "patient"} ${this.file.id} a bien été supprimé, ainsi que le compte utilisateur associé.`)
+                this.setSuccessMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ${this.file.id} a bien été supprimé, ainsi que le compte utilisateur associé.`)
             } catch (error) {
-                this.setErrorMessage(`Le dossier ${this.type === "doctor" ? "de docteur" : "patient"} ne peut pas être supprimé.${this.type === "doctor" ? " Il doit être référencé dans au moins un dossier patient." : ""}`);
+                this.setErrorMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ne peut pas être supprimé.${this.type === "doctor" ? " Il doit être référencé dans au moins un dossier patient." : ""}`);
             }
         },
         async updateCanEdit() {

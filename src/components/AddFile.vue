@@ -31,7 +31,7 @@
             <div></div>
             <div v-if="type === 'doctor'" class="col-md-12">
                 <label class="form-label">* Spécialités</label>
-                <TagSelectorComponent @newSelection="updateSelection($event, selection)" :options="specialties" />
+                <TagSelector @newSelection="updateSelection($event, selection)" :options="specialties" />
                 <div class="error" :class="{ fieldError: specialtiesError }">
                     Le médecin doit avoir au moins une spécialité.
                 </div>
@@ -133,12 +133,12 @@
 import { Service } from "../services/services.js";
 import { useMessagesStore } from "../stores/messagesStore";
 import { mapActions } from "pinia";
-import TagSelectorComponent from "./TagSelectorComponent.vue";
+import TagSelector from "./TagSelector.vue";
 
 export default {
-    name: "AddFileComponent",
+    name: "AddFile",
     components: {
-        TagSelectorComponent,
+        TagSelector,
     },
     props: ["type"],
     data() {

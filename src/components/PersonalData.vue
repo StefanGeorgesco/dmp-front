@@ -125,7 +125,7 @@ import { useMessagesStore } from "../stores/messagesStore";
 import { Service } from "../services/services.js";
 
 export default {
-  name: "PersonalDataComponent",
+  name: "PersonalData",
   data() {
     return {
       update: false,

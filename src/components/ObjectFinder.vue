@@ -22,7 +22,7 @@ import { useMessagesStore } from "../stores/messagesStore.js";
 import { Service } from "../services/services.js";
 
 export default {
-    name: "ObjectFinderComponent",
+    name: "ObjectFinder",
     emits: ["newSelection"],
     props: ["objectType", "preSelection", "objectRepFn", "objectFilterFn", "finderState"],
     data() {
@@ -71,7 +71,7 @@ export default {
 </script>
 
 <!-- eslint-disable prettier/prettier -->
-<style>
+<style scoped>
 .tag-input {
     position: relative;
     border: 1px solid #ced4da;

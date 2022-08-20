@@ -17,7 +17,7 @@
 <!-- eslint-disable prettier/prettier -->
 <script>
 export default {
-    name: "TagSelectorComponent",
+    name: "TagSelector",
     emits: ["newSelection"],
     props: ["options"],
     data() {
@@ -50,7 +50,7 @@ export default {
 </script>
 
 <!-- eslint-disable prettier/prettier -->
-<style>
+<style scoped>
 .tag-input {
     position: relative;
     border: 1px solid #ced4da;

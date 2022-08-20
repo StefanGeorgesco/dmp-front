@@ -2,14 +2,14 @@
 <template>
   <div class="container-custom">
     <div class="row">
-      <div v-show="file.id" class="col-md-2">
+      <div v-if="file.id" class="col-md-2">
         <template v-if="role === 'DOCTOR'">
           <div v-cloak class="card">
             <h4>{{ file.firstname }} {{ file.lastname }} ({{ file.id }})</h4>
             <p>Né(e) le {{ new Date(file.dateOfBirth).toLocaleDateString() }}</p>
           </div>
         </template>
-        <div class="card" v-else-if="role === 'PATIENT'">
+        <div class="card" v-if="role === 'PATIENT' || !isReferringDoctor">
           <h5>Médecin référent</h5>
           <h6>{{ file.referringDoctorFirstname }} {{ file.referringDoctorLastname }} ({{ file.referringDoctorId }})</h6>
           <p>{{ file.referringDoctorSpecialties.join(", ") }}</p>
@@ -24,7 +24,7 @@
             <a @click="correspondenceFilter = 'past'" :class="{ active: correspondenceFilter === 'past' }">passées</a> -
             <a @click="correspondenceFilter = 'all'" :class="{ active: correspondenceFilter === 'all' }">toutes</a>
             <br><br>
-            <ViewCorrespondenceComponent v-for="correspondence in filteredCorrepondences" :key="correspondence.id"
+            <CorrespondenceComponent v-for="correspondence in filteredCorrepondences" :key="correspondence.id"
               :correspondence="correspondence" :canDelete="isReferringDoctor"
               @correspondenceUpdated="updateCorrespondences" />
             <template v-if="filteredCorrepondences.length === 0">
@@ -46,7 +46,7 @@
       </div>
       <div v-cloak class="col-md-7">
         <h5>Eléments médicaux ({{ items.length }})</h5>
-        <ViewItemComponent v-for="item in items" :key="item.id" :item="item" @itemUpdated="updateItems" />
+        <ItemComponent v-for="item in items" :key="item.id" :item="item" @itemUpdated="updateItems" />
       </div>
       <br>
     </div>
@@ -66,14 +66,14 @@ import { mapState, mapActions } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore";
 import { Service } from "../services/services.js";
-import ViewCorrespondenceComponent from "./ViewCorrespondenceComponent.vue";
-import ViewItemComponent from "./ViewItemComponent.vue";
+import CorrespondenceComponent from "./CorrespondenceComponent.vue";
+import ItemComponent from "./ItemComponent.vue";
 import AddCorrespondence from "./AddCorrespondence.vue";
 
 export default {
-  name: "ViewPatientFileComponent",
+  name: "PatientFile",
   components: {
-    ViewCorrespondenceComponent, ViewItemComponent, AddCorrespondence,
+    CorrespondenceComponent, ItemComponent, AddCorrespondence,
   },
   data() {
     return {

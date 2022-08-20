@@ -2,7 +2,7 @@
 <template>
   <div class="container" v-if="role === 'ADMIN'">
     <div class="col-12">
-      <RouterLink to="/manage-doctors" type="button" class="btn btn-light">Gérer les dossiers des docteurs</RouterLink>
+      <RouterLink to="/manage-doctors" type="button" class="btn btn-light">Gérer les dossiers des médecins</RouterLink>
     </div>
     <br>
     <div class="col-12">
@@ -10,8 +10,8 @@
       </RouterLink>
     </div>
   </div>
-  <ManageFilesComponent type="patientFile" v-else-if="role === 'DOCTOR'" />
-  <ViewPatientFileComponent v-else-if="role === 'PATIENT'"/>
+  <ManageFiles type="patientFile" v-else-if="role === 'DOCTOR'" />
+  <PatientFile v-else-if="role === 'PATIENT'"/>
   <div class="container" v-else>Type inconnu</div>
 </template>
 
@@ -19,13 +19,13 @@
 <script>
 import { mapState } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
-import ManageFilesComponent from "./ManageFilesComponent.vue";
-import ViewPatientFileComponent from "./ViewPatientFileComponent.vue";
+import ManageFiles from "./ManageFiles.vue";
+import PatientFile from "./PatientFile.vue";
 
 export default {
   name: "HomeComponent",
   components : {
-    ManageFilesComponent, ViewPatientFileComponent,
+    ManageFiles, PatientFile,
   },
   computed: {
     ...mapState(useAuthUserStore, ["role"]),

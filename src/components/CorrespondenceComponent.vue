@@ -24,7 +24,7 @@
                 </div>
                 <div class="modal-body">
                     <p>
-                        Confirmez-vous la suppression de la correspondance du docteur
+                        Confirmez-vous la suppression de la correspondance du médecin
                         {{ correspondence.doctorId }} - {{ correspondence.doctorFirstname }}
                         {{ correspondence.doctorLastname }} qui était prévue jusqu'au
                         {{ new Date(correspondence.dateUntil).toLocaleDateString() }} ?
@@ -47,7 +47,7 @@ import { useMessagesStore } from "../stores/messagesStore.js";
 import { Service } from "../services/services.js";
 
 export default {
-    name: "ViewCorrespondenceComponent",
+    name: "CorrespondenceComponent",
     props: ["correspondence", "canDelete"],
     emits: ["correspondenceUpdated"],
     methods: {
