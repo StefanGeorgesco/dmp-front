@@ -102,7 +102,6 @@ export default {
       this.selectedFile = null;
     },
     ...mapActions(useMessagesStore, ["setErrorMessage"]),
-    ...mapActions(useAuthUserStore, ["logout"]),
   },
 }
 </script>

@@ -118,7 +118,6 @@ export default {
             return o.id !== this.userId;
         },
         ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
-        ...mapActions(useAuthUserStore, ["logout"]),
     },
     computed: {
         ...mapState(useAuthUserStore, ["userId"]),
