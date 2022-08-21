@@ -1,7 +1,12 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <h5>Eléments médicaux ({{ items.length }})</h5>
-  <ItemComponent v-for="item in items" :key="item.id" :item="item" @itemUpdated="updateItems" />
+  <ItemComponent v-for="item in items" :key="item.id" :item="item" :globalEditing="editing"
+    @editingStart="editing = true;" @editingEnd="editing = false; updateItems();" />
+  <br>
+  <button v-show="!editing" @click="addItem" type="button" class="btn btn-primary">
+    <i class="fa-solid fa-plus"></i> Ajouter un élément
+  </button>
 </template>
 
 <!-- eslint-disable prettier/prettier -->
@@ -21,7 +26,7 @@ export default {
   data() {
     return {
       items: [],
-      itemsUpdated: false,
+      editing: false,
     };
   },
   computed: {
@@ -34,19 +39,27 @@ export default {
     this.updateItems();
   },
   methods: {
+    addItem() {
+      this.items.push({
+        "@type": null,
+        date: new Date().toISOString().slice(0, 10),
+        authoringDoctorId: this.userId,
+        patientFileId: this.file.id,
+        editing: true,
+      });
+      this.editing = true;
+    },
     async updateItems() {
-      this.itemsUpdated = false;
       try {
         let response = await Service.getItems(this.routeId);
         this.items = response.data;
-        this.itemsUpdated = true;
       } catch (error) {
         if (error.response.data) {
           this.setErrorMessage(error.response.data.message);
         }
       }
     },
-    ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
+    ...mapActions(useMessagesStore, ["setErrorMessage"]),
   },
 }
 </script>

@@ -154,18 +154,30 @@ export class Service {
     return axios.get(uri);
   }
 
-  static addCorrespondence(patientFileId, correspondence) {
+  static addCorrespondence(correspondence) {
     let uri = encodeURI(
-      `${baseUrl}/patient-file/${patientFileId}/correspondence`
+      `${baseUrl}/patient-file/${correspondence.patientFileId}/correspondence`
     );
     return axios.post(uri, correspondence);
   }
 
-  static deleteCorrespondence(patientFileId, correspondenceId) {
+  static deleteCorrespondence(correspondence) {
     let uri = encodeURI(
-      `${baseUrl}/patient-file/${patientFileId}/correspondence/${correspondenceId}`
+      `${baseUrl}/patient-file/${correspondence.patientFileId}/correspondence/${correspondence.id}`
     );
     return axios.delete(uri);
+  }
+
+  static addItem(item) {
+    let uri = encodeURI(`${baseUrl}/patient-file/${item.patientFileId}/item`);
+    return axios.post(uri, item);
+  }
+
+  static updateItem(item) {
+    let uri = encodeURI(
+      `${baseUrl}/patient-file/${item.patientFileId}/item/${item.id}`
+    );
+    return axios.put(uri, item);
   }
 
   static updateReferringDoctor(patientFileId, referringDoctor) {

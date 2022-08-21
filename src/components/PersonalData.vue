@@ -255,15 +255,6 @@ input[readonly],
   border-radius: 0.375rem;
 }
 
-.error {
-  display: none;
-}
-
-.error.fieldError {
-  display: initial;
-  color: red;
-}
-
 .tag-container {
   position: relative;
   display: flex;
@@ -279,5 +270,13 @@ input[readonly],
   padding: 0.25em 1em;
   margin: 0.25em;
   color: white;
+}
+.error {
+  display: none;
+}
+
+.error.fieldError {
+  display: initial;
+  color: red;
 }
 </style>

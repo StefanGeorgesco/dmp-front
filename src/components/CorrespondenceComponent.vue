@@ -54,7 +54,7 @@ export default {
         async deleteCorrespondence() {
             this.$refs.modalClose.click();
             try {
-                await Service.deleteCorrespondence(this.correspondence.patientFileId, this.correspondence.id);
+                await Service.deleteCorrespondence(this.correspondence);
                 this.$emit("correspondenceUpdated");
                 this.setSuccessMessage("La correspondance a bien été supprimée.");
             } catch (error) {

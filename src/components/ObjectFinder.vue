@@ -5,7 +5,7 @@
             {{ objectRepFn(selectedOject) }}
         </div>
         <input @keyup.esc="deleteSelection" @focus="deleteSelection" @input="searchObjects" ref="input"
-            v-model="searchString" type="text">
+            v-model="searchString" type="text" :disabled="disabled" v-show="!disabled">
         <div class="options-list" v-show="foundObjects.length > 0">
             <div class="tag-option" v-for="o in foundObjects" :key="o.id" @click="select(o)">
                 {{ objectRepFn(o) }}
@@ -24,11 +24,11 @@ import { Service } from "../services/services.js";
 export default {
     name: "ObjectFinder",
     emits: ["newSelection"],
-    props: ["objectType", "preSelection", "objectRepFn", "objectFilterFn", "finderState"],
+    props: ["objectType", "preSelection", "objectRepFn", "objectFilterFn", "finderState", "disabled"],
     data() {
         return {
             searchString: "",
-            selectedOject: null,
+            selectedOject: this.preSelection,
             foundObjects: [],
         };
     },
@@ -53,7 +53,7 @@ export default {
         },
         clear() {
             this.searchString = "";
-            this.selectedOject = null;
+            this.selectedOject = this.preSelection;
             this.foundObjects = [];
         },
         deleteSelection() {
@@ -87,7 +87,7 @@ export default {
 .tag-input>.tag {
     flex: 0 1 auto;
     border-radius: 0.375rem;
-    background-color: #0d6efd;
+    background-color: cornflowerblue;
     padding: 0.25em 1em;
     margin: 0.25em;
     color: white;

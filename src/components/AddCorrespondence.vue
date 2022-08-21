@@ -6,7 +6,7 @@
                 <label class="form-label">* Médecin correspondant</label>
                 <ObjectFinder objectType="doctor" :objectRepFn="toString" :finderState="objectFinderSate"
                     :objectFilterFn="objectFilter" @newSelection="updateSelection($event, selection)" />
-                <div class="error" :class="{ fieldError: doctorPresentError }">
+                <div class="error" :class="{ fieldError: doctorError }">
                     Le médecin est obligatoire.
                 </div>
             </div>
@@ -56,7 +56,7 @@ export default {
             mustCheck: false,
             dateUntilPresentError: false,
             dateUntilFutureError: false,
-            doctorPresentError: false,
+            doctorError: false,
             objectFinderSate: {
                 counter: 0,
             },
@@ -67,9 +67,10 @@ export default {
             if (this.mustCheck) {
                 this.dateUntilPresentError = !this.correspondence.dateUntil;
                 this.dateUntilFutureError = this.correspondence.dateUntil && new Date(this.correspondence.dateUntil) <= new Date();
-                this.doctorPresentError = !this.correspondence.doctorId;
+                this.doctorError = !this.correspondence.doctorId;
             }
-            return (!this.dateUntilPresentError && !this.dateUntilFutureError && !this.doctorPresentError);
+            
+            return (!this.dateUntilPresentError && !this.dateUntilFutureError && !this.doctorError);
         },
         updateSelection(selection) {
             this.correspondence.doctorId = selection?.id;
@@ -79,7 +80,8 @@ export default {
             this.mustCheck = true;
             if (this.checkForm()) {
                 try {
-                    await Service.addCorrespondence(this.patientFileId, this.correspondence);
+                    this.correspondence.patientFileId = this.patientFileId;
+                    await Service.addCorrespondence(this.correspondence);
                     this.clear();
                     this.$emit("correspondenceAdded");
                     this.objectFinderSate.counter++;
@@ -109,7 +111,7 @@ export default {
             this.mustCheck = false;
             this.dateUntilPresentError = false;
             this.dateUntilFutureError = false;
-            this.doctorPresentError = false;
+            this.doctorError = false;
         },
         toString(o) {
             return `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties.map(s => s.description).join(", ")}`;
