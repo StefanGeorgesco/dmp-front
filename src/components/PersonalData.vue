@@ -202,16 +202,17 @@ export default {
         this.zipcodeError = !this.file.address.zipcode;
         this.countryError = !this.file.address.country;
 
-        return (
-          !this.phoneError &&
-          !this.emailPresentError &&
-          !this.emailFormatError &&
-          !this.street1Error &&
-          !this.cityError &&
-          !this.zipcodeError &&
-          !this.countryError
-        );
       }
+
+      return (
+        !this.phoneError &&
+        !this.emailPresentError &&
+        !this.emailFormatError &&
+        !this.street1Error &&
+        !this.cityError &&
+        !this.zipcodeError &&
+        !this.countryError
+      );
     },
     async submitUpdateFile() {
       this.mustCheck = true;

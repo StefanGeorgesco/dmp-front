@@ -98,14 +98,15 @@ export default {
           : false;
         this.securityCodeError = !this.user.securityCode;
 
-        return (
-          !this.IdError &&
-          !this.usernameError &&
-          !this.passwordPresentError &&
-          !this.passwordLengthError &&
-          !this.securityCodeError
-        );
       }
+
+      return (
+        !this.IdError &&
+        !this.usernameError &&
+        !this.passwordPresentError &&
+        !this.passwordLengthError &&
+        !this.securityCodeError
+      );
     },
     async submitSignUp() {
       this.mustCheck = true;
