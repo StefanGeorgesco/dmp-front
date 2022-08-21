@@ -48,7 +48,6 @@ export class Service {
         Buffer.from(user.username + ":" + user.password, "utf8").toString(
           "base64"
         ),
-      //"X-Requested-With": "XMLHttpRequest",
     };
 
     return axios.post(`${baseUrl}/login`, null, { headers });

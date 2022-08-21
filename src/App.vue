@@ -105,7 +105,7 @@ export default {
   methods: {
     doLogout() {
       this.logout();
-      this.$router.go("/");
+      this.$router.push("/");
     },
     ...mapActions(useAuthUserStore, ["reloadAuth", "logout"]),
   },
