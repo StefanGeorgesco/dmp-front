@@ -29,10 +29,17 @@ axios.interceptors.response.use(
     const authStore = useAuthUserStore();
     const msgStore = useMessagesStore();
 
-    if (error.response.status === 401) {
+    if (
+      router.currentRoute.value.name !== "login" &&
+      error.response.status === 401
+    ) {
       msgStore.setErrorMessage("Session expirée. Vous devez vous reconnecter.");
       authStore.logout();
       router.push("/login");
+    } else if (error.response.status >= 500) {
+      msgStore.setErrorMessage(
+        "Impossible de se connecter au serveur. Veuillez réessayer."
+      );
     }
     return Promise.reject(error);
   }

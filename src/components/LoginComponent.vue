@@ -44,7 +44,9 @@ export default {
         await this.login(this.user);
         this.$router.push("/");
       } catch (error) {
-        this.setErrorMessage("Identifiant ou mot de passe incorrect.");
+        if (error.response.status === 401) {
+          this.setErrorMessage("Identifiant ou mot de passe incorrect.");
+        }
       }
     },
     ...mapActions(useMessagesStore, ["setErrorMessage"]),
