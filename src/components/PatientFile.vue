@@ -4,7 +4,7 @@
     <div class="row">
       <div v-if="file.id" class="col-md-2">
         <template v-if="role === 'DOCTOR'">
-          <div v-cloak class="card">
+          <div class="card">
             <h4>{{ file.firstname }} {{ file.lastname }} ({{ file.id }})</h4>
             <p>Né(e) le {{ new Date(file.dateOfBirth).toLocaleDateString() }}</p>
           </div>
@@ -15,10 +15,10 @@
           <p>{{ file.referringDoctorSpecialties.join(", ") }}</p>
         </div>
       </div>
-      <div v-cloak class="col-md-3">
+      <div class="col-md-3">
         <CorrespondencesComponent :file="file" />
       </div>
-      <div v-cloak class="col-md-7">
+      <div class="col-md-7">
         <ItemsComponent :file="file" />
       </div>
       <br>
@@ -54,6 +54,7 @@ export default {
         referringDoctorId: "",
         referringDoctorFirstname: "",
         referringDoctorLastname: "",
+        referringDoctorSpecialties: [],
       },
     };
   },
@@ -84,10 +85,6 @@ export default {
 
 <!-- eslint-disable prettier/prettier -->
 <style scoped>
-[v-cloak] {
-  display: none;
-}
-
 .card {
   padding: 0.5rem;
 }

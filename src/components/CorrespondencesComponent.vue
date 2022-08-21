@@ -1,31 +1,29 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <h5>Correspondances ({{ filteredCorrepondences.length }})</h5>
-  <template v-if="correspondencesUpdated">
-    <template v-if="correspondences.length > 0">
-      <a @click="correspondenceFilter = 'ongoing'" :class="{ active: correspondenceFilter === 'ongoing' }">en
-        cours</a> -
-      <a @click="correspondenceFilter = 'past'" :class="{ active: correspondenceFilter === 'past' }">passées</a> -
-      <a @click="correspondenceFilter = 'all'" :class="{ active: correspondenceFilter === 'all' }">toutes</a>
-      <br><br>
-      <CorrespondenceComponent v-for="correspondence in filteredCorrepondences" :key="correspondence.id"
-        :correspondence="correspondence" :canDelete="isReferringDoctor"
-        @correspondenceUpdated="updateCorrespondences" />
-      <template v-if="filteredCorrepondences.length === 0">
-        <p>Aucune correspondance {{ correspondenceFilter === "ongoing" ? "en cours" : "passée" }}.</p>
-      </template>
+  <template v-if="correspondences.length > 0">
+    <a @click="correspondenceFilter = 'ongoing'" :class="{ active: correspondenceFilter === 'ongoing' }">en
+      cours</a> -
+    <a @click="correspondenceFilter = 'past'" :class="{ active: correspondenceFilter === 'past' }">passées</a> -
+    <a @click="correspondenceFilter = 'all'" :class="{ active: correspondenceFilter === 'all' }">toutes</a>
+    <br><br>
+    <CorrespondenceComponent v-for="correspondence in filteredCorrepondences" :key="correspondence.id"
+      :correspondence="correspondence" :canDelete="isReferringDoctor" @correspondenceUpdated="updateCorrespondences" />
+    <template v-if="filteredCorrepondences.length === 0">
+      <p>Aucune correspondance {{ correspondenceFilter === "ongoing" ? "en cours" : "passée" }}.</p>
     </template>
-    <template v-else>
-      <br>
-      <p>Il n'y a aucune correspondance sur ce dossier.</p>
-    </template>
+  </template>
+  <template v-else>
+    <br>
+    <p>Il n'y a aucune correspondance sur ce dossier.</p>
   </template>
   <template v-if="isReferringDoctor">
     <br>
     <button v-show="!addingCorrespondence" @click="addingCorrespondence = true" type="button" class="btn btn-primary"><i
         class="fa-solid fa-plus"></i> Ajouter une correspondance</button>
-    <AddCorrespondence @correspondenceAdded="addingCorrespondence = false; updateCorrespondences();"
-      @canceled="addingCorrespondence = false" v-show="addingCorrespondence" :patientFileId="file.id" />
+    <AddCorrespondence v-show="addingCorrespondence"
+      @correspondenceAdded="addingCorrespondence = false; updateCorrespondences();"
+      @canceled="addingCorrespondence = false" :patientFileId="file.id" />
   </template>
 </template>
 
@@ -47,7 +45,6 @@ export default {
   data() {
     return {
       correspondences: [],
-      correspondencesUpdated: false,
       correspondenceFilter: "ongoing",
       addingCorrespondence: false,
     };
@@ -78,11 +75,9 @@ export default {
   },
   methods: {
     async updateCorrespondences() {
-      this.correspondencesUpdated = false;
       try {
         let response = await Service.getCorrespondences(this.routeId);
         this.correspondences = response.data;
-        this.correspondencesUpdated = true;
         if (this.correspondenceFilter === "past") {
           this.correspondenceFilter = "ongoing";
         }
