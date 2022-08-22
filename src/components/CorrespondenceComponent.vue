@@ -48,7 +48,16 @@ import { Service } from "../services/services.js";
 
 export default {
     name: "CorrespondenceComponent",
-    props: ["correspondence", "canDelete"],
+    props: {
+        correspondence: {
+            type: Object,
+            required: true,
+        },
+        canDelete: {
+            type: Boolean,
+            required: true,
+        },
+    },
     emits: ["correspondenceUpdated"],
     methods: {
         async deleteCorrespondence() {

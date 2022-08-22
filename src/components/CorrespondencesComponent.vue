@@ -8,7 +8,7 @@
     <a @click="correspondenceFilter = 'all'" :class="{ active: correspondenceFilter === 'all' }">toutes</a>
     <br><br>
     <CorrespondenceComponent v-for="correspondence in filteredCorrepondences" :key="correspondence.id"
-      :correspondence="correspondence" :canDelete="isReferringDoctor" @correspondenceUpdated="updateCorrespondences" />
+      :correspondence="correspondence" :can-delete="isReferringDoctor" @correspondence-updated="updateCorrespondences" />
     <template v-if="filteredCorrepondences.length === 0">
       <p>Aucune correspondance {{ correspondenceFilter === "ongoing" ? "en cours" : "passée" }}.</p>
     </template>
@@ -22,8 +22,8 @@
     <button v-show="!addingCorrespondence" @click="addingCorrespondence = true" type="button" class="btn btn-primary"><i
         class="fa-solid fa-plus"></i> Ajouter une correspondance</button>
     <AddCorrespondence v-show="addingCorrespondence"
-      @correspondenceAdded="addingCorrespondence = false; updateCorrespondences();"
-      @canceled="addingCorrespondence = false" :patientFileId="file.id" />
+      @correspondence-added="addingCorrespondence = false; updateCorrespondences();"
+      @canceled="addingCorrespondence = false" :patient-file-id="file.id" />
   </template>
 </template>
 
@@ -41,7 +41,12 @@ export default {
   components: {
     CorrespondenceComponent, AddCorrespondence,
   },
-  props: ["file"],
+  props: {
+    file: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       correspondences: [],

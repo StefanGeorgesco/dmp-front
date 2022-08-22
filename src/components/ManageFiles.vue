@@ -19,7 +19,7 @@
   </div>
   <br>
   <div v-if="selectedFile" class="container">
-    <FileCard @referringDoctorUpdated="updateFile($event, file)" @close="clear" @fileDeleted="clear" :type="type"
+    <FileCard @referring-doctor-updated="updateFile($event, file)" @close="clear" @file-deleted="clear" :type="type"
       :file="selectedFile">
     </FileCard>
   </div>
@@ -43,7 +43,15 @@ import FileCard from "./FileCard.vue";
 
 export default {
   name: "ManageFiles",
-  props: ["type"],
+  props: {
+    type: {
+      type: String,
+      required: true,
+      validator(value) {
+        return ["patientFile", "doctor"].includes(value);
+      },
+    },
+  },
   components: {
     FileCard,
   },

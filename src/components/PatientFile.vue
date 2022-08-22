@@ -14,6 +14,11 @@
           <h6>{{ file.referringDoctorFirstname }} {{ file.referringDoctorLastname }} ({{ file.referringDoctorId }})</h6>
           <p>{{ file.referringDoctorSpecialties.join(", ") }}</p>
         </div>
+        <div v-if="role !== 'PATIENT'" class="container">
+          <div class="col-12">
+            <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>
+          </div>
+        </div>
       </div>
       <div class="col-md-3">
         <CorrespondencesComponent :file="file" />
@@ -24,7 +29,6 @@
       <br>
     </div>
   </div>
-  <br>
   <div v-if="role !== 'PATIENT'" class="container">
     <div class="col-12">
       <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>

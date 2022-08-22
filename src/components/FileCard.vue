@@ -17,14 +17,14 @@
                 <div v-else class="container">
                     <form @submit.prevent="submitUpdateReferringDoctor" @input="checkForm" class="row g-3" novalidate>
                         <div class="col-md-12"></div>
-                        <ObjectFinder @newSelection="updateDoctorSelection($event, selection)" objectType="doctor"
+                        <ObjectFinder @new-selection="updateDoctorSelection($event, selection)" object-type="doctor"
                             :preSelection="{
                                 id: file.referringDoctorId,
                                 firstname: file.referringDoctorFirstname,
                                 lastname: file.referringDoctorLastname,
-                                specialties: file.referringDoctorSpecialties.map(s => { s.description })
-                            }" :objectRepFn="toString" :objectFilterFn="objectFilter"
-                            :finderState="objectFinderSate" />
+                                specialties: file.referringDoctorSpecialties
+                            }" :object-rep-fn="toString" :object-filter-fn="objectFilter"
+                            :finder-state="objectFinderSate" />
                         <div class="col-12">
                             <button class="btn btn-primary" type="submit">Enregistrer</button>
                         </div>
@@ -85,7 +85,19 @@ import ObjectFinder from "./ObjectFinder.vue";
 export default {
     name: "FileCard",
     emits: ["fileDeleted", "close", "referringDoctorUpdated"],
-    props: ["type", "file"],
+    props: {
+        type: {
+            type: String,
+            required: true,
+            validator(value) {
+                return ["patientFile", "doctor"].includes(value);
+            },
+        },
+        file: {
+            type: Object,
+            required: true,
+        },
+    },
     components: {
         ObjectFinder, RouterLink,
     },
@@ -190,7 +202,7 @@ export default {
             };
         },
         toString(o) {
-            return `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties.map(s => s.description).join(", ")}`;
+            return `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties.map(s => s.description ? s.description :s ).join(", ")}`;
         },
         objectFilter() {
             return true;

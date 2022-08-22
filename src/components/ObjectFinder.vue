@@ -24,7 +24,32 @@ import { Service } from "../services/services.js";
 export default {
     name: "ObjectFinder",
     emits: ["newSelection"],
-    props: ["objectType", "preSelection", "objectRepFn", "objectFilterFn", "finderState", "disabled"],
+    props: {
+        objectType: {
+            type: String,
+            required: true,
+        },
+        preSelection: Object,
+        objectRepFn: {
+            type: Function,
+            default(o) {
+                return o.toString();
+            },
+        },
+        objectFilterFn: {
+            type: Function,
+            default() {
+                return true;
+            },
+        },
+        finderState: {
+            type: Object,
+            default() {
+                return {};
+            },
+        },
+        disabled: Boolean,
+    },
     data() {
         return {
             searchString: "",

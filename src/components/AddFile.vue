@@ -31,7 +31,7 @@
             <div></div>
             <div v-if="type === 'doctor'" class="col-md-12">
                 <label class="form-label">* Spécialités</label>
-                <TagSelector @newSelection="updateSelection($event, selection)" :options="specialties" />
+                <TagSelector @new-selection="updateSelection($event, selection)" :options="specialties" />
                 <div class="error" :class="{ fieldError: specialtiesError }">
                     Le médecin doit avoir au moins une spécialité.
                 </div>
@@ -140,7 +140,15 @@ export default {
     components: {
         TagSelector,
     },
-    props: ["type"],
+    props: {
+        type: {
+            type: String,
+            required: true,
+            validator(value) {
+                return ["patientFile", "doctor"].includes(value);
+            },
+        },
+    },
     data() {
         return {
             editing: false,

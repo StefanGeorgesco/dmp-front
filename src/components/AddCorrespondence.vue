@@ -4,8 +4,8 @@
         <form @submit.prevent="submitAddCorrespondence" @input="checkForm" class="row g-3" novalidate>
             <div class="col-md-12">
                 <label class="form-label">* Médecin correspondant</label>
-                <ObjectFinder objectType="doctor" :objectRepFn="toString" :finderState="objectFinderSate"
-                    :objectFilterFn="objectFilter" @newSelection="updateSelection($event, selection)" />
+                <ObjectFinder object-type="doctor" :object-rep-fn="toString" :finder-state="objectFinderSate"
+                    :object-filter-fn="objectFilter" @new-selection="updateSelection($event, selection)" />
                 <div class="error" :class="{ fieldError: doctorError }">
                     Le médecin est obligatoire.
                 </div>
@@ -42,7 +42,12 @@ import ObjectFinder from "./ObjectFinder.vue";
 
 export default {
     name: "AddCorrespondence",
-    props: ["patientFileId"],
+    props: {
+        patientFileId: {
+            type: String,
+            required: true,
+        },
+    },
     components: {
         ObjectFinder,
     },

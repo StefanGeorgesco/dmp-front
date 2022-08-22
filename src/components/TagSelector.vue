@@ -19,7 +19,12 @@
 export default {
     name: "TagSelector",
     emits: ["newSelection"],
-    props: ["options"],
+    props: {
+        options: {
+            type: Array,
+            required: true,
+        }
+    },
     data() {
         return {
             searchText: "",

@@ -37,35 +37,35 @@
             </div>
             <template v-if="item['@type'] === 'act'">
                 <label class="form-label"><span v-show="item.editing">*</span> Acte dispensé</label>
-                <ObjectFinder objectType="medical-act" :preSelection="item.medicalAct"
-                    :objectRepFn="(o) => `${o.id} - ${o.description}`" :objectFilterFn="(o) => true"
-                    :finderState="objectFinderSate" :disabled="!item.editing"
-                    @newSelection="selectMedicalAct($event, selection)" />
+                <ObjectFinder object-type="medical-act" :preSelection="item.medicalAct"
+                    :object-rep-fn="(o) => `${o.id} - ${o.description}`" :object-filter-fn="(o) => true"
+                    :finder-state="objectFinderSate" :disabled="!item.editing"
+                    @new-selection="selectMedicalAct($event, selection)" />
                 <div class="error" :class="{ fieldError: medicalActError }">
                     L'acte médical dispensé est obligatoire.
                 </div>
             </template>
             <template v-if="item['@type'] === 'diagnosis'">
                 <label class="form-label"><span v-show="item.editing">*</span> Maladie diagnostiquée</label>
-                <ObjectFinder objectType="disease" :preSelection="item.disease"
-                    :objectRepFn="(o) => `${o.id} - ${o.description}`" :objectFilterFn="(o) => true"
-                    :finderState="objectFinderSate" :disabled="!item.editing"
-                    @newSelection="selectDisease($event, selection)" />
+                <ObjectFinder object-type="disease" :preSelection="item.disease"
+                    :object-rep-fn="(o) => `${o.id} - ${o.description}`" :object-filter-fn="(o) => true"
+                    :finder-state="objectFinderSate" :disabled="!item.editing"
+                    @new-selection="selectDisease($event, selection)" />
                 <div class="error" :class="{ fieldError: diseaseError }">
                     La maladie diagnostiquée est obligatoire.
                 </div>
             </template>
             <template v-if="item['@type'] === 'mail'">
                 <label class="form-label"><span v-show="item.editing">*</span> Médecin destinataire</label>
-                <ObjectFinder objectType="doctor" :preSelection="item.recipientDoctorId ? {
+                <ObjectFinder object-type="doctor" :preSelection="item.recipientDoctorId ? {
                     id: item.recipientDoctorId,
                     firstname: item.recipientDoctorFirstname,
                     lastname: item.recipientDoctorLastname,
                     specialties: null,
                 } : null"
-                    :objectRepFn="(o) => `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties?.map(s => s.description).join(', ')}`"
-                    :objectFilterFn="(o) => true" :finderState="objectFinderSate" :disabled="!item.editing"
-                    @newSelection="selectRecipientDoctor($event, selection)" />
+                    :object-rep-fn="(o) => `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties?.map(s => s.description).join(', ')}`"
+                    :object-filter-fn="(o) => true" :finder-state="objectFinderSate" :disabled="!item.editing"
+                    @new-selection="selectRecipientDoctor($event, selection)" />
                 <div class="error" :class="{ fieldError: recipientDoctorIdError }">
                     Le médecin destinataire est obligatoire.
                 </div>
@@ -101,7 +101,16 @@ import ObjectFinder from "./ObjectFinder.vue";
 
 export default {
     name: "ItemComponent",
-    props: ["item", "globalEditing"],
+    props: {
+        item: {
+            type: Object,
+            required: true,
+        },
+        globalEditing: {
+            type: Boolean,
+            required: true,
+        },
+    },
     emits: ["editingStart", "editingEnd"],
     components: {
         ObjectFinder,

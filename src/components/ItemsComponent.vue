@@ -1,8 +1,8 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <h5>Eléments médicaux ({{ items.length }})</h5>
-  <ItemComponent v-for="item in items" :key="item.id" :item="item" :globalEditing="editing"
-    @editingStart="editing = true;" @editingEnd="editing = false; updateItems();" />
+  <ItemComponent v-for="item in items" :key="item.id" :item="item" :global-editing="editing"
+    @editing-start="editing = true;" @editing-end="editing = false; updateItems();" />
   <br>
   <button v-show="!editing" @click="addItem" type="button" class="btn btn-primary">
     <i class="fa-solid fa-plus"></i> Ajouter un élément
@@ -22,7 +22,12 @@ export default {
   components: {
     ItemComponent,
   },
-  props: ["file"],
+  props: {
+    file: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       items: [],
