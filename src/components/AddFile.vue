@@ -31,7 +31,7 @@
             <div></div>
             <div v-if="type === 'doctor'" class="col-md-12">
                 <label class="form-label">* Spécialités</label>
-                <TagSelector @new-selection="updateSelection($event, selection)" :options="specialties" />
+                <TagSelector @new-selection="updateSelection" :options="specialties" />
                 <div class="error" :class="{ fieldError: specialtiesError }">
                     Le médecin doit avoir au moins une spécialité.
                 </div>

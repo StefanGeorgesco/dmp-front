@@ -5,7 +5,7 @@
             <div class="col-md-12">
                 <label class="form-label">* Médecin correspondant</label>
                 <ObjectFinder object-type="doctor" :object-rep-fn="toString" :finder-state="objectFinderSate"
-                    :object-filter-fn="objectFilter" @new-selection="updateSelection($event, selection)" />
+                    :object-filter-fn="objectFilter" @new-selection="updateSelection" />
                 <div class="error" :class="{ fieldError: doctorError }">
                     Le médecin est obligatoire.
                 </div>

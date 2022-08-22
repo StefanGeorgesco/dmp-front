@@ -19,7 +19,7 @@
   </div>
   <br>
   <div v-if="selectedFile" class="container">
-    <FileCard @referring-doctor-updated="updateFile($event, file)" @close="clear" @file-deleted="clear" :type="type"
+    <FileCard @referring-doctor-updated="updateFile" @close="clear" @file-deleted="clear" :type="type"
       :file="selectedFile">
     </FileCard>
   </div>

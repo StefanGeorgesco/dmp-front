@@ -40,7 +40,7 @@
                 <ObjectFinder object-type="medical-act" :preSelection="item.medicalAct"
                     :object-rep-fn="(o) => `${o.id} - ${o.description}`" :object-filter-fn="(o) => true"
                     :finder-state="objectFinderSate" :disabled="!item.editing"
-                    @new-selection="selectMedicalAct($event, selection)" />
+                    @new-selection="selectMedicalAct" />
                 <div class="error" :class="{ fieldError: medicalActError }">
                     L'acte médical dispensé est obligatoire.
                 </div>
@@ -50,7 +50,7 @@
                 <ObjectFinder object-type="disease" :preSelection="item.disease"
                     :object-rep-fn="(o) => `${o.id} - ${o.description}`" :object-filter-fn="(o) => true"
                     :finder-state="objectFinderSate" :disabled="!item.editing"
-                    @new-selection="selectDisease($event, selection)" />
+                    @new-selection="selectDisease" />
                 <div class="error" :class="{ fieldError: diseaseError }">
                     La maladie diagnostiquée est obligatoire.
                 </div>
@@ -65,7 +65,7 @@
                 } : null"
                     :object-rep-fn="(o) => `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties?.map(s => s.description).join(', ')}`"
                     :object-filter-fn="(o) => true" :finder-state="objectFinderSate" :disabled="!item.editing"
-                    @new-selection="selectRecipientDoctor($event, selection)" />
+                    @new-selection="selectRecipientDoctor" />
                 <div class="error" :class="{ fieldError: recipientDoctorIdError }">
                     Le médecin destinataire est obligatoire.
                 </div>

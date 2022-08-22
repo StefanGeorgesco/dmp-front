@@ -17,7 +17,7 @@
                 <div v-else class="container">
                     <form @submit.prevent="submitUpdateReferringDoctor" @input="checkForm" class="row g-3" novalidate>
                         <div class="col-md-12"></div>
-                        <ObjectFinder @new-selection="updateDoctorSelection($event, selection)" object-type="doctor"
+                        <ObjectFinder @new-selection="updateDoctorSelection" object-type="doctor"
                             :preSelection="{
                                 id: file.referringDoctorId,
                                 firstname: file.referringDoctorFirstname,
