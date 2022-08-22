@@ -3,6 +3,8 @@ import { Buffer } from "buffer";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore.js";
 
+const baseUrl = "/dmp";
+
 let router;
 
 (async function () {
@@ -15,6 +17,12 @@ axios.interceptors.request.use((request) => {
 
   if (authStore.authorization) {
     request.headers.common.Authorization = authStore.authorization;
+  }
+  if (
+    ["post", "put"].includes(request.method) &&
+    request.url !== `${baseUrl}/login`
+  ) {
+    request.headers["Content-Type"] = "application/json";
   }
   request.headers["X-Requested-With"] = "XMLHttpRequest";
 
@@ -44,8 +52,6 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-const baseUrl = "/dmp";
 
 export class Service {
   static login(user) {
