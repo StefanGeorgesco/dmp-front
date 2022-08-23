@@ -92,14 +92,40 @@
             </div>
         </form>
         <button v-show="!globalEditing && !item.editing && isAuthor" class="btn btn-primary" type="button"
-            @click="startEditing"><i class="fa-solid fa-pen"></i> Modifier</button>
-        <br>
+            @click="startEditing"><i class="fa-solid fa-pen"></i> Modifier</button><span> </span>
+        <button v-show="!globalEditing && !item.editing && isAuthor" type="button" class="btn btn-danger"
+            data-bs-toggle="modal" :data-bs-target="'#deleteModal-' + item.id">
+            <i class="fa-solid fa-trash-can"></i> Supprimer
+        </button>
         <button v-show="item.editing" class="btn btn-light" type="button" @click="cancelEditing"><i
                 class="fa-solid fa-xmark"></i>
             Annuler</button>
-        <br><br>
+        <br>
+        <br>
     </div>
     <hr>
+    <div class="modal fade" :id="'deleteModal-' + item.id" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        ref="modalClose"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Confirmez-vous la suppression de l'élément
+                        {{ item["@type"] }} du {{ new Date(item.date).toLocaleDateString() }} ?
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button @click="submitDeleteItem" type="button" class="btn btn-primary"
+                        ref="confirm">Confirmer</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <!-- eslint-disable prettier/prettier -->
@@ -178,6 +204,9 @@ export default {
         },
     },
     methods: {
+        resetItem() {
+            this.item = { ...this.itemValue };
+        },
         startEditing() {
             this.item.editing = true;
             this.$emit('editingStart');
@@ -186,8 +215,20 @@ export default {
             this.item.editing = false;
             this.$emit('editingCanceled');
         },
-        resetItem() {
-            this.item = { ...this.itemValue };
+        selectMedicalAct(selection) {
+            this.item.medicalAct = selection;
+            this.checkForm();
+        },
+        selectDisease(selection) {
+            this.item.disease = selection;
+            this.checkForm();
+        },
+        selectRecipientDoctor(selection) {
+            this.item.recipientDoctorId = selection?.id;
+            this.item.recipientDoctorFirstname = selection?.firstname;
+            this.item.recipientDoctorLastname = selection?.lastname;
+            this.item.recipientDoctorSpecialties = selection?.specialties.map((s) => s.description);
+            this.checkForm();
         },
         checkForm() {
             if (this.mustCheck) {
@@ -210,21 +251,6 @@ export default {
                 !this.recipientDoctorIdError &&
                 !this.textError &&
                 !this.descriptionError);
-        },
-        selectMedicalAct(selection) {
-            this.item.medicalAct = selection;
-            this.checkForm();
-        },
-        selectDisease(selection) {
-            this.item.disease = selection;
-            this.checkForm();
-        },
-        selectRecipientDoctor(selection) {
-            this.item.recipientDoctorId = selection?.id;
-            this.item.recipientDoctorFirstname = selection?.firstname;
-            this.item.recipientDoctorLastname = selection?.lastname;
-            this.item.recipientDoctorSpecialties = selection?.specialties.map((s) => s.description);
-            this.checkForm();
         },
         async submitSaveItem() {
             this.mustCheck = true;
@@ -256,6 +282,20 @@ export default {
                     }
                 }
             }
+        },
+        async submitDeleteItem() {
+            this.$refs.modalClose.click();
+            try {
+                await Service.deleteItem(this.item);
+                this.item.editing = false;
+                this.$emit("editingEnd");
+                this.setSuccessMessage(`L'élément a bien été supprimé.`);
+            } catch (error) {
+                if (error.response.data) {
+                    this.setErrorMessage(error.response.data.message);
+                }
+            }
+
         },
         ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
     },
@@ -290,5 +330,9 @@ div>i {
 .error.fieldError {
     display: initial;
     color: red;
+}
+
+button {
+    margin-right: 1em;
 }
 </style>

@@ -130,7 +130,7 @@ export default {
             this.$emit("canceled");
         },
         toString(o) {
-            return `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties?.map(s => s.description).join(", ")}`;
+            return `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties?.map(s => s.description ? s.description : s).join(", ")}`;
         },
         objectFilter(o) {
             return o.id !== this.userId;

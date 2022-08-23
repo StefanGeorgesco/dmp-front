@@ -2,7 +2,7 @@
 <template>
   <h5>Eléments médicaux ({{ items.length }})</h5>
   <ItemComponent v-for="item in items" :key="item.id" :item-value="item" :global-editing="editing"
-    @editing-start="editing = true;" @editing-canceled="cancelEditing"
+    @editing-start="startEditing;" @editing-canceled="cancelEditing"
     @editing-end="completeEditing" />
   <br>
   <button v-show="!editing" @click="addItem" type="button" class="btn btn-primary">
@@ -40,9 +40,12 @@ export default {
     this.fetchItems();
   },
   watch: {
-    fetchedItems() {
-      this.items = [...this.fetchedItems];
-    },
+    fetchedItems: {
+      handler() {
+        this.items = this.fetchedItems.map((item) => ({ ...item }));
+      },
+      deep: true,
+    }
   },
   computed: {
     routeId() {
@@ -61,6 +64,17 @@ export default {
         }
       }
     },
+    startEditing() {
+      this.editing = true;
+    },
+    cancelEditing() {
+      this.editing = false;
+      this.items = this.fetchedItems.map((item) => ({ ...item }));
+    },
+    completeEditing() {
+      this.editing = false;
+      this.fetchItems();
+    },
     addItem() {
       this.editing = true;
       this.items.push({
@@ -70,14 +84,6 @@ export default {
         patientFileId: this.file.id,
         editing: true,
       });
-    },
-    cancelEditing() {
-      this.editing = false;
-      this.items = [...this.fetchedItems];
-    },
-    completeEditing() {
-      this.editing = false;
-      this.fetchItems();
     },
     ...mapActions(useMessagesStore, ["setErrorMessage"]),
   },

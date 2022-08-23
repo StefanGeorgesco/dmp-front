@@ -186,6 +186,13 @@ export class Service {
     return axios.put(uri, item);
   }
 
+  static deleteItem(item) {
+    let uri = encodeURI(
+      `${baseUrl}/patient-file/${item.patientFileId}/item/${item.id}`
+    );
+    return axios.delete(uri, item);
+  }
+
   static updateReferringDoctor(patientFileId, referringDoctor) {
     let uri = encodeURI(
       `${baseUrl}/patient-file/${patientFileId}/referring-doctor`
