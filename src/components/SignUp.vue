@@ -49,12 +49,13 @@
         </div>
       </div>
       <div class="col-12">
-        <button class="btn btn-primary" type="submit">S'enregistrer</button>
+        <button class="btn btn-primary" type="submit"><i class="fa-solid fa-check"></i> S'enregistrer</button>
       </div>
     </form>
     <br>
     <div class="col-12">
-      <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>
+      <RouterLink to="/" type="button" class="btn btn-light"><i class="fa-solid fa-right-from-bracket"></i> Retour
+      </RouterLink>
     </div>
     <br>
   </div>

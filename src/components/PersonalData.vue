@@ -105,14 +105,15 @@
     </form>
     <br>
     <div v-if="update" class="col-12">
-      <button @click="getFile" class="btn btn-light" type="button">Annuler</button>
+      <button @click="getFile" class="btn btn-light" type="button"><i class="fa-solid fa-xmark"></i> Annuler</button>
     </div>
     <div v-if="!update" class="col-12">
       <button @click="update = true" class="btn btn-primary" type="button">Modifier</button>
     </div>
     <br>
     <div class="col-12">
-      <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>
+      <RouterLink to="/" type="button" class="btn btn-light"><i class="fa-solid fa-right-from-bracket"></i> Retour
+      </RouterLink>
     </div>
     <br>
   </div>

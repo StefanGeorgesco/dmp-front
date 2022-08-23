@@ -1,11 +1,11 @@
-<!-- eslint-disable vue/no-mutating-props -->
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div class="container" :class="{ highlighted: item.editing }">
         <form @submit.prevent="submitSaveItem" @input="checkForm" class="row g-3 needs-validation" novalidate>
             <div class="col-md-4">
                 <label for="item_type" class="form-label"><span v-show="item.editing && !item.id">*</span> Type</label>
-                <select v-model="item['@type']" :disabled="item.id" id="item_type" class="form-control">
+                <select @change="checkForm" v-model="item['@type']" :disabled="item.id" id="item_type"
+                    class="form-control">
                     <option v-for="t in types" :key="t.value" :value="t.value" v-text="t.name" :disabled="!t.value">
                     </option>
                 </select>
@@ -15,7 +15,8 @@
             </div>
             <div class="col-md-4">
                 <label for="item_date" class="form-label"><span v-show="item.editing && !item.id">*</span> Date</label>
-                <input v-model="item.date" type="date" class="form-control" id="item_date" :readonly="item.id" />
+                <input @change="($event) => $event.target.blur()" v-model="item.date" type="date" class="form-control"
+                    id="item_date" :readonly="item.id" />
                 <div class="error" :class="{ fieldError: datePresentError }">
                     La date est obligatoire.
                 </div>
@@ -27,7 +28,7 @@
                 <i>Créé par {{ item.authoringDoctorFirstname }} {{ item.authoringDoctorLastname }}
                     ({{ item.authoringDoctorId }})
                     - Spécialité{{ item.authoringDoctorSpecialties.length > 1 ? "s" : "" }} : {{
-                    item.authoringDoctorSpecialties.join(", ")
+                            item.authoringDoctorSpecialties.join(", ")
                     }}</i>
             </div>
             <div class="col-md-12">
@@ -37,34 +38,32 @@
             </div>
             <template v-if="item['@type'] === 'act'">
                 <label class="form-label"><span v-show="item.editing">*</span> Acte dispensé</label>
-                <ObjectFinder object-type="medical-act" :preSelection="item.medicalAct"
+                <ObjectFinder object-type="medical-act" :object-value="item.medicalAct"
                     :object-rep-fn="(o) => `${o.id} - ${o.description}`" :object-filter-fn="(o) => true"
-                    :finder-state="objectFinderSate" :disabled="!item.editing"
-                    @new-selection="selectMedicalAct" />
+                    :disabled="!item.editing" @new-selection="selectMedicalAct" />
                 <div class="error" :class="{ fieldError: medicalActError }">
                     L'acte médical dispensé est obligatoire.
                 </div>
             </template>
             <template v-if="item['@type'] === 'diagnosis'">
                 <label class="form-label"><span v-show="item.editing">*</span> Maladie diagnostiquée</label>
-                <ObjectFinder object-type="disease" :preSelection="item.disease"
+                <ObjectFinder object-type="disease" :object-value="item.disease"
                     :object-rep-fn="(o) => `${o.id} - ${o.description}`" :object-filter-fn="(o) => true"
-                    :finder-state="objectFinderSate" :disabled="!item.editing"
-                    @new-selection="selectDisease" />
+                    :disabled="!item.editing" @new-selection="selectDisease" />
                 <div class="error" :class="{ fieldError: diseaseError }">
                     La maladie diagnostiquée est obligatoire.
                 </div>
             </template>
             <template v-if="item['@type'] === 'mail'">
                 <label class="form-label"><span v-show="item.editing">*</span> Médecin destinataire</label>
-                <ObjectFinder object-type="doctor" :preSelection="item.recipientDoctorId ? {
+                <ObjectFinder object-type="doctor" :object-value="item.recipientDoctorId ? {
                     id: item.recipientDoctorId,
                     firstname: item.recipientDoctorFirstname,
                     lastname: item.recipientDoctorLastname,
-                    specialties: null,
+                    specialties: item.recipientDoctorSpecialties,
                 } : null"
-                    :object-rep-fn="(o) => `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties?.map(s => s.description).join(', ')}`"
-                    :object-filter-fn="(o) => true" :finder-state="objectFinderSate" :disabled="!item.editing"
+                    :objectRepFn="(o) => `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties.map(s => s.description ? s.description : s).join(', ')}`"
+                    :objectFilterFn="(o) => o.id !== userId" :disabled="!item.editing"
                     @new-selection="selectRecipientDoctor" />
                 <div class="error" :class="{ fieldError: recipientDoctorIdError }">
                     Le médecin destinataire est obligatoire.
@@ -76,21 +75,33 @@
                     Le texte du courrier est obligatoire.
                 </div>
             </template>
+            <template v-if="item['@type'] === 'prescription' || item['@type'] === 'symptom'">
+                <label for="description" class="form-label"><span v-show="item.editing">*</span> Description</label>
+                <textarea v-model.trim="item.description" id="description" class="form-control"
+                    :readonly="!item.editing"></textarea>
+                <div class="error" :class="{ fieldError: descriptionError }">
+                    La description
+                    <span v-if="item['@type'] === 'prescription'">de la prescription</span>
+                    <span v-else-if="item['@type'] === 'symptom'">du symptôme</span>
+                    est obligatoire.
+                </div>
+            </template>
             <div class="col-12">
-                <button v-show="item.editing" class="btn btn-primary" type="submit">Enregistrer</button>
+                <button v-show="item.editing" class="btn btn-primary" type="submit"><i
+                        class="fa-solid fa-floppy-disk"></i> {{ item.id ? "Enregistrer" : "Créer" }}</button>
             </div>
         </form>
         <button v-show="!globalEditing && !item.editing && isAuthor" class="btn btn-primary" type="button"
-            @click="item.editing = true; $emit('editingStart');">Modifier</button>
+            @click="startEditing"><i class="fa-solid fa-pen"></i> Modifier</button>
         <br>
-        <button v-show="item.editing" class="btn btn-light" type="button"
-            @click="item.editing = false; $emit('editingEnd'); objectFinderSate.counter++;">Annuler</button>
+        <button v-show="item.editing" class="btn btn-light" type="button" @click="cancelEditing"><i
+                class="fa-solid fa-xmark"></i>
+            Annuler</button>
         <br><br>
     </div>
     <hr>
 </template>
 
-<!-- eslint-disable vue/no-mutating-props -->
 <!-- eslint-disable prettier/prettier -->
 <script>
 import { mapActions, mapState } from "pinia";
@@ -102,7 +113,7 @@ import ObjectFinder from "./ObjectFinder.vue";
 export default {
     name: "ItemComponent",
     props: {
-        item: {
+        itemValue: {
             type: Object,
             required: true,
         },
@@ -111,7 +122,7 @@ export default {
             required: true,
         },
     },
-    emits: ["editingStart", "editingEnd"],
+    emits: ["editingStart", "editingCanceled", "editingEnd"],
     components: {
         ObjectFinder,
     },
@@ -143,6 +154,7 @@ export default {
                     value: "symptom",
                 },
             ],
+            item: { ...this.itemValue },
             mustCheck: false,
             typeError: false,
             datePresentError: false,
@@ -152,9 +164,6 @@ export default {
             recipientDoctorIdError: false,
             textError: false,
             descriptionError: false,
-            objectFinderSate: {
-                counter: 0,
-            },
         };
     },
     computed: {
@@ -163,7 +172,23 @@ export default {
         },
         ...mapState(useAuthUserStore, ["userId"]),
     },
+    watch: {
+        itemValue() {
+            this.resetItem();
+        },
+    },
     methods: {
+        startEditing() {
+            this.item.editing = true;
+            this.$emit('editingStart');
+        },
+        cancelEditing() {
+            this.item.editing = false;
+            this.$emit('editingCanceled');
+        },
+        resetItem() {
+            this.item = { ...this.itemValue };
+        },
         checkForm() {
             if (this.mustCheck) {
                 this.typeError = !this.item["@type"];
@@ -196,6 +221,9 @@ export default {
         },
         selectRecipientDoctor(selection) {
             this.item.recipientDoctorId = selection?.id;
+            this.item.recipientDoctorFirstname = selection?.firstname;
+            this.item.recipientDoctorLastname = selection?.lastname;
+            this.item.recipientDoctorSpecialties = selection?.specialties.map((s) => s.description);
             this.checkForm();
         },
         async submitSaveItem() {
@@ -226,13 +254,8 @@ export default {
                             this.setErrorMessage(error.response.data.message);
                         }
                     }
-                } finally {
-                    this.objectFinderSate.counter++;
                 }
             }
-        },
-        toString(o) {
-            return `${o.id} - ${o.description}`;
         },
         ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
     },

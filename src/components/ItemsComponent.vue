@@ -1,8 +1,9 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <h5>Eléments médicaux ({{ items.length }})</h5>
-  <ItemComponent v-for="item in items" :key="item.id" :item="item" :global-editing="editing"
-    @editing-start="editing = true;" @editing-end="editing = false; updateItems();" />
+  <ItemComponent v-for="item in items" :key="item.id" :item-value="item" :global-editing="editing"
+    @editing-start="editing = true;" @editing-canceled="cancelEditing"
+    @editing-end="completeEditing" />
   <br>
   <button v-show="!editing" @click="addItem" type="button" class="btn btn-primary">
     <i class="fa-solid fa-plus"></i> Ajouter un élément
@@ -31,20 +32,37 @@ export default {
   data() {
     return {
       items: [],
+      fetchedItems: [],
       editing: false,
     };
+  },
+  async created() {
+    this.fetchItems();
+  },
+  watch: {
+    fetchedItems() {
+      this.items = [...this.fetchedItems];
+    },
   },
   computed: {
     routeId() {
       return this.$route.params.id;
     },
-    ...mapState(useAuthUserStore, ["role", "userId"]),
-  },
-  async created() {
-    this.updateItems();
+    ...mapState(useAuthUserStore, ["userId"]),
   },
   methods: {
+    async fetchItems() {
+      try {
+        let response = await Service.getItems(this.routeId);
+        this.fetchedItems = response.data;
+      } catch (error) {
+        if (error.response.data) {
+          this.setErrorMessage(error.response.data.message);
+        }
+      }
+    },
     addItem() {
+      this.editing = true;
       this.items.push({
         "@type": null,
         date: new Date().toISOString().slice(0, 10),
@@ -52,17 +70,14 @@ export default {
         patientFileId: this.file.id,
         editing: true,
       });
-      this.editing = true;
     },
-    async updateItems() {
-      try {
-        let response = await Service.getItems(this.routeId);
-        this.items = response.data;
-      } catch (error) {
-        if (error.response.data) {
-          this.setErrorMessage(error.response.data.message);
-        }
-      }
+    cancelEditing() {
+      this.editing = false;
+      this.items = [...this.fetchedItems];
+    },
+    completeEditing() {
+      this.editing = false;
+      this.fetchItems();
     },
     ...mapActions(useMessagesStore, ["setErrorMessage"]),
   },

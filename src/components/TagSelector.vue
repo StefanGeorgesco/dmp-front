@@ -5,7 +5,7 @@
             {{ o.id }} - {{ o.description }}
             <span @click="remove(o)"></span>
         </div>
-        <input ref="input" v-model="searchText" type="text">
+        <input @keyup.esc="searchString=''" ref="input" v-model="searchString" type="text">
         <div class="options-list" v-show="filteredOptions.length > 0">
             <div class="tag-option" v-for="o in filteredOptions" :key="o.id" @click="add(o)">
                 {{ o.id }} - {{ o.description }}
@@ -27,14 +27,14 @@ export default {
     },
     data() {
         return {
-            searchText: "",
+            searchString: "",
             selectedOptions: [],
         };
     },
     computed: {
         filteredOptions() {
-            return this.searchText === "" ? [] : this.options.filter(o =>
-                o.description.toLowerCase().indexOf(this.searchText.toLowerCase()) !== -1
+            return this.searchString === "" ? [] : this.options.filter(o =>
+                o.description.toLowerCase().indexOf(this.searchString.toLowerCase()) !== -1
                 && !this.selectedOptions.map(so => so.id).includes(o.id)
             );
         }
@@ -42,7 +42,7 @@ export default {
     methods: {
         add(o) {
             this.selectedOptions.push(o);
-            this.searchText = "";
+            this.searchString = "";
             this.$emit("newSelection", this.selectedOptions);
             this.$refs.input.focus();
         },

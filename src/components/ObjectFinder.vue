@@ -4,8 +4,8 @@
         <div v-if="selectedOject" class="tag">
             {{ objectRepFn(selectedOject) }}
         </div>
-        <input @keyup.esc="deleteSelection" @focus="deleteSelection" @input="searchObjects" ref="input"
-            v-model="searchString" type="text" :disabled="disabled" v-show="!disabled">
+        <input @keyup.esc="clear" @input="searchObjects" ref="input" v-model="searchString" type="text"
+            :disabled="disabled" v-show="!disabled">
         <div class="options-list" v-show="foundObjects.length > 0">
             <div class="tag-option" v-for="o in foundObjects" :key="o.id" @click="select(o)">
                 {{ objectRepFn(o) }}
@@ -29,7 +29,7 @@ export default {
             type: String,
             required: true,
         },
-        preSelection: Object,
+        objectValue: Object,
         objectRepFn: {
             type: Function,
             default(o) {
@@ -42,25 +42,20 @@ export default {
                 return true;
             },
         },
-        finderState: {
-            type: Object,
-            default() {
-                return {};
-            },
-        },
         disabled: Boolean,
     },
     data() {
         return {
             searchString: "",
-            selectedOject: this.preSelection,
+            selectedOject: this.objectValue ? { ...this.objectValue } : null,
             foundObjects: [],
         };
     },
     watch: {
-        finderState: {
+        objectValue: {
             handler() {
                 this.clear();
+                this.selectedOject = this.objectValue ? { ...this.objectValue } : null;
             },
             deep: true,
         },
@@ -77,19 +72,12 @@ export default {
             }
         },
         clear() {
-            this.searchString = "";
-            this.selectedOject = this.preSelection;
             this.foundObjects = [];
-        },
-        deleteSelection() {
-            this.clear();
-            this.$emit("newSelection", null);
+            this.searchString = "";
         },
         select(o) {
-            this.searchString = "";
+            this.clear();
             this.selectedOject = o;
-            this.foundObjects = [];
-            this.$refs.input.blur();
             this.$emit("newSelection", o);
         },
         ...mapActions(useMessagesStore, ["setErrorMessage"]),

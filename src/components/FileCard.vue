@@ -17,16 +17,15 @@
                 <div v-else class="container">
                     <form @submit.prevent="submitUpdateReferringDoctor" @input="checkForm" class="row g-3" novalidate>
                         <div class="col-md-12"></div>
-                        <ObjectFinder @new-selection="updateDoctorSelection" object-type="doctor"
-                            :preSelection="{
-                                id: file.referringDoctorId,
-                                firstname: file.referringDoctorFirstname,
-                                lastname: file.referringDoctorLastname,
-                                specialties: file.referringDoctorSpecialties
-                            }" :object-rep-fn="toString" :object-filter-fn="objectFilter"
-                            :finder-state="objectFinderSate" />
+                        <ObjectFinder @new-selection="updateDoctorSelection" object-type="doctor" :object-value="{
+                            id: file.referringDoctorId,
+                            firstname: file.referringDoctorFirstname,
+                            lastname: file.referringDoctorLastname,
+                            specialties: file.referringDoctorSpecialties
+                        }" :object-rep-fn="toString" :object-filter-fn="objectFilter" />
                         <div class="col-12">
-                            <button class="btn btn-primary" type="submit">Enregistrer</button>
+                            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i>
+                                Enregistrer</button>
                         </div>
                     </form>
                     <div class="error" :class="{ fieldError: doctorPresentError }">
@@ -34,8 +33,8 @@
                     </div>
                     <br>
                     <div class="col-12">
-                        <button @click="cancelEditReferringDoctorAction" type="button"
-                            class="btn btn-light">Annuler</button>
+                        <button @click="cancelEditReferringDoctorAction" type="button" class="btn btn-light"><i
+                                class="fa-solid fa-xmark"></i> Annuler</button>
                     </div>
                 </div>
                 <RouterLink v-if="role === 'DOCTOR' && canEditKnown && canEdit" :to="viewFileUrl"
@@ -109,9 +108,6 @@ export default {
             referringDoctor: {
                 id: "",
             },
-            objectFinderSate: {
-                counter: 0,
-            },
             mustCheck: false,
             doctorPresentError: false,
         };
@@ -178,7 +174,6 @@ export default {
                 this.setSuccessMessage("Le médecin référent a bien été modifié.");
                 this.updatingReferringDoctor = false;
                 this.clearReferringDoctor();
-                this.objectFinderSate.counter++;
                 this.$emit("referringDoctorUpdated", this.file);
             } catch (error) {
                 this.canEdit = false;
@@ -194,7 +189,6 @@ export default {
         cancelEditReferringDoctorAction() {
             this.clearReferringDoctor();
             this.updatingReferringDoctor = false;
-            this.objectFinderSate.counter++;
         },
         clearReferringDoctor() {
             this.referringDoctor = {
@@ -202,7 +196,7 @@ export default {
             };
         },
         toString(o) {
-            return `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties.map(s => s.description ? s.description :s ).join(", ")}`;
+            return `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties.map(s => s.description ? s.description : s).join(", ")}`;
         },
         objectFilter() {
             return true;

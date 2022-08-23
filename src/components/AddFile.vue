@@ -107,12 +107,13 @@
                 </div>
             </fieldset>
             <div class="col-12">
-                <button class="btn btn-primary" type="submit">Créer</button>
+                <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Créer</button>
             </div>
         </form>
         <br>
         <div class="col-12">
-            <button @click="$router.go(-1);" type="button" class="btn btn-light">Retour</button>
+            <button @click="$router.go(-1);" type="button" class="btn btn-light">
+                <i class="fa-solid fa-right-from-bracket"></i> Retour</button>
         </div>
         <br>
     </div>
@@ -122,7 +123,8 @@
         </div>
         <br>
         <div class="col-12">
-            <button @click="$router.go(-1);" type="button" class="btn btn-light">Retour</button>
+            <button @click="$router.go(-1);" type="button" class="btn btn-light">
+                <i class="fa-solid fa-right-from-bracket"></i> Retour</button>
         </div>
         <br>
     </div>

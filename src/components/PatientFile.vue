@@ -16,7 +16,8 @@
         </div>
         <div v-if="role !== 'PATIENT'" class="container">
           <div class="col-12">
-            <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>
+            <RouterLink to="/" type="button" class="btn btn-light"><i class="fa-solid fa-right-from-bracket"></i> Retour
+            </RouterLink>
           </div>
         </div>
       </div>
@@ -31,7 +32,8 @@
   </div>
   <div v-if="role !== 'PATIENT'" class="container">
     <div class="col-12">
-      <RouterLink to="/" type="button" class="btn btn-light">Retour</RouterLink>
+      <RouterLink to="/" type="button" class="btn btn-light"><i class="fa-solid fa-right-from-bracket"></i> Retour
+      </RouterLink>
     </div>
   </div>
   <br>

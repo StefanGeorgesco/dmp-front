@@ -15,12 +15,13 @@
         <input type="password" class="form-control" v-model="user.password" id="password" />
       </div>
       <div class="col-12">
-        <button class="btn btn-primary" type="submit">Entrer</button>
+        <button class="btn btn-primary" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Entrer</button>
       </div>
     </form>
     <br>
     <div class="col-12">
-      <RouterLink to="/sign-up" type="button" class="btn btn-light">S'enregistrer</RouterLink>
+      <RouterLink to="/sign-up" type="button" class="btn btn-light"><i class="fa-solid fa-user-plus"></i> S'enregistrer
+      </RouterLink>
     </div>
     <br>
   </div>
