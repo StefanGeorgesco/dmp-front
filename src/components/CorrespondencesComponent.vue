@@ -1,16 +1,25 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <h5>Correspondances ({{ filteredCorrepondences.length }})</h5>
+  <h5>Correspondances ({{ processedCorrepondences.length }})</h5>
   <template v-if="correspondences.length > 0">
     <a @click="correspondenceFilter = 'ongoing'" :class="{ active: correspondenceFilter === 'ongoing' }">en
       cours</a> -
     <a @click="correspondenceFilter = 'past'" :class="{ active: correspondenceFilter === 'past' }">passées</a> -
     <a @click="correspondenceFilter = 'all'" :class="{ active: correspondenceFilter === 'all' }">toutes</a>
+    <span style="margin-left: 1.25rem;">tri par date </span>
+    <a @click="sortDirection = -1" :class="{ active: sortDirection === -1 }"
+      style="font-size: x-large; margin-right: 0.25rem; text-decoration: none">&uarr;</a>
+    <a @click="sortDirection = 1" :class="{ active: sortDirection === 1 }"
+      style="font-size: x-large; text-decoration:none">&darr;</a>
     <br><br>
-    <CorrespondenceComponent v-for="correspondence in filteredCorrepondences" :key="correspondence.id"
-      :correspondence="correspondence" :can-delete="isReferringDoctor" @correspondence-updated="updateCorrespondences" />
-    <template v-if="filteredCorrepondences.length === 0">
-      <p>Aucune correspondance {{ correspondenceFilter === "ongoing" ? "en cours" : "passée" }}.</p>
+    <input v-model="searchString" @keyup.esc="searchString = ''; $event.target.blur();"
+      style="border: 1px solid #ced4da; border-radius: 0.375rem;" type="text" placeholder="Recherche...">
+    <br><br>
+    <CorrespondenceComponent v-for="correspondence in processedCorrepondences" :key="correspondence.id"
+      :correspondence="correspondence" :can-delete="isReferringDoctor"
+      @correspondence-updated="updateCorrespondences" />
+    <template v-if="processedCorrepondences.length === 0">
+      <p>Aucune correspondance ne correspond à la sélection.</p>
     </template>
   </template>
   <template v-else>
@@ -35,6 +44,7 @@ import { useMessagesStore } from "../stores/messagesStore";
 import { Service } from "../services/services.js";
 import CorrespondenceComponent from "./CorrespondenceComponent.vue";
 import AddCorrespondence from "./AddCorrespondence.vue";
+import { filterFn } from "../utils/utils";
 
 export default {
   name: "CorrespondencesComponent",
@@ -51,6 +61,8 @@ export default {
     return {
       correspondences: [],
       correspondenceFilter: "ongoing",
+      sortDirection: 1,
+      searchString: "",
       addingCorrespondence: false,
     };
   },
@@ -61,17 +73,27 @@ export default {
     isReferringDoctor() {
       return this.file.referringDoctorId === this.userId;
     },
-    filteredCorrepondences() {
+    processedCorrepondences() {
+
+      let result;
+
       switch (this.correspondenceFilter) {
         case "all":
-          return [...this.correspondences];
+          result = [...this.correspondences];
+          break;
         case "past":
-          return this.correspondences.filter(c => new Date(c.dateUntil) < new Date());
+          result = this.correspondences.filter(c => new Date(c.dateUntil) < new Date());
+          break;
         case "ongoing":
-          return this.correspondences.filter(c => new Date(c.dateUntil) >= new Date());
+          result = this.correspondences.filter(c => new Date(c.dateUntil) >= new Date());
+          break;
         default:
-          return [...this.correspondences];
+          result = [...this.correspondences];
       }
+
+      result = result.filter(filterFn(this.searchString));
+
+      return result.sort((c1, c2) => this.sortDirection * (new Date(c1.dateUntil) - new Date(c2.dateUntil)));
     },
     ...mapState(useAuthUserStore, ["userId"]),
   },
@@ -86,6 +108,7 @@ export default {
         if (this.correspondenceFilter === "past") {
           this.correspondenceFilter = "ongoing";
         }
+        this.searchString = "";
       } catch (error) {
         if (error.response.data) {
           this.setErrorMessage(error.response.data.message);
@@ -106,5 +129,6 @@ a:hover {
 a.active {
   text-decoration: none;
   color: black;
+  cursor: auto;
 }
 </style>

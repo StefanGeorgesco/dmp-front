@@ -4,7 +4,7 @@
         <div class="card-body">
             <h6 class="card-title">Médecin : {{ correspondence.doctorFirstname }}
                 {{ correspondence.doctorLastname }} ({{ correspondence.doctorId }})</h6>
-
+            <p><i>{{ correspondence.doctorSpecialties.join(", ") }}</i></p>
             <p class="card-text">
                 Jusqu'au : {{ new Date(correspondence.dateUntil).toLocaleDateString() }}
             </p>
