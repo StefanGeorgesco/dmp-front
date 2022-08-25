@@ -198,8 +198,8 @@ export default {
         toString(o) {
             return `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties.map(s => s.description ? s.description : s).join(", ")}`;
         },
-        objectFilter() {
-            return true;
+        objectFilter(o) {
+            return o.id !== this.file.referringDoctorId;
         },
         ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
     },
