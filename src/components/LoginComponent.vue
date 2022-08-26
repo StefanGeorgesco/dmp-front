@@ -1,7 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div style="position: relative; height: 80vh; width: 100vw; overflow: hidden;">
-    <div class="col-md-4" style="position: absolute; left: 30%; right: 30%; top: 20%; bottom: 20%;">
+  <div class="login-container">
+    <div class="login-form-container">
       <div class="container">
         <h2>S'identifier</h2>
       </div>
@@ -65,4 +65,19 @@ export default {
 
 <!-- eslint-disable prettier/prettier -->
 <style scoped>
+.login-container {
+  position: relative;
+  height: calc(100vh - 10rem);
+  width: 100vw;
+  overflow: hidden;
+}
+
+.login-form-container {
+  position: absolute;
+  width: 30vw;
+  left: 30%;
+  right: 35%;
+  top: 20%;
+  bottom: 20%;
+}
 </style>
