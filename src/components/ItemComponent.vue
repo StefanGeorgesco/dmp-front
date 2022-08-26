@@ -1,22 +1,34 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <div ref="item" class="col-md-12" :class="{ highlighted: item.editing }" style="padding: 0 1rem;">
+    <div ref="item" class="col-md-12 container" :class="{ highlighted: item.editing }" style="padding: 0 1rem;">
         <form @submit.prevent="submitSaveItem" @input="checkForm" class="row g-3 needs-validation" novalidate>
-            <div class="col-md-4">
-                <label for="item_type" class="form-label"><span v-show="item.editing && !item.id">*</span> Type</label>
-                <select @change="checkForm" v-model="item['@type']" :disabled="item.id" id="item_type"
-                    class="form-control">
-                    <option v-for="t in types" :key="t.value" :value="t.value" v-text="t.name" :disabled="!t.value">
-                    </option>
-                </select>
+            <div class="col-md-3">
+                <div class="mb-3 row">
+                    <label for="item_type" class="col-sm-4 col-form-label">
+                        <span v-show="item.editing && !item.id">* </span>Type
+                    </label>
+                    <div class="col-sm-8">
+                        <select @change="checkForm" v-model="item['@type']" :disabled="item.id" id="item_type"
+                            class="form-control">
+                            <option v-for="t in types" :key="t.value" :value="t.value" v-text="t.name"
+                                :disabled="!t.value">
+                            </option>
+                        </select>
+                    </div>
+                </div>
                 <div class="error" :class="{ fieldError: typeError }">
                     Le type est obligatoire.
                 </div>
             </div>
             <div class="col-md-4">
-                <label for="item_date" class="form-label"><span v-show="item.editing && !item.id">*</span> Date</label>
-                <input @change="($event) => $event.target.blur()" v-model="item.date" type="date" class="form-control"
-                    id="item_date" :readonly="item.id" />
+                <div class="mb-3 row">
+                    <label for="item_date" class="col-sm-3 col-form-label"><span v-show="item.editing && !item.id">*
+                        </span>Date</label>
+                    <div class="col-sm-7">
+                        <input @change="($event) => $event.target.blur()" v-model="item.date" type="date"
+                            class="form-control" id="item_date" :readonly="item.id" />
+                    </div>
+                </div>
                 <div class="error" :class="{ fieldError: datePresentError }">
                     La date est obligatoire.
                 </div>
@@ -24,20 +36,20 @@
                     La date ne peut pas être dans le futur.
                 </div>
             </div>
-            <div v-if="item.id" class="col-md-12">
-                <i>Créé par {{ item.authoringDoctorFirstname }} {{ item.authoringDoctorLastname }}
+            <template v-if="item.id">
+                <i class="author">Créé par {{ item.authoringDoctorFirstname }} {{ item.authoringDoctorLastname }}
                     ({{ item.authoringDoctorId }})
                     - Spécialité{{ item.authoringDoctorSpecialties.length > 1 ? "s" : "" }} : {{
-                    item.authoringDoctorSpecialties.join(", ")
+                            item.authoringDoctorSpecialties.join(", ")
                     }}</i>
-            </div>
+            </template>
             <div class="col-md-12">
                 <label for="item_comments" class="form-label">Commentaires</label>
                 <textarea v-model.trim="item.comments" id="item_comments" class="form-control"
                     :readonly="!item.editing"></textarea>
             </div>
             <template v-if="item['@type'] === 'act'">
-                <label class="form-label"><span v-show="item.editing">*</span> Acte dispensé</label>
+                <label class="form-label"><span v-show="item.editing">* </span>Acte dispensé</label>
                 <ObjectFinder object-type="medical-act" :object-value="item.medicalAct"
                     :object-rep-fn="(o) => `${o.id} - ${o.description}`" :object-filter-fn="(o) => true"
                     :disabled="!item.editing" @new-selection="selectMedicalAct" />
@@ -46,7 +58,7 @@
                 </div>
             </template>
             <template v-if="item['@type'] === 'diagnosis'">
-                <label class="form-label"><span v-show="item.editing">*</span> Maladie diagnostiquée</label>
+                <label class="form-label"><span v-show="item.editing">* </span>Maladie diagnostiquée</label>
                 <ObjectFinder object-type="disease" :object-value="item.disease"
                     :object-rep-fn="(o) => `${o.id} - ${o.description}`" :object-filter-fn="(o) => true"
                     :disabled="!item.editing" @new-selection="selectDisease" />
@@ -55,7 +67,7 @@
                 </div>
             </template>
             <template v-if="item['@type'] === 'mail'">
-                <label class="form-label"><span v-show="item.editing">*</span> Médecin destinataire</label>
+                <label class="form-label"><span v-show="item.editing">* </span>Destinataire</label>
                 <ObjectFinder object-type="doctor" :object-value="item.recipientDoctorId ? {
                     id: item.recipientDoctorId,
                     firstname: item.recipientDoctorFirstname,
@@ -68,15 +80,17 @@
                 <div class="error" :class="{ fieldError: recipientDoctorIdError }">
                     Le médecin destinataire est obligatoire.
                 </div>
-                <label for="mail_text" class="form-label"><span v-show="item.editing">*</span> Texte</label>
-                <textarea v-model.trim="item.text" id="mail_text" class="form-control"
-                    :readonly="!item.editing"></textarea>
-                <div class="error" :class="{ fieldError: textError }">
-                    Le texte du courrier est obligatoire.
+                <div class="col-md-12">
+                    <label for="mail_text" class="form-label"><span v-show="item.editing">* </span>Texte</label>
+                    <textarea v-model.trim="item.text" id="mail_text" class="form-control"
+                        :readonly="!item.editing"></textarea>
+                    <div class="error" :class="{ fieldError: textError }">
+                        Le texte du courrier est obligatoire.
+                    </div>
                 </div>
             </template>
             <template v-if="item['@type'] === 'prescription' || item['@type'] === 'symptom'">
-                <label for="description" class="form-label"><span v-show="item.editing">*</span> Description</label>
+                <label for="description" class="form-label"><span v-show="item.editing">* </span>Description</label>
                 <textarea v-model.trim="item.description" id="description" class="form-control"
                     :readonly="!item.editing"></textarea>
                 <div class="error" :class="{ fieldError: descriptionError }">
@@ -87,21 +101,27 @@
                 </div>
             </template>
             <div class="col-12">
-                <button v-show="item.editing" class="btn btn-primary" type="submit"><i
-                        class="fa-solid fa-floppy-disk"></i> {{ item.id ? "Enregistrer" : "Créer" }}</button>
+                <button v-show="item.editing" class="btn btn-primary" type="submit">
+                    <i class="fa-solid fa-floppy-disk"></i> {{ item.id ? "Enregistrer" : "Créer" }}
+                </button>
             </div>
         </form>
-        <button v-show="!globalEditing && !item.editing && isAuthor" class="btn btn-primary" type="button"
-            @click="startEditing"><i class="fa-solid fa-pen"></i></button><span> </span>
-        <button v-show="!globalEditing && !item.editing && isAuthor" type="button" class="btn btn-danger"
-            data-bs-toggle="modal" :data-bs-target="'#deleteModal-' + item.id">
-            <i class="fa-solid fa-trash-can"></i>
-        </button>
-        <button v-show="item.editing" class="btn btn-light" type="button" @click="cancelEditing"><i
-                class="fa-solid fa-xmark"></i>
-            Annuler</button>
-        <br>
-        <br>
+        <template v-if="!globalEditing && !item.editing && isAuthor">
+            <button type="button" class="btn btn-primary" @click="startEditing">
+                <i class="fa-solid fa-pen"></i>
+            </button>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                :data-bs-target="'#deleteModal-' + item.id">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        </template>
+        <template v-if="item.editing">
+            <br>
+            <button type="button" class="btn btn-light" @click="cancelEditing">
+                <i class="fa-solid fa-xmark"></i> Annuler
+            </button>
+            <br><br>
+        </template>
     </div>
     <hr style="border: 2px solid black; border-radius: 1px;">
     <div class="modal fade" :id="'deleteModal-' + item.id" tabindex="-1">
@@ -307,6 +327,10 @@ export default {
 
 <!-- eslint-disable prettier/prettier -->
 <style scoped>
+.container {
+    padding-top: 1rem;
+}
+
 [readonly],
 [disabled] {
     outline: none;
@@ -322,8 +346,10 @@ div>i {
     font-weight: 100;
 }
 
-.form-label, input, select, textarea {
-    display: inline-block;
+.form-control>input,
+select,
+textarea {
+    display: inline;
 }
 
 .highlighted {
@@ -341,5 +367,11 @@ div>i {
 
 button {
     margin-right: 1em;
+}
+
+.author {
+    padding-top: 0;
+    margin-top: 0;
+    font-weight: 90;
 }
 </style>
