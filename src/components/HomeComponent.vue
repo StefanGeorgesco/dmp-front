@@ -1,6 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <div class="container" v-if="role === 'ADMIN'">
+    <br>
     <div class="col-12">
       <RouterLink to="/manage-doctors" type="button" class="btn btn-light">Gérer les dossiers des médecins</RouterLink>
     </div>
