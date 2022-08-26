@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <div class="container" :class="{ highlighted: item.editing }">
+    <div ref="item" class="col-md-12" :class="{ highlighted: item.editing }" style="padding: 0 1rem;">
         <form @submit.prevent="submitSaveItem" @input="checkForm" class="row g-3 needs-validation" novalidate>
             <div class="col-md-4">
                 <label for="item_type" class="form-label"><span v-show="item.editing && !item.id">*</span> Type</label>
@@ -28,7 +28,7 @@
                 <i>Créé par {{ item.authoringDoctorFirstname }} {{ item.authoringDoctorLastname }}
                     ({{ item.authoringDoctorId }})
                     - Spécialité{{ item.authoringDoctorSpecialties.length > 1 ? "s" : "" }} : {{
-                            item.authoringDoctorSpecialties.join(", ")
+                    item.authoringDoctorSpecialties.join(", ")
                     }}</i>
             </div>
             <div class="col-md-12">
@@ -92,10 +92,10 @@
             </div>
         </form>
         <button v-show="!globalEditing && !item.editing && isAuthor" class="btn btn-primary" type="button"
-            @click="startEditing"><i class="fa-solid fa-pen"></i> Modifier</button><span> </span>
+            @click="startEditing"><i class="fa-solid fa-pen"></i></button><span> </span>
         <button v-show="!globalEditing && !item.editing && isAuthor" type="button" class="btn btn-danger"
             data-bs-toggle="modal" :data-bs-target="'#deleteModal-' + item.id">
-            <i class="fa-solid fa-trash-can"></i> Supprimer
+            <i class="fa-solid fa-trash-can"></i>
         </button>
         <button v-show="item.editing" class="btn btn-light" type="button" @click="cancelEditing"><i
                 class="fa-solid fa-xmark"></i>
@@ -103,7 +103,7 @@
         <br>
         <br>
     </div>
-    <hr>
+    <hr style="border: 2px solid black; border-radius: 1px;">
     <div class="modal fade" :id="'deleteModal-' + item.id" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -191,6 +191,9 @@ export default {
             textError: false,
             descriptionError: false,
         };
+    },
+    mounted() {
+        if (!this.itemValue.id) this.$refs.item.scrollIntoView();
     },
     computed: {
         isAuthor() {
@@ -317,6 +320,10 @@ select[disabled] {
 label,
 div>i {
     font-weight: 100;
+}
+
+.form-label, input, select, textarea {
+    display: inline-block;
 }
 
 .highlighted {

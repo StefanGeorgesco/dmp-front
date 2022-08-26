@@ -1,12 +1,11 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <div class="container">
+    <div ref="newCorrespondence" class="container">
         <form @submit.prevent="submitAddCorrespondence" @input="checkForm" class="row g-3" novalidate>
             <div class="col-md-12">
                 <label class="form-label">* Médecin correspondant</label>
-                <ObjectFinder object-type="doctor"
-                    :object-value="doctor?.id ? doctor : null"
-                    :object-rep-fn="toString" :object-filter-fn="objectFilter" @new-selection="updateSelection" />
+                <ObjectFinder object-type="doctor" :object-value="doctor?.id ? doctor : null" :object-rep-fn="toString"
+                    :object-filter-fn="objectFilter" @new-selection="updateSelection" />
                 <div class="error" :class="{ fieldError: doctorError }">
                     Le médecin est obligatoire.
                 </div>
@@ -62,6 +61,9 @@ export default {
             dateUntilFutureError: null,
             doctorError: null,
         };
+    },
+    mounted() {
+        this.$refs.newCorrespondence.scrollIntoView();
     },
     computed: {
         doctor() {

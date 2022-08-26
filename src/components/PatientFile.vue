@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="container-custom">
+  <div class="container-custom col-md-12">
     <div class="row">
       <div v-if="file.id" class="col-md-2">
         <template v-if="role === 'DOCTOR'">
@@ -30,7 +30,6 @@
       <br>
     </div>
   </div>
-  <br>
 </template>
 
 <!-- eslint-disable prettier/prettier -->
@@ -92,9 +91,11 @@ export default {
 .container-custom {
   padding: 0;
   margin: 0;
+  overflow: hidden;
 }
 
 [class*="col-md-"] {
-  padding: 0.5rem 2rem;
+  padding: 0 0.5rem;
+  margin: 0;
 }
 </style>

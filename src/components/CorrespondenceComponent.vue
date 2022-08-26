@@ -1,18 +1,15 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <div class="card col-md-12" style="with: 100%;">
-        <div class="card-body">
-            <h6 class="card-title">Médecin : {{ correspondence.doctorFirstname }}
-                {{ correspondence.doctorLastname }} ({{ correspondence.doctorId }})</h6>
-            <p><i>{{ correspondence.doctorSpecialties.join(", ") }}</i></p>
-            <p class="card-text">
-                Jusqu'au : {{ new Date(correspondence.dateUntil).toLocaleDateString() }}
-            </p>
-            <button v-if="canDelete" type="button" class="btn btn-danger" data-bs-toggle="modal"
-                :data-bs-target="'#deleteModal-' + correspondence.id">
-                <i class="fa-solid fa-trash-can"></i> Supprimer
-            </button>
-        </div>
+    <div class="card col-md-11 card-body" style="with: 100%; position: relative;">
+        <h6 class="card-title">Médecin : {{ correspondence.doctorFirstname }}
+            {{ correspondence.doctorLastname }} ({{ correspondence.doctorId }})</h6>
+        <p><i>{{ correspondence.doctorSpecialties.join(", ") }}</i></p>
+            Jusqu'au : {{ new Date(correspondence.dateUntil).toLocaleDateString() }}
+        <button v-if="canDelete" type="button" class="btn btn-danger" data-bs-toggle="modal"
+            :data-bs-target="'#deleteModal-' + correspondence.id"
+            style="position: absolute; bottom: 0.5rem; right: 0.5rem;">
+            <i class="fa-solid fa-trash-can"></i>
+        </button>
     </div>
     <div class="modal fade" :id="'deleteModal-' + correspondence.id" tabindex="-1">
         <div class="modal-dialog">
@@ -81,5 +78,6 @@ export default {
 <style>
 .card {
     margin: 0.5rem;
+    padding: 0.5rem;
 }
 </style>

@@ -1,33 +1,37 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <h5>Eléments médicaux ({{ processedItems.length }})</h5>
+  <h5 style="display: inline-block; margin-right: 0.5rem;">Eléments médicaux ({{ processedItems.length }})</h5>
   <template v-if="items.length > 0">
+    <input v-model="searchString" @keyup.esc="searchString = ''; $event.target.blur();"
+      style="border: 1px solid #ced4da; border-radius: 0.375rem; margin-right: 0.5rem;" type="text"
+      placeholder="Recherche..." size="15">
     <select v-model="typeFilter" @change="$event.target.blur();"
-      style="border: 1px solid #ced4da; border-radius: 0.375rem;">
+      style="border: 1px solid #ced4da; border-radius: 0.375rem; margin: 0;">
       <option v-for="t in types" :key="t.value" :value="t.value" v-text="t.name"></option>
     </select>
-    <span style="margin-left: 1.25rem;">tri par date </span>
-    <a @click="sortDirection = -1" :class="{ active: sortDirection === -1 }"
-      style="font-size: x-large; margin-right: 0.25rem; text-decoration: none">&uarr;</a>
-    <a @click="sortDirection = 1" :class="{ active: sortDirection === 1 }"
-      style="font-size: x-large; text-decoration:none">&darr;</a>
-    <br><br>
-    <input v-model="searchString" @keyup.esc="searchString = ''; $event.target.blur();"
-      style="border: 1px solid #ced4da; border-radius: 0.375rem;" type="text" placeholder="Recherche...">
-    <br><br>
-    <ItemComponent v-for="item in processedItems" :key="item.id" :item-value="item" :global-editing="editing"
-      @editing-start="startEditing;" @editing-canceled="cancelEditing" @editing-end="completeEditing" />
-    <template v-if="processedItems.length === 0">
-      <p>Aucun élément ne correspond à la sélection</p>
+    <template v-if="processedItems.length > 0">
+      <span style="margin-left: 1.25rem;">date </span>
+      <a @click="sortDirection = -1" :class="{ active: sortDirection === -1 }"
+        style="font-size: x-large; margin-right: 0.25rem; text-decoration: none">&uarr;</a>
+      <a @click="sortDirection = 1" :class="{ active: sortDirection === 1 }"
+        style="font-size: x-large; text-decoration:none">&darr;</a>
     </template>
+    <br><br>
+    <div class="overflow-auto scroll-pane">
+      <template v-if="processedItems.length === 0">
+        <p>Aucun élément ne correspond à la sélection</p>
+      </template>
+      <ItemComponent v-for="item in processedItems" :key="item.id" :item-value="item" :global-editing="editing"
+        @editing-start="startEditing;" @editing-canceled="cancelEditing" @editing-end="completeEditing" />
+    </div>
   </template>
   <template v-else>
-    <br>
+    <br><br>
     <p>Il n'y a aucun élément médical sur ce dossier.</p>
   </template>
   <br>
   <button v-if="role === 'DOCTOR'" v-show="!editing" @click="addItem" type="button" class="btn btn-primary">
-    <i class="fa-solid fa-plus"></i> Ajouter un élément
+    <i class="fa-solid fa-plus"></i> Ajouter
   </button>
 </template>
 
@@ -162,5 +166,8 @@ a.active {
   text-decoration: none;
   color: black;
   cursor: auto;
+}
+.scroll-pane {
+  height: calc(100vh - 18.15rem);
 }
 </style>

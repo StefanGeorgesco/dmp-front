@@ -121,7 +121,8 @@ header > * {
   margin: 0;
 }
 
-header > nav {
+nav {
+  height: 3.5em;
   top: 4rem;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
 }
@@ -135,7 +136,7 @@ header > h1 {
   padding: 1rem 0;
   margin: 0;
   box-sizing: border-box;
-  margin-top: 9rem;
+  margin-top: 7rem;
 }
 
 .collapse.navbar-collapse {
@@ -148,17 +149,12 @@ header > h1 {
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
 }
 
-nav {
-  height: 5em;
-}
-
 .alert {
-  min-height: 4rem;
+  padding: 0.25rem 0.5rem;
   position: absolute;
   top: 0.45rem;
   bottom: auto;
-  left: 30%;
-  right: 10%;
+  left: 27%;
   z-index: 2;
 }
 
