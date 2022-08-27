@@ -113,22 +113,25 @@ export default {
 </script>
 
 <style scoped>
-header > * {
+header {
   position: fixed;
+  top: 0;
   z-index: 1;
-  background-color: white;
   width: 100%;
+  background-color: white;
   margin: 0;
-}
-
-nav {
-  height: 3.5em;
-  top: 4rem;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
 }
 
+header > * {
+  margin: 0;
+}
+
+header > nav {
+  height: 3.5em;
+}
+
 header > h1 {
-  top: 0;
   padding: 0.5rem;
 }
 
