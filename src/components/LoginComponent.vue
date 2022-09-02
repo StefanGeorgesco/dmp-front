@@ -69,7 +69,6 @@ export default {
   position: relative;
   height: calc(100vh - 10rem);
   width: 100vw;
-  overflow: hidden;
 }
 
 .login-form-container {
