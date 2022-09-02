@@ -51,12 +51,12 @@
       </div>
       <div class="container">
         <transition name="errorMessageTransition">
-          <div v-show="errorMessage" class="alert alert-danger" role="alert">
+          <div v-show="showErrorMessage" class="alert alert-danger" role="alert">
             {{ errorMessage }}
           </div>
         </transition>
         <transition name="successMessageTransition">
-          <div v-show="successMessage" class="alert alert-success" role="alert">
+          <div v-show="showSuccessMessage" class="alert alert-success" role="alert">
             {{ successMessage }}
           </div>
         </transition>
@@ -99,7 +99,12 @@ export default {
     },
   },
   computed: {
-    ...mapState(useMessagesStore, ["errorMessage", "successMessage"]),
+    ...mapState(useMessagesStore, [
+      "errorMessage",
+      "successMessage",
+      "showErrorMessage",
+      "showSuccessMessage",
+    ]),
     ...mapState(useAuthUserStore, ["isAuthenticated", "role", "username"]),
   },
   methods: {
