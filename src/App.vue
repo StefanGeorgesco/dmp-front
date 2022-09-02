@@ -142,9 +142,8 @@ header > h1 {
 
 .main-section {
   padding: 1rem 0;
-  margin: 0;
+  margin: 7rem 0 0;
   box-sizing: border-box;
-  margin-top: 7rem;
 }
 
 .collapse.navbar-collapse {
