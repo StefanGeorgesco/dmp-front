@@ -24,7 +24,7 @@
       <p>Aucun élément ne correspond à la sélection</p>
     </template>
     <ItemComponent v-for="item in processedItems" :key="item.id" :item-value="item" :global-editing="editing"
-      @editing-start="startEditing;" @editing-canceled="cancelEditing" @editing-end="completeEditing" />
+      @editing-start="startEditing" @editing-canceled="cancelEditing" @editing-end="completeEditing" />
   </div>
   <template v-if="items.length === 0">
     <p>Il n'y a aucun élément médical sur ce dossier.</p>
