@@ -17,20 +17,12 @@
                 <div v-else class="container">
                     <form @submit.prevent="submitUpdateReferringDoctor" @input="checkForm" class="row g-3" novalidate>
                         <div class="col-md-12"></div>
-                        <ObjectFinder @new-selection="updateDoctorSelection" object-type="doctor" :object-value="{
-                            id: file.referringDoctorId,
-                            firstname: file.referringDoctorFirstname,
-                            lastname: file.referringDoctorLastname,
-                            specialties: file.referringDoctorSpecialties
-                        }" :object-rep-fn="toString" :object-filter-fn="objectFilter" />
+                        <ObjectFinder @new-selection="updateDoctorSelection" object-type="doctor" :object-value="referringDoctor" :object-rep-fn="toString" :object-filter-fn="objectFilter" />
                         <div class="col-12">
                             <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i>
                                 Enregistrer</button>
                         </div>
                     </form>
-                    <div class="error" :class="{ fieldError: doctorPresentError }">
-                        Le médecin est obligatoire.
-                    </div>
                     <br>
                     <div class="col-12">
                         <button @click="cancelEditReferringDoctorAction" type="button" class="btn btn-light"><i
@@ -105,15 +97,12 @@ export default {
             canEditKnown: false,
             canEdit: null,
             updatingReferringDoctor: false,
-            referringDoctor: {
-                id: "",
-            },
-            mustCheck: false,
-            doctorPresentError: false,
+            referringDoctor: null,
         };
     },
     async created() {
         this.updateCanEdit();
+        this.getReferringdoctor();
     },
     watch: {
         async file() {
@@ -129,12 +118,6 @@ export default {
         ...mapState(useAuthUserStore, ["role"]),
     },
     methods: {
-        checkForm() {
-            if (this.mustCheck) {
-                this.doctorPresentError = !this.correspondence.doctorId;
-            }
-            return (!this.doctorPresentError);
-        },
         async deleteFile() {
             this.$refs.modalClose.click();
             let service;
@@ -165,6 +148,16 @@ export default {
                 }
             }
         },
+        async getReferringdoctor() {
+            try {
+                let response = await Service.getDoctor(this.file.referringDoctorId);
+                this.referringDoctor = response.data;
+            } catch (error) {
+                if (error.response.data) {
+                    this.setErrorMessage(error.response.data.message);
+                }
+            }
+        },
         updateDoctorSelection(selection) {
             this.referringDoctor = selection;
         },
@@ -173,7 +166,6 @@ export default {
                 await Service.updateReferringDoctor(this.file.id, this.referringDoctor);
                 this.setSuccessMessage("Le médecin référent a bien été modifié.");
                 this.updatingReferringDoctor = false;
-                this.clearReferringDoctor();
                 this.$emit("referringDoctorUpdated", this.file);
             } catch (error) {
                 this.canEdit = false;
@@ -187,13 +179,8 @@ export default {
             }
         },
         cancelEditReferringDoctorAction() {
-            this.clearReferringDoctor();
+            this.getReferringdoctor();
             this.updatingReferringDoctor = false;
-        },
-        clearReferringDoctor() {
-            this.referringDoctor = {
-                id: "",
-            };
         },
         toString(o) {
             return `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties.map(s => s.description ? s.description : s).join(", ")}`;
@@ -212,11 +199,11 @@ export default {
     position: relative;
 }
 
-.card-body>span {
+.card-body > span {
     cursor: pointer;
 }
 
-.card-body>span:after {
+.card-body > span:after {
     position: absolute;
     right: 1rem;
     top: .5rem;
@@ -225,14 +212,5 @@ export default {
     margin: 0 0 0 1em;
     font-size: x-large;
     font-weight: bold;
-}
-
-.error {
-    display: none;
-}
-
-.error.fieldError {
-    display: initial;
-    color: red;
 }
 </style>
