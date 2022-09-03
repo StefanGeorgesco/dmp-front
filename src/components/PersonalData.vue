@@ -121,6 +121,7 @@
 
 <!-- eslint-disable prettier/prettier -->
 <script>
+import { nextTick } from 'vue';
 import { mapState, mapActions } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore";
@@ -241,7 +242,7 @@ export default {
         }
       } else {
         this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
-        document.querySelector(".fieldError")?.scrollIntoView(false);
+        nextTick(() => { document.querySelector(".fieldError")?.scrollIntoView(false); });
       }
     },
     ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
