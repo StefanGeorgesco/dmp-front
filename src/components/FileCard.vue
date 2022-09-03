@@ -132,7 +132,7 @@ export default {
                 this.setSuccessMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ${this.file.id} a bien été supprimé, ainsi que le compte utilisateur associé.`)
             } catch (error) {
                 if (error.response.data) {
-                    this.setErrorMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ne peut pas être supprimé.${this.type === "doctor" ? " Il doit être référencé dans au moins un dossier patient." : ""}`);
+                    this.setErrorMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ne peut pas être supprimé.${this.type === "doctor" ? " Il est probablement référencé dans au moins un dossier patient." : ""}`);
                 }
             }
         },
