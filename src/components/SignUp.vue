@@ -126,6 +126,9 @@ export default {
             }
           }
         }
+      } else {
+        this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
+        document.querySelector(".fieldError")?.scrollIntoView();
       }
     },
     ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
