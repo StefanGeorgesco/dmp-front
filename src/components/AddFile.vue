@@ -235,7 +235,7 @@ export default {
             }
 
             return (
-                !this.IdError &&
+                !this.idError &&
                 !this.firstnameError &&
                 !this.lastnameError &&
                 !this.specialtiesError &&
@@ -277,7 +277,7 @@ export default {
                 }
             } else {
                 this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
-                document.querySelector(".fieldError")?.scrollIntoView();
+                document.querySelector(".fieldError")?.scrollIntoView(false);
             }
         },
         ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
@@ -285,6 +285,7 @@ export default {
 };
 </script>
 
+<!-- eslint-disable prettier/prettier -->
 <style scoped>
 .error {
     display: none;

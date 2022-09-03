@@ -102,7 +102,7 @@ export default {
     },
     async created() {
         this.updateCanEdit();
-        this.getReferringdoctor();
+        if (this.type === "patientFile") this.getReferringdoctor();
     },
     watch: {
         async file() {
@@ -179,7 +179,7 @@ export default {
             }
         },
         cancelEditReferringDoctorAction() {
-            this.getReferringdoctor();
+            if (this.type === "patientFile") this.getReferringdoctor();
             this.updatingReferringDoctor = false;
         },
         toString(o) {

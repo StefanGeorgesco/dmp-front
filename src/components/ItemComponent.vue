@@ -308,7 +308,7 @@ export default {
                 }
             } else {
                 this.setErrorMessage("Les données saisies sont incorrectes.");
-                document.querySelector(".fieldError")?.scrollIntoView();
+                document.querySelector(".fieldError")?.scrollIntoView(false);
             }
         },
         async submitDeleteItem() {

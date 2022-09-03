@@ -241,7 +241,7 @@ export default {
         }
       } else {
         this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
-        document.querySelector(".fieldError")?.scrollIntoView();
+        document.querySelector(".fieldError")?.scrollIntoView(false);
       }
     },
     ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
