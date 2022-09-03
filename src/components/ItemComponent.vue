@@ -229,6 +229,8 @@ export default {
     methods: {
         resetItem() {
             this.item = { ...this.itemValue };
+            this.checkForm();
+            this.mustCheck = false;
         },
         startEditing() {
             this.item.editing = true;
@@ -304,6 +306,9 @@ export default {
                         }
                     }
                 }
+            } else {
+                this.setErrorMessage("Les données saisies sont incorrectes.");
+                document.querySelector(".fieldError")?.scrollIntoView();
             }
         },
         async submitDeleteItem() {
