@@ -31,7 +31,7 @@ export const useMessagesStore = defineStore({
       this.successMessageTimeout = setTimeout(() => {
         this.successMessage = "";
       }, 5000);
-      this.successMessageTimeout = setTimeout(() => {
+      this.showSuccessMessageTimeout = setTimeout(() => {
         this.showSuccessMessage = false;
       }, 3000);
       this.successMessage = message;
