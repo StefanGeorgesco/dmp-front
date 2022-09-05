@@ -73,10 +73,10 @@ export default {
 
 .login-form-container {
   position: absolute;
-  width: 30vw;
-  left: 30%;
-  right: 35%;
-  top: 20%;
-  bottom: 20%;
+  width: max(30vw, 20rem);
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 </style>
