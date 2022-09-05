@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import HomeComponent from "../components/HomeComponent.vue";
 import LoginComponent from "../components/LoginComponent.vue";
@@ -20,7 +20,7 @@ const roleGuard = (roles) => {
 };
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(),
   routes: [
     {
       path: "/",
@@ -85,6 +85,8 @@ router.beforeEach((to, from, next) => {
 
   if (to.name !== "login" && to.name !== "sign-up" && !store.isAuthenticated) {
     next({ name: "login" });
+  } else if (to.name === "login" && store.isAuthenticated) {
+    next({ name: "home" });
   } else {
     next();
   }
