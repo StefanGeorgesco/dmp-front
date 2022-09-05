@@ -31,7 +31,7 @@
             <div></div>
             <div v-if="type === 'doctor'" class="col-md-12">
                 <label class="form-label">* Spécialités</label>
-                <TagSelector @new-selection="updateSelection" :options="specialties" />
+                <TagSelector @new-selection="updateSpecialtiesSelection" :options="specialties" />
                 <div class="error" :class="{ fieldError: specialtiesError }">
                     Le médecin doit avoir au moins une spécialité.
                 </div>
@@ -47,7 +47,6 @@
                     La date de naissance ne peut pas être dans le futur.
                 </div>
             </div>
-            <div></div>
             <div class="col-md-4">
                 <label for="telephone" class="form-label">* Numéro de téléphone</label>
                 <input v-model.trim="file.phone" type="text" class="form-control" id="telephone" required>
@@ -68,6 +67,8 @@
             <div></div>
             <fieldset class="row g-3">
                 <legend>Adresse</legend>
+                <AddressPicker @new-selection="fillAddress" :errorMessageService="setErrorMessage" />
+                <div></div>
                 <div class="col-md-4">
                     <label for="rue1" class="form-label">* Numéro et voie</label>
                     <input v-model.trim="file.address.street1" type="text" class="form-control" id="rue1" required>
@@ -137,11 +138,13 @@ import { Service } from "../services/services.js";
 import { useMessagesStore } from "../stores/messagesStore";
 import { mapActions } from "pinia";
 import TagSelector from "./TagSelector.vue";
+import AddressPicker from "./AddressPicker.vue";
 
 export default {
     name: "AddFile",
     components: {
         TagSelector,
+        AddressPicker,
     },
     props: {
         type: {
@@ -212,8 +215,12 @@ export default {
         }
     },
     methods: {
-        updateSelection(selection) {
-            this.file.specialties = selection;
+        updateSpecialtiesSelection(specialties) {
+            this.file.specialties = specialties;
+            this.checkForm();
+        },
+        fillAddress(address) {
+            this.file.address = address;
             this.checkForm();
         },
         checkForm() {

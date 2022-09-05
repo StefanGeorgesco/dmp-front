@@ -54,6 +54,8 @@
       <div></div>
       <fieldset class="row g-3">
         <legend>Adresse</legend>
+        <AddressPicker v-show="update" @new-selection="fillAddress" :errorMessageService="setErrorMessage" />
+        <div></div>
         <div class=" col-md-4">
           <label for="rue1" class="form-label"><span :style="{ visibility: (update ? 'visible' : 'hidden') }">*
             </span>Numéro et voie</label>
@@ -126,9 +128,13 @@ import { mapState, mapActions } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore";
 import { Service } from "../services/services.js";
+import AddressPicker from "./AddressPicker.vue";
 
 export default {
   name: "PersonalData",
+  components: {
+    AddressPicker,
+  },
   data() {
     return {
       editing: false,
@@ -193,6 +199,10 @@ export default {
           this.setErrorMessage(error.response.data.message);
         }
       }
+    },
+    fillAddress(address) {
+      this.file.address = address;
+      this.checkForm();
     },
     checkForm() {
       if (this.mustCheck) {
