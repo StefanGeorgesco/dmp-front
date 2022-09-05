@@ -64,7 +64,7 @@ export default {
         };
     },
     mounted() {
-        this.$refs.newCorrespondence.scrollIntoView();
+        this.$refs.newCorrespondence.scrollIntoView(false);
     },
     computed: {
         doctor() {
@@ -147,7 +147,10 @@ export default {
 </script>
 
 <!-- eslint-disable prettier/prettier -->
-<style>
+<style scoped>
+.container {
+    background-color: aliceblue;
+}
 .error {
     display: none;
 }
