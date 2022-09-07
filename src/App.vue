@@ -64,16 +64,21 @@
       </div>
     </nav>
   </header>
+  <div v-if="loading" class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
   <main class="main-section">
     <RouterView />
   </main>
 </template>
 
+<!-- eslint-disable prettier/prettier -->
 <script>
 import { RouterLink, RouterView } from "vue-router";
 import { mapState, mapActions } from "pinia";
 import { useAuthUserStore } from "./stores/authUserStore.js";
 import { useMessagesStore } from "./stores/messagesStore.js";
+import { useLoaderStore } from "./stores/loaderStore";
 
 export default {
   name: "App",
@@ -107,6 +112,7 @@ export default {
       "showSuccessMessage",
     ]),
     ...mapState(useAuthUserStore, ["isAuthenticated", "role", "username"]),
+    ...mapState(useLoaderStore, ["loading"]),
   },
   methods: {
     foldMenu() {
@@ -121,7 +127,14 @@ export default {
 };
 </script>
 
+<!-- eslint-disable prettier/prettier -->
 <style scoped>
+.spinner-border {
+  position: fixed;
+  top: calc(50% - 1.5rem);
+  left: calc(50% - 1.5rem);
+  z-index: 2;
+}
 header {
   position: fixed;
   top: 0;

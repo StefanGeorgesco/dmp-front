@@ -18,7 +18,7 @@
 <script>
 import { mapActions } from "pinia";
 import { useMessagesStore } from "../stores/messagesStore.js";
-
+import { useLoaderStore } from '../stores/loaderStore';
 import { Service } from "../services/services.js";
 
 export default {
@@ -62,6 +62,7 @@ export default {
     },
     methods: {
         async searchObjects() {
+            let id = this.setLoader();
             try {
                 let response = await Service.findObjectBySearchString(this.objectType, this.searchString);
                 this.foundObjects = response.data.filter(this.objectFilterFn);
@@ -69,6 +70,8 @@ export default {
                 if (error.response.data) {
                     this.setErrorMessage(error.response.data.message);
                 }
+            } finally {
+                this.clearLoader(id);
             }
         },
         clear() {
@@ -81,6 +84,7 @@ export default {
             this.$emit("newSelection", o);
         },
         ...mapActions(useMessagesStore, ["setErrorMessage"]),
+        ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
     },
 }
 </script>

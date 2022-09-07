@@ -37,7 +37,7 @@
       <p style="padding: 0.8rem 0;">Il n'y a aucune correspondance sur ce dossier.</p>
     </template>
   </div>
-  <template v-if=" isReferringDoctor">
+  <template v-if="isReferringDoctor">
     <button v-show="!addingCorrespondence" @click="addingCorrespondence = true" type="button" class="btn btn-primary"><i
         class="fa-solid fa-plus"></i> Ajouter</button>
   </template>
@@ -48,6 +48,7 @@
 import { mapState, mapActions } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore";
+import { useLoaderStore } from '../stores/loaderStore';
 import { Service } from "../services/services.js";
 import CorrespondenceComponent from "./CorrespondenceComponent.vue";
 import AddCorrespondence from "./AddCorrespondence.vue";
@@ -109,6 +110,7 @@ export default {
   },
   methods: {
     async updateCorrespondences() {
+      let id = this.setLoader();
       try {
         let response = await Service.getCorrespondences(this.routeId);
         this.correspondences = response.data;
@@ -120,9 +122,12 @@ export default {
         if (error.response.data) {
           this.setErrorMessage(error.response.data.message);
         }
+      } finally {
+        this.clearLoader(id);
       }
     },
     ...mapActions(useMessagesStore, ["setErrorMessage"]),
+    ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 }
 </script>
@@ -132,6 +137,7 @@ export default {
 .container {
   padding: 0.8rem 0;
 }
+
 .commands {
   height: 3.5em;
   display: flex;

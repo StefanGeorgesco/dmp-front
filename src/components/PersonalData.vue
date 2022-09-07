@@ -54,7 +54,8 @@
       <div></div>
       <fieldset class="row g-3">
         <legend>Adresse</legend>
-        <AddressPicker v-show="update" @new-selection="fillAddress" :errorMessageService="setErrorMessage" />
+        <AddressPicker v-show="update" @new-selection="fillAddress" :error-message-service="setErrorMessage"
+          :set-loader-service="setLoader" :clear-loader-service="clearLoader" />
         <div></div>
         <div class=" col-md-4">
           <label for="rue1" class="form-label"><span :style="{ visibility: (update ? 'visible' : 'hidden') }">*
@@ -127,6 +128,7 @@ import { nextTick } from 'vue';
 import { mapState, mapActions } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore";
+import { useLoaderStore } from '../stores/loaderStore';
 import { Service } from "../services/services.js";
 import AddressPicker from "./AddressPicker.vue";
 
@@ -235,6 +237,7 @@ export default {
         } else {
           updateService = Service.updatePatientFileDetails;
         }
+        let id = this.setLoader();
         try {
           let response = await updateService(this.file);
           this.setSuccessMessage("Les données ont bien été modifiées.");
@@ -249,6 +252,8 @@ export default {
               this.setErrorMessage(error.response.data.message);
             }
           }
+        } finally {
+          this.clearLoader(id);
         }
       } else {
         this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
@@ -256,6 +261,7 @@ export default {
       }
     },
     ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
+    ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 };
 </script>
@@ -286,6 +292,7 @@ input[readonly],
   margin: 0.25em;
   color: white;
 }
+
 .error {
   display: none;
 }

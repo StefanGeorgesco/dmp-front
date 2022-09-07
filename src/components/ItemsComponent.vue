@@ -40,6 +40,7 @@
 import { mapState, mapActions } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore";
+import { useLoaderStore } from '../stores/loaderStore';
 import { Service } from "../services/services.js";
 import ItemComponent from "./ItemComponent.vue";
 import { filterFn } from "../utils/utils";
@@ -119,6 +120,7 @@ export default {
   },
   methods: {
     async fetchItems() {
+      let id = this.setLoader();
       try {
         let response = await Service.getItems(this.routeId);
         this.fetchedItems = response.data;
@@ -126,7 +128,10 @@ export default {
         if (error.response.data) {
           this.setErrorMessage(error.response.data.message);
         }
+      } finally {
+        this.clearLoader(id);
       }
+
     },
     startEditing() {
       this.editing = true;
@@ -152,6 +157,7 @@ export default {
       });
     },
     ...mapActions(useMessagesStore, ["setErrorMessage"]),
+    ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 }
 </script>

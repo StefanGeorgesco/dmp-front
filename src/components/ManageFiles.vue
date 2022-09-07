@@ -38,6 +38,7 @@
 import { mapState, mapActions } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore";
+import { useLoaderStore } from '../stores/loaderStore';
 import { Service } from "../services/services.js";
 import FileCard from "./FileCard.vue";
 
@@ -82,6 +83,7 @@ export default {
       } else {
         service = Service.findPatientFilesByIdOrFirstnameOrLastname;
       }
+      let id = this.setLoader();
       try {
         let response = await service(this.searchString);
         this.foundFiles = response.data;
@@ -89,14 +91,19 @@ export default {
         if (error.response.data) {
           this.setErrorMessage(error.response.data.message);
         }
+      } finally {
+        this.clearLoader(id);
       }
     },
     async updateFile(file) {
+      let id = this.setLoader();
       try {
         let response = await Service.getPatientFile(file.id);
         this.select(response.data);
       } catch (error) {
         this.clear();
+      } finally {
+        this.clearLoader(id);
       }
     },
     select(f) {
@@ -110,6 +117,7 @@ export default {
       this.selectedFile = null;
     },
     ...mapActions(useMessagesStore, ["setErrorMessage"]),
+    ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 }
 </script>

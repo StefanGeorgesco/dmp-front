@@ -154,6 +154,7 @@ import { nextTick } from 'vue';
 import { mapActions, mapState } from "pinia";
 import { useMessagesStore } from "../stores/messagesStore.js";
 import { useAuthUserStore } from "../stores/authUserStore.js";
+import { useLoaderStore } from '../stores/loaderStore';
 import { Service } from "../services/services.js";
 import ObjectFinder from "./ObjectFinder.vue";
 
@@ -293,6 +294,8 @@ export default {
                     action = "créé"
                 }
 
+                let id = this.setLoader();
+
                 try {
                     await service(this.item);
                     this.item.editing = false;
@@ -306,6 +309,8 @@ export default {
                             this.setErrorMessage(error.response.data.message);
                         }
                     }
+                } finally {
+                    this.clearLoader(id);
                 }
             } else {
                 this.setErrorMessage("Les données saisies sont incorrectes.");
@@ -314,6 +319,7 @@ export default {
         },
         async submitDeleteItem() {
             this.$refs.modalClose.click();
+            let id = this.setLoader();
             try {
                 await Service.deleteItem(this.item);
                 this.item.editing = false;
@@ -323,10 +329,13 @@ export default {
                 if (error.response.data) {
                     this.setErrorMessage(error.response.data.message);
                 }
+            } finally {
+                this.clearLoader(id);
             }
 
         },
         ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
+        ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
     },
 }
 </script>

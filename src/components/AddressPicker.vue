@@ -24,8 +24,19 @@ export default {
             type: Function,
             default(m) {
                 console.log(m);
-            }
+            },
         },
+        setLoaderService: {
+            type: Function,
+            default() {             
+            },
+        },
+        clearLoaderService: {
+            type: Function,
+            defaut(id) {
+                console.log(id);
+            }
+        }
     },
     emits: ["newSelection"],
     data() {
@@ -42,6 +53,7 @@ export default {
         findAddresses() {
             if (this.searchString) {
                 let url = encodeURI(`${baseUrl}?type=housenumber&limit=15&q=${this.searchString}`);
+                let id = this.setLoaderService();
                 fetch(url)
                     .then(response => {
                         if (response.ok) {
@@ -55,7 +67,10 @@ export default {
                     })
                     .catch(error => {
                         this.errorMessageService(`Le service d'adresse est injoignable ('${error.message}').`);
-                    });
+                    })
+                    .finally(
+                        () => { this.clearLoaderService(id); }
+                    );
             } else {
                 this.clear();
             }

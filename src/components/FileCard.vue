@@ -70,6 +70,7 @@ import { RouterLink } from "vue-router";
 import { mapState, mapActions } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore.js";
+import { useLoaderStore } from '../stores/loaderStore';
 import { Service } from "../services/services.js";
 import ObjectFinder from "./ObjectFinder.vue";
 
@@ -126,6 +127,7 @@ export default {
             } else {
                 service = Service.deletePatientFile;
             }
+            let id = this.setLoader();
             try {
                 await service(this.file.id);
                 this.$emit("fileDeleted");
@@ -134,10 +136,13 @@ export default {
                 if (error.response.data) {
                     this.setErrorMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ne peut pas être supprimé.${this.type === "doctor" ? " Il est probablement référencé dans au moins un dossier patient." : ""}`);
                 }
+            } finally {
+                this.clearLoader(id);
             }
         },
         async updateCanEdit() {
             if (this.role === "DOCTOR" && this.type === "patientFile") {
+                let id = this.setLoader();
                 try {
                     await Service.getCorrespondences(this.file.id);
                     this.canEdit = true;
@@ -145,10 +150,12 @@ export default {
                     this.canEdit = false;
                 } finally {
                     this.canEditKnown = true;
+                    this.clearLoader(id);
                 }
             }
         },
         async getReferringdoctor() {
+            let id = this.setLoader();
             try {
                 let response = await Service.getDoctor(this.file.referringDoctorId);
                 this.referringDoctor = response.data;
@@ -156,12 +163,15 @@ export default {
                 if (error.response.data) {
                     this.setErrorMessage(error.response.data.message);
                 }
+            } finally {
+                this.clearLoader(id);
             }
         },
         updateDoctorSelection(selection) {
             this.referringDoctor = selection;
         },
         async submitUpdateReferringDoctor() {
+            let id = this.setLoader();
             try {
                 await Service.updateReferringDoctor(this.file.id, this.referringDoctor);
                 this.setSuccessMessage("Le médecin référent a bien été modifié.");
@@ -176,6 +186,8 @@ export default {
                         this.setErrorMessage(error.response.data.message);
                     }
                 }
+            } finally {
+                this.clearLoader(id);
             }
         },
         cancelEditReferringDoctorAction() {
@@ -189,6 +201,7 @@ export default {
             return o.id !== this.file.referringDoctorId;
         },
         ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
+        ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
     },
 };
 </script>

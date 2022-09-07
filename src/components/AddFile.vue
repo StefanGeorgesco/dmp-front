@@ -67,7 +67,10 @@
             <div></div>
             <fieldset class="row g-3">
                 <legend>Adresse</legend>
-                <AddressPicker @new-selection="fillAddress" :errorMessageService="setErrorMessage" />
+                <AddressPicker @new-selection="fillAddress"
+                    :error-message-service="setErrorMessage"
+                    :set-loader-service="setLoader"
+                    :clear-loader-service="clearLoader" />
                 <div></div>
                 <div class="col-md-4">
                     <label for="rue1" class="form-label">* Numéro et voie</label>
@@ -136,6 +139,7 @@
 import { nextTick } from 'vue';
 import { Service } from "../services/services.js";
 import { useMessagesStore } from "../stores/messagesStore";
+import { useLoaderStore } from '../stores/loaderStore';
 import { mapActions } from "pinia";
 import TagSelector from "./TagSelector.vue";
 import AddressPicker from "./AddressPicker.vue";
@@ -267,6 +271,7 @@ export default {
                 } else {
                     service = Service.addPatientFile;
                 }
+                let id = this.setLoader();
                 try {
                     let response = await service(this.file);
                     this.setSuccessMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} a bien été créé.`);
@@ -282,6 +287,8 @@ export default {
                             this.setErrorMessage(error.response.data.message);
                         }
                     }
+                } finally {
+                    this.clearLoader(id);
                 }
             } else {
                 this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
@@ -289,6 +296,7 @@ export default {
             }
         },
         ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
+        ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
     },
 };
 </script>

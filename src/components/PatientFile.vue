@@ -37,6 +37,7 @@
 import { mapState, mapActions } from "pinia";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore";
+import { useLoaderStore } from '../stores/loaderStore';
 import { Service } from "../services/services.js";
 import ItemsComponent from "./ItemsComponent.vue";
 import CorrespondencesComponent from "./CorrespondencesComponent.vue";
@@ -67,6 +68,7 @@ export default {
     ...mapState(useAuthUserStore, ["role", "userId"]),
   },
   async created() {
+    let id = this.setLoader();
     try {
       let response = await Service.getPatientFile(this.routeId);
       this.file = response.data;
@@ -74,10 +76,13 @@ export default {
       if (error.response.data) {
         this.setErrorMessage(error.response.data.message);
       }
+    } finally {
+      this.clearLoader(id);
     }
   },
   methods: {
     ...mapActions(useMessagesStore, ["setErrorMessage"]),
+    ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 }
 </script>
