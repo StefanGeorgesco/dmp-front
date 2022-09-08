@@ -22,6 +22,7 @@ export const useLoaderStore = defineStore({
     },
     clearLoader(id) {
       clearTimeout(this.timeouts.get(id));
+      this.timeouts.delete(id);
       this.loaders.delete(id);
     },
   },
