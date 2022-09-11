@@ -5,7 +5,7 @@
     <template v-if="addingCorrespondence || correspondences.length > 0">
       <input v-if="correspondences.length > 0" v-model="searchString"
         @keyup.esc="searchString = ''; $event.target.blur();"
-        style="border: 1px solid #ced4da; border-radius: 0.375rem;" type="text" placeholder="Recherche..." size="15">
+        style="border: 1px solid #ced4da; border-radius: 0.375rem;" type="text" placeholder="Recherche..." size="8">
       <br>
       <div class="commands" v-if="correspondences.length > 0" style="height: 2rem;">
         <a @click="correspondenceFilter = 'ongoing'" :class="{ active: correspondenceFilter === 'ongoing' }">en
@@ -40,6 +40,7 @@
   <template v-if="isReferringDoctor">
     <button v-show="!addingCorrespondence" @click="addingCorrespondence = true" type="button" class="btn btn-primary"><i
         class="fa-solid fa-plus"></i> Ajouter</button>
+    <br><br>
   </template>
 </template>
 
@@ -156,6 +157,6 @@ a.active {
 }
 
 .scroll-pane {
-  height: calc(100vh - 18.5rem);
+  height: calc(100vh - 20rem);
 }
 </style>

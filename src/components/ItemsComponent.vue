@@ -6,7 +6,7 @@
     </h5>
     <input v-if="fetchedItems.length > 0" v-model="searchString" @keyup.esc="searchString = ''; $event.target.blur();"
       style="border: 1px solid #ced4da; border-radius: 0.375rem; margin-right: 0.5rem;" type="text"
-      placeholder="Recherche..." size="15">
+      placeholder="Recherche..." size="8">
     <select v-if="fetchedItems.length > 0" v-model="typeFilter" @change="$event.target.blur();"
       style="border: 1px solid #ced4da; border-radius: 0.375rem; margin: 0;">
       <option v-for="t in types" :key="t.value" :value="t.value" v-text="t.name"></option>
@@ -183,7 +183,7 @@ a.active {
 }
 
 .scroll-pane {
-  height: calc(100vh - 16.5rem);
+  height: calc(100vh - 17.8rem);
   padding-top: 1rem;
 }
 </style>

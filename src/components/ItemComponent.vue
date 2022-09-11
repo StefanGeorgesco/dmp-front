@@ -2,12 +2,12 @@
 <template>
     <div ref="item" class="col-md-12 container" :class="{ highlighted: item.editing }" style="padding: 0 1rem;">
         <form @submit.prevent="submitSaveItem" @input="checkForm" class="row g-3 needs-validation" novalidate>
-            <div class="col-md-3">
+            <div class="col-md-5">
                 <div class="mb-3 row">
                     <label for="item_type" class="col-sm-4 col-form-label">
                         <span v-show="item.editing && !item.id">* </span>Type
                     </label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-6">
                         <select @change="checkForm" v-model="item['@type']" :disabled="item.id" id="item_type"
                             class="form-control">
                             <option v-for="t in types" :key="t.value" :value="t.value" v-text="t.name"
@@ -20,7 +20,7 @@
                     Le type est obligatoire.
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <div class="mb-3 row">
                     <label for="item_date" class="col-sm-3 col-form-label"><span v-show="item.editing && !item.id">*
                         </span>Date</label>
