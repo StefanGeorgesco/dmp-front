@@ -28,7 +28,7 @@ export default {
         },
         setLoaderService: {
             type: Function,
-            default() {             
+            default() {
             },
         },
         clearLoaderService: {
@@ -41,8 +41,19 @@ export default {
     emits: ["newSelection"],
     data() {
         return {
+            longitude: "2.349",     // Notre-Dame de Paris
+            latitude: "48.854499",  //
             searchString: "",
             foundAddresses: [],
+        }
+    },
+    created() {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                this.longitude = position.coords.longitude;
+                this.latitude = position.coords.latitude;
+                console.log(`lon: ${this.longitude}, lat: ${this.latitude}`);
+            }, () => console.log("impossible de déterminer la position"), { enableHighAccuracy: true });
         }
     },
     methods: {
@@ -52,7 +63,7 @@ export default {
         },
         findAddresses() {
             if (this.searchString) {
-                let url = encodeURI(`${baseUrl}?type=housenumber&limit=15&q=${this.searchString}`);
+                let url = encodeURI(`${baseUrl}?type=housenumber&lon=${this.longitude}&lat=${this.latitude}&limit=15&q=${this.searchString}`);
                 let id = this.setLoaderService();
                 fetch(url)
                     .then(response => {
