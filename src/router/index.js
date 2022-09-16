@@ -1,12 +1,13 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import { useAuthUserStore } from "../stores/authUserStore.js";
-import HomeComponent from "../components/HomeComponent.vue";
-import LoginComponent from "../components/LoginComponent.vue";
-import SignUp from "../components/SignUp.vue";
-import PersonalData from "../components/PersonalData.vue";
-import AddFile from "../components/AddFile.vue";
-import ManageFiles from "../components/ManageFiles.vue";
-import PatientFile from "../components/PatientFile.vue";
+
+const HomeComponent = () => import("../components/HomeComponent.vue");
+const LoginComponent = () => import("../components/LoginComponent.vue");
+const SignUp = () => import("../components/SignUp.vue");
+const PersonalData = () => import("../components/PersonalData.vue");
+const AddFile = () => import("../components/AddFile.vue");
+const ManageFiles = () => import("../components/ManageFiles.vue");
+const PatientFile = () => import("../components/PatientFile.vue");
 
 const roleGuard = (roles) => {
   return () => {
