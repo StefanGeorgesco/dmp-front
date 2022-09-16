@@ -5,7 +5,7 @@
             {{ o.id }} - {{ o.description }}
             <span @click="remove(o)"></span>
         </div>
-        <input @keyup.esc="searchString=''" ref="input" v-model="searchString" type="text">
+        <input @keyup.esc="clear" @blur="delayedClear" ref="input" v-model="searchString" type="text">
         <div class="options-list" v-show="filteredOptions.length > 0">
             <div class="tag-option" v-for="o in filteredOptions" :key="o.id" @click="add(o)">
                 {{ o.id }} - {{ o.description }}
@@ -40,6 +40,12 @@ export default {
         }
     },
     methods: {
+        clear() {
+            this.searchString = "";
+        },
+        delayedClear() {
+            setTimeout(this.clear, 200);
+        },
         add(o) {
             this.selectedOptions.push(o);
             this.searchString = "";
