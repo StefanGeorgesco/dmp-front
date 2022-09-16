@@ -2,7 +2,7 @@
 
 <template>
     <div class="col-md-4 input-container">
-        <input @keyup.esc="clear" v-model="searchString" type="text" @input="findAddresses" class="form-control"
+        <input @keyup.esc="clear" @blur="delayedClear" v-model="searchString" type="text" v-debounce:500ms="findAddresses" class="form-control"
             placeholder="Recherche...">
         <div class="options-list" v-show="foundAddresses.length > 0">
             <div class="option-item" v-for="address in foundAddresses" :key="address.properties.id"
@@ -15,6 +15,8 @@
 
 <!-- eslint-disable prettier/prettier -->
 <script>
+import { vue3Debounce } from 'vue-debounce';
+
 const baseUrl = "https://api-adresse.data.gouv.fr/search";
 
 export default {
@@ -39,6 +41,9 @@ export default {
         }
     },
     emits: ["newSelection"],
+    directives: {
+        debounce: vue3Debounce({ lock: true }),
+    },
     data() {
         return {
             longitude: "2.349",     // Notre-Dame de Paris
@@ -60,6 +65,9 @@ export default {
         clear() {
             this.searchString = "";
             this.foundAddresses = [];
+        },
+        delayedClear() {
+            setTimeout(this.clear, 200);
         },
         findAddresses() {
             if (this.searchString) {
