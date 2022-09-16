@@ -7,10 +7,7 @@ const baseUrl = "/dmp";
 
 let router;
 
-(async function () {
-  let obj = await import("../router");
-  router = obj.default;
-})();
+import("../router").then((obj) => (router = obj.default));
 
 axios.interceptors.request.use((request) => {
   const authStore = useAuthUserStore();
@@ -41,7 +38,7 @@ axios.interceptors.response.use(
       router.currentRoute.value.name !== "login" &&
       error.response.status === 401
     ) {
-      msgStore.setErrorMessage("Session expirée. Vous devez vous reconnecter.");
+      msgStore.setErrorMessage("Vous devez vous reconnecter.");
       authStore.logout();
       router.push("/login");
     } else if (error.response.status >= 500) {
