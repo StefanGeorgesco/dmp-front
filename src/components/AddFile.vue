@@ -67,10 +67,8 @@
             <div></div>
             <fieldset class="row g-3">
                 <legend>Adresse</legend>
-                <AddressPicker @new-selection="fillAddress"
-                    :error-message-service="setErrorMessage"
-                    :set-loader-service="setLoader"
-                    :clear-loader-service="clearLoader" />
+                <AddressPicker @new-selection="fillAddress" :error-message-service="setErrorMessage"
+                    :set-loader-service="setLoader" :clear-loader-service="clearLoader" />
                 <div></div>
                 <div class="col-md-4">
                     <label for="rue1" class="form-label">* Numéro et voie</label>
@@ -123,7 +121,12 @@
     </div>
     <div class="container" :hidden="!created">
         <div class="col-12">
-            <div>{{ creationMessage }} <span id="code">{{ creationCode }}</span></div>
+            <div>
+                {{ creationMessage }}
+                <span id="code">{{ creationCode }}</span>
+                <div class="button" @click="copy">Copier</div>
+            </div>
+
         </div>
         <br>
         <div class="col-12">
@@ -295,6 +298,11 @@ export default {
                 nextTick(() => { document.querySelector(".fieldError")?.scrollIntoView(false); });
             }
         },
+        copy() {
+            navigator.clipboard.writeText(this.creationCode)
+                .then(() => this.setSuccessMessage("Le code a bine été copié dans le presse-papier."))
+                .catch(() => this.setErrorMessage("Impossible de copier le code. Veuillez le copier 'à la main'."));
+        },
         ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
         ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
     },
@@ -314,5 +322,28 @@ export default {
 
 #code {
     color: blue;
+}
+
+.button {
+    display: inline-block;
+    color: #6c757d;
+    border: 2px solid #6c757d;
+    border-radius: 5px;
+    padding: 0 0.5em;
+    margin-left: 0.5rem;
+    box-shadow: 3px 3px 2px gray;
+}
+
+.button:hover {
+    color: #fff;
+    background-color: #b2c3d3;
+    border-color: #6c757d;
+    cursor: pointer;
+}
+
+.button:active {
+    background-color: #8d99a3;
+    box-shadow: 0 0 0 white;
+    transform: translate(3px, 3px);
 }
 </style>
