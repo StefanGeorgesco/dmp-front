@@ -4,7 +4,7 @@
         <div v-if="selectedOject" class="tag">
             {{ objectRepFn(selectedOject) }}
         </div>
-        <input @keyup.esc="clear" @input="searchObjects" ref="input" v-model="searchString" type="text"
+        <input @keyup.esc="clear" @blur="delayedClear" v-debounce:300ms="searchObjects" ref="input" v-model="searchString" type="text"
             :disabled="disabled" v-show="!disabled">
         <div class="options-list" v-show="foundObjects.length > 0">
             <div class="tag-option" v-for="o in foundObjects" :key="o.id" @click="select(o)">
@@ -20,10 +20,14 @@ import { mapActions } from "pinia";
 import { useMessagesStore } from "../stores/messagesStore.js";
 import { useLoaderStore } from '../stores/loaderStore';
 import { Service } from "../services/services.js";
+import { vue3Debounce } from 'vue-debounce';
 
 export default {
     name: "ObjectFinder",
     emits: ["newSelection"],
+    directives: {
+        debounce: vue3Debounce({ lock: true }),
+    },
     props: {
         objectType: {
             type: String,
@@ -77,6 +81,9 @@ export default {
         clear() {
             this.foundObjects = [];
             this.searchString = "";
+        },
+        delayedClear() {
+            setTimeout(this.clear, 200);
         },
         select(o) {
             this.clear();
