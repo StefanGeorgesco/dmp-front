@@ -2,8 +2,8 @@
 
 <template>
     <div class="col-md-4 input-container">
-        <input @keyup.esc="clear" @blur="delayedClear" v-model="searchString" type="text" v-debounce:500ms="findAddresses" class="form-control"
-            placeholder="Recherche...">
+        <input @keyup.esc="clear" @blur="delayedClear" v-model="searchString" type="text"
+            v-debounce:500ms="findAddresses" class="form-control" placeholder="Recherche...">
         <div class="options-list" v-show="foundAddresses.length > 0">
             <div class="option-item" v-for="address in foundAddresses" :key="address.properties.id"
                 @click="select(address)">
@@ -71,25 +71,27 @@ export default {
         },
         findAddresses() {
             if (this.searchString) {
-                let url = encodeURI(`${baseUrl}?type=housenumber&lon=${this.longitude}&lat=${this.latitude}&limit=15&q=${this.searchString}`);
-                let id = this.setLoaderService();
-                fetch(url)
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            this.errorMessageService(`Le service d'adresse est injoignable (erreur ${response.status} '${response.statusText}').`);
-                        }
-                    })
-                    .then(data => {
-                        this.foundAddresses = data.features;
-                    })
-                    .catch(error => {
-                        this.errorMessageService(`Le service d'adresse est injoignable ('${error.message}').`);
-                    })
-                    .finally(
-                        () => { this.clearLoaderService(id); }
-                    );
+                if (this.searchString.trim().length > 2) {
+                    let url = encodeURI(`${baseUrl}?type=housenumber&lon=${this.longitude}&lat=${this.latitude}&limit=15&q=${this.searchString}`);
+                    let id = this.setLoaderService();
+                    fetch(url)
+                        .then(response => {
+                            if (response.ok) {
+                                return response.json();
+                            } else {
+                                this.errorMessageService(`Le service d'adresse est injoignable (erreur ${response.status} '${response.statusText}').`);
+                            }
+                        })
+                        .then(data => {
+                            this.foundAddresses = data.features;
+                        })
+                        .catch(error => {
+                            this.errorMessageService(`Le service d'adresse est injoignable ('${error.message}').`);
+                        })
+                        .finally(
+                            () => { this.clearLoaderService(id); }
+                        );
+                }
             } else {
                 this.clear();
             }
