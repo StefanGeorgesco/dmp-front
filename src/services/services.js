@@ -3,7 +3,7 @@ import { Buffer } from "buffer";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore.js";
 
-const baseUrl = "/dmp";
+const baseUrl = "/api";
 
 let router;
 

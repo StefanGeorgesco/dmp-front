@@ -7,7 +7,7 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   server: {
     proxy: {
-      "^/dmp": {
+      "^/api": {
         target: "http://localhost:8080",
         ws: true,
         changeOrigin: true,
