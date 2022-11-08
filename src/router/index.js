@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 
 const HomeComponent = () => import("../components/HomeComponent.vue");
@@ -21,7 +21,7 @@ const roleGuard = (roles) => {
 };
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory("/dmp/"),
   routes: [
     {
       path: "/",
